@@ -26,4 +26,3 @@ docker commit alpine zero12a/alpine_openjdk8:20190329
 
 #이미지 올리기
 docker upsh zeor12a/alpine_openjdk8
-
