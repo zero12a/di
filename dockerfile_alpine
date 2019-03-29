@@ -1,0 +1,29 @@
+#알파인 리눅스 내려받기
+docker pull alpine
+
+#백그라우드 프로세스로 실행하기 ( tail -f 없으면 실행하면 바로 종료되어 버림)
+docker run -d --name alpine alpine:latest tail -f /dev/null
+
+#콘솔 진입 (bash가 없음)
+docker exec -it alpine sh
+
+#업데이트
+ apk update
+ apk upgrade 
+
+#확장 패키지 설치
+ apk search jdk
+ apk add openjdk8 
+ apk add vim
+ apk add bash
+
+#findsecbugs cli 다운로드
+wget https://github.com/find-sec-bugs/find-sec-bugs/releases/download/version-1.9.0/findsecbugs-cli-1.9.0.zip
+unzip *.zip
+
+#이미지 만들기
+docker commit alpine zero12a/alpine_openjdk8:20190329
+
+#이미지 올리기
+docker upsh zeor12a/alpine_openjdk8
+
