@@ -21,11 +21,17 @@ docker exec -it alpine sh
 wget https://github.com/find-sec-bugs/find-sec-bugs/releases/download/version-1.9.0/findsecbugs-cli-1.9.0.zip
 unzip *.zip
 
-#이미지 만들기
+#이미지 만들기1
 docker commit alpine zero12a/alpine_openjdk8:20190329
 
-#이미지 올리기
-docker upsh zeor12a/alpine_openjdk8
+#이미지 올리기2
+docker push zeor12a/alpine_openjdk8
+
+#이미지 만들기1
+docker commit alpine zero12a/alpine_aws_enc:20190403
+
+#이미지 올리기2
+docker push zero12a/alpine_aws_enc
 
 
 #############################
@@ -84,14 +90,14 @@ aws console - kms에서 "고객 관리형 키" 메뉴로 이동해서 키 생성
 
 #암호화
 aws-encryption-cli --encrypt --input plain.txt \
-                     --master-keys key=arn:aws:kms:ap-northeast-2:776092519253:key/dabd9d90-b50c-45d9-bea5-2f33c20f558b \
+                     --master-keys key=arn:aws:kms:ap-northeast-2:~~ \
                      --encryption-context purpose=test \
                      --metadata-output ~/metadata \
                      --output plain.enc
 
 #암호화 (키 필요)
 aws-encryption-cli --encrypt --input plain.txt \
-                     --master-keys key=arn:aws:kms:ap-northeast-2:776092519253:key/dabd9d90-b50c-45d9-bea5-2f33c20f558b \
+                     --master-keys key=arn:aws:kms:ap-northeast-2:~~ \
                      --encryption-context purpose=test \
                      --metadata-output ~/metadata \
                      --output plain.enc
