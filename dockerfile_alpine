@@ -128,8 +128,8 @@ apk add groff
 
 #사용자 인증
 aws configure
-AKIA3JMVYBNKRDR26Q4H 
-IPYxqUst6Awa19F0mXXfOWU7z0jNimbuLp/LkGab
+ID 
+KEY
 ap-northeast-2
 json
 
