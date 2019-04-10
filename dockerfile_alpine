@@ -135,7 +135,7 @@ apk add groff
 #사용자 인증
 aws configure
 ID 
-KEY
+KEY 
 ap-northeast-2
 json
 
