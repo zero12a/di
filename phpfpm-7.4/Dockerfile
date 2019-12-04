@@ -1,14 +1,6 @@
-FROM php:7.2-fpm
-RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libpng-dev \
-    && docker-php-ext-install -j$(nproc) iconv \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd
-
-# docker build -t speedphp73cg .
-# docker run -i -t -p 9000:9000 --name phpfpm73 speedphp73cg
+# docker build -t msacgphpfpm .
+# (포그라운드 실행) docker run -i -t -p 9100:9000 --name cgphpfpm msacgphpfpm
+# (백그라운드 실행) docker run -i -t -d -p 9100:9000 --name cgphpfpm msacgphpfpm
 
 # step 1
 FROM php:7.3-fpm
@@ -16,7 +8,10 @@ FROM php:7.3-fpm
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl vim wget
+RUN apt-get install -y curl unzip
+
+# Install debug tool
+RUN apt-get install -y vim wget telnet procps
 
 # step 3
 RUN curl -sS https://getcomposer.org/installer | php  
@@ -28,8 +23,30 @@ RUN docker-php-ext-install zip
 
 # step 5
 # RUN cd /var/www/html
-RUN wget https://raw.githubusercontent.com/zero12a/cg/master/cg_test.php
-RUN cp cg_test.php /var/www/html/
+RUN mkdir /data
+RUN mkdir /data/www
+WORKDIR /data/www
+RUN wget https://github.com/zero12a/cg/archive/master.zip
+RUN unzip master.zip
+RUN mv cg-master/ c.g/
+
+# install download lib
+RUN mkdir /data/www/lib
+RUN mkdir /data/www/lib/php
+WORKDIR /data/www/lib/php
+RUN composer require monolog/monolog
+RUN composer require predis/predis
+RUN composer require aws/aws-sdk-php
+RUN composer require ezyang/htmlpurifier
+RUN composer require phpoffice/phpexcel
+
+# install download custom lib
+WORKDIR /data/www/lib/php
+RUN wget https://github.com/zero12a/cg/raw/master/libcustom/PHP-SQL-Parser.zip
+RUN unzip PHP-SQL-Parser.zip
+
+# test page
+# RUN cp cg_test.php /var/www/html/
 
 # step 6
 EXPOSE 9000
