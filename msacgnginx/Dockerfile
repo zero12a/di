@@ -24,9 +24,19 @@ RUN mv entrykit /usr/local/bin
 RUN entrykit --symlink
 
 # conf copy
-WORKDIR /data
-RUN wget 
-COPY nginx.conf /etc/nginx/nginx.conf
+WORKDIR /etc/nginx/
+RUN rm /etc/nginx/nginx.conf
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacgnginx/nginx.conf.tmpl
+
+# env define
+ENV FASTCGI_PASS 172.17.0.1:9100
+
+# conf make conf
+ENTRYPOINT [ \
+    "render", \
+        "/etc/nginx/nginx.conf", \
+        "--" \
+]
 
 RUN chown -R www-data:www-data /var/lib/nginx
 

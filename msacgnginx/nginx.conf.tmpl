@@ -65,7 +65,7 @@ http {
         location ~ \.php$ {
             root           /data/www;
 		
-            fastcgi_pass   {{ var "FASTCGI_PASS" | default "172.17.0.1:9100" }} ;
+            fastcgi_pass {{ var "FASTCGI_PASS" | default "127.0.0.1:9000" }} ;
             fastcgi_index  index.php;
  	        fastcgi_read_timeout 300;
             fastcgi_param  SCRIPT_FILENAME  /$document_root$fastcgi_script_name;
