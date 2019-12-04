@@ -45,6 +45,10 @@ WORKDIR /data/www/lib/php
 RUN wget https://github.com/zero12a/cg/raw/master/libcustom/PHP-SQL-Parser.zip
 RUN unzip PHP-SQL-Parser.zip
 
+# make log folder
+RUN mkdir /data/www/c.g/log
+RUN chmod 777 /data/www/c.g/log
+
 # test page
 # RUN cp cg_test.php /var/www/html/
 
