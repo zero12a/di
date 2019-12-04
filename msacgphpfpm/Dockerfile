@@ -49,6 +49,27 @@ RUN unzip PHP-SQL-Parser.zip
 RUN mkdir /data/www/c.g/log
 RUN chmod 777 /data/www/c.g/log
 
+
+# 엔트리킷 환경변수템플릿
+WORKDIR /data
+RUN wget https://github.com/progrium/entrykit/releases/download/v0.4.0/entrykit_0.4.0_Linux_x86_64.tgz
+RUN tar -xvzf entrykit_0.4.0_Linux_x86_64.tgz
+RUN rm entrykit_0.4.0_Linux_x86_64.tgz
+RUN mv entrykit /usr/local/bin
+RUN entrykit --symlink
+
+# env define
+ENV REDIS_HOST 172.17.0.1
+ENV REDIS_PORT 1234;
+
+# conf make conf
+ENTRYPOINT [ \
+    "render", \
+        "/data/www/c.g/incConfig.php", \
+        "--" \
+]
+
+
 # test page
 # RUN cp cg_test.php /var/www/html/
 
