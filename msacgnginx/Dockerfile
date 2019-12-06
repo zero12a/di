@@ -66,6 +66,8 @@ RUN wget https://raw.githubusercontent.com/ValYouW/jqPropertyGrid/master/jqPrope
 RUN wget https://raw.githubusercontent.com/ValYouW/jqPropertyGrid/master/jqPropertyGrid.css
 # 100. moment.min.js
 RUN wget https://momentjs.com/downloads/moment.min.js
+# 110. json2.min.js
+RUN wget https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js
 
 
 # 엔트리킷 환경변수템플릿
