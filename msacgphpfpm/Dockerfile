@@ -59,8 +59,10 @@ RUN mv entrykit /usr/local/bin
 RUN entrykit --symlink
 
 # env define
+ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/predis/predis/autoload.php"
 ENV REDIS_HOST 172.17.0.1
-ENV REDIS_PORT 1234;
+ENV REDIS_PORT 1234
+ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # conf make conf
 ENTRYPOINT [ \
