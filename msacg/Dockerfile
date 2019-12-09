@@ -67,6 +67,7 @@ RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/www.conf.tmpl
 # down entrypoint.sh
 WORKDIR /
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/entrypoint.sh
+RUN ["chmod", "+x", "/entrypoint.sh"]
 
 # install cron
 # cron add
@@ -91,6 +92,9 @@ ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
+# port open
+EXPOSE 80
+
 # conf make conf
 ENTRYPOINT [ \
     "render", \
@@ -102,7 +106,7 @@ ENTRYPOINT [ \
     "render", \
         "/etc/nginx/nginx.conf", \
         "--", \
-    "/entrypoint.sh"
+    "/entrypoint.sh" \
 ]
 
 
@@ -111,6 +115,6 @@ ENTRYPOINT [ \
 
 
 # step 6
-EXPOSE 80
+
 # CMD ["php-fpm"]
 
