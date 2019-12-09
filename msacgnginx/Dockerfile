@@ -1,6 +1,7 @@
 # docker build -t msacgnginx .
 # (포그라운드 실행) docker run -i -t -p 8090:80 --name cgnginx msacgnginx
 # (백그라운드 실행) docker run -i -t -d -p 8090:80 --name cgnginx msacgnginx
+# nginx config 수정시 재시작 : nginx -s reload
 
 FROM ubuntu:latest
 

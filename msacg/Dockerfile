@@ -1,7 +1,7 @@
 ## debian linux 10
-# docker build -t msacgphpfpm .
-# (포그라운드 실행) docker run -i -t -p 9100:9000 --name cgphpfpm msacgphpfpm
-# (백그라운드 실행) docker run -i -t -d -p 9100:9000 --name cgphpfpm msacgphpfpm
+# docker build -t msacg .
+# (포그라운드 실행) docker run -i -t -p 8090:80 --name cg msacg
+# (백그라운드 실행) docker run -i -t -d -p 8090:80 --name cg msacg
 
 # step 1
 FROM php:7.3-fpm
@@ -9,7 +9,7 @@ FROM php:7.3-fpm
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip
+RUN apt-get install -y curl unzip nginx
 
 # Install debug tool
 RUN apt-get install -y vim wget telnet procps
@@ -50,6 +50,14 @@ RUN unzip PHP-SQL-Parser.zip
 RUN mkdir /data/www/c.g/log
 RUN chmod 777 /data/www/c.g/log
 
+
+# nginx
+# conf copy
+WORKDIR /etc/nginx/
+RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.default
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/nginx.conf.tmpl
+
+
 # install cron
 # cron add
 
@@ -61,9 +69,15 @@ RUN rm entrykit_0.4.0_Linux_x86_64.tgz
 RUN mv entrykit /usr/local/bin
 RUN entrykit --symlink
 
-# env define
+
+### env define
+# nginx
+ENV FASTCGI_PASS "unix:/var/run/php-fpm.sock"
+# php fpm
+ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
+# php apps
 ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/predis/predis/autoload.php"
-ENV REDIS_HOST 172.17.0.1
+ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
@@ -71,7 +85,10 @@ ENV REDIS_CONFIG_ID "CONFIG_CG"
 ENTRYPOINT [ \
     "render", \
         "/data/www/c.g/incConfig.php", \
-        "--" \
+        "--", \
+    "render", \
+        "/etc/nginx.conf", \
+        "--" \        
 ]
 
 
