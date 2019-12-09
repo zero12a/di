@@ -11,7 +11,7 @@ RUN mkdir /data/www
 
 # Install Nginx.
 RUN apt-get update
-RUN apt-get install -y nginx unzip
+RUN apt-get install -y nginx unzip curl
 
 # Install debug tool
 RUN apt-get install -y vim wget telnet
@@ -30,7 +30,7 @@ RUN mv codemirror*/ codemirror/
 RUN wget https://github.com/twbs/bootstrap/releases/download/v4.4.1/bootstrap-4.4.1-dist.zip
 RUN unzip bootstrap-4.4.1-dist.zip
 RUN rm bootstrap-4.4.1-dist.zip
-RUN mv mv bootstrap-4.4.1-dist/ bootstrap4/
+RUN mv bootstrap-4.4.1-dist/ bootstrap4/
 # 30. bootstrap4 jquery3 slim
 RUN wget https://code.jquery.com/jquery-3.4.1.min.js
 RUN mv jquery-3.4.1.min.js bootstrap4/
