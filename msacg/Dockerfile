@@ -62,6 +62,7 @@ RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/nginx.conf.tm
 # conf copy
 WORKDIR /usr/local/etc/php-fpm.d/
 RUN mv www.conf www.conf.default
+RUN mv zz-docker.conf zz-docker.conf.default
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/www.conf.tmpl
 
 # down entrypoint.sh
