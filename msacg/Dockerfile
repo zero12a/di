@@ -9,7 +9,7 @@ FROM php:7.3-fpm
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip nginx
+RUN apt-get install -y curl unzip nginx cron
 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim wget telnet procps net-tools
