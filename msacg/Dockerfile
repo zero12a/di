@@ -30,6 +30,7 @@ WORKDIR /data/www
 RUN wget https://github.com/zero12a/cg/archive/master.zip
 RUN unzip master.zip
 RUN mv cg-master/ c.g/
+RUN rm master.zip
 
 # install download lib
 RUN mkdir /data/www/lib
@@ -54,8 +55,14 @@ RUN chmod 777 /data/www/c.g/log
 # nginx
 # conf copy
 WORKDIR /etc/nginx/
-RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.default
+RUN mv nginx.conf nginx.conf.default
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/nginx.conf.tmpl
+
+# php-fpm www.conf
+# conf copy
+WORKDIR /usr/local/etc/php-fpm.d/
+RUN mv www.conf www.conf.default
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/www.conf.tmpl
 
 
 # install cron
@@ -84,10 +91,13 @@ ENV REDIS_CONFIG_ID "CONFIG_CG"
 # conf make conf
 ENTRYPOINT [ \
     "render", \
+        "/usr/local/etc/php-fpm.d/www.conf", \
+        "--", \
+    "render", \
         "/data/www/c.g/incConfig.php", \
         "--", \
     "render", \
-        "/etc/nginx.conf", \
+        "/etc/nginx/nginx.conf", \
         "--" \        
 ]
 
