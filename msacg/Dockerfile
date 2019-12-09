@@ -64,6 +64,9 @@ WORKDIR /usr/local/etc/php-fpm.d/
 RUN mv www.conf www.conf.default
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/www.conf.tmpl
 
+# down entrypoint.sh
+WORKDIR /
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/entrypoint.sh
 
 # install cron
 # cron add
@@ -99,9 +102,7 @@ ENTRYPOINT [ \
     "render", \
         "/etc/nginx/nginx.conf", \
         "--", \
-    "nginx", \
-        "", \
-        "" \
+    "/entrypoint.sh"
 ]
 
 
@@ -111,5 +112,5 @@ ENTRYPOINT [ \
 
 # step 6
 EXPOSE 80
-CMD ["php-fpm"]
+# CMD ["php-fpm"]
 
