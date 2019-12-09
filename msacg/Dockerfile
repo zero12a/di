@@ -11,8 +11,8 @@ WORKDIR /root
 RUN apt-get update            
 RUN apt-get install -y curl unzip nginx
 
-# Install debug tool
-RUN apt-get install -y vim wget telnet procps
+# Install debug tool (vi:bim, ps:procps, netstat:net-tools)
+RUN apt-get install -y vim wget telnet procps net-tools
 
 # step 3
 RUN curl -sS https://getcomposer.org/installer | php  
@@ -98,7 +98,10 @@ ENTRYPOINT [ \
         "--", \
     "render", \
         "/etc/nginx/nginx.conf", \
-        "--" \        
+        "--", \
+    "nginx", \
+        "", \
+        "" \
 ]
 
 
@@ -107,6 +110,6 @@ ENTRYPOINT [ \
 
 
 # step 6
-EXPOSE 9000
+EXPOSE 80
 CMD ["php-fpm"]
 
