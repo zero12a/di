@@ -1,9 +1,13 @@
 #!/bin/bash
 
-echo "Starting php-fpm..."
-exec php-fpm
+printf "\n\nStarting PHP daemon...\n\n"
+php-fpm --daemonize
 
-echo "Starting nginx..."
-exec nginx
+printf "Starting Nginx...\n\n"
+set -e
 
+if [[ "$1" == -* ]]; then
+    set -- nginx -g daemon off; "$@"
+fi
 
+exec "$@"
