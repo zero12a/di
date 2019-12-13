@@ -1,0 +1,1 @@
+* * * * * /data/www/l.c/predis_watcher.sh

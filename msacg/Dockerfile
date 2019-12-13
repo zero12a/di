@@ -9,10 +9,10 @@ FROM php:7.3-fpm
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip nginx cron
+RUN apt-get install -y curl unzip nginx cron wget
 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
-RUN apt-get install -y vim wget telnet procps net-tools
+RUN apt-get install -y vim telnet procps net-tools
 
 # step 3
 RUN curl -sS https://getcomposer.org/installer | php  
@@ -30,6 +30,14 @@ WORKDIR /data/www
 RUN wget https://github.com/zero12a/cg/archive/master.zip
 RUN unzip master.zip
 RUN mv cg-master/ c.g/
+RUN rm master.zip
+
+# step 6
+# common download
+WORKDIR /data/www
+RUN wget https://github.com/zero12a/common/archive/master.zip
+RUN unzip master.zip
+RUN mv common-master/ commmon/
 RUN rm master.zip
 
 # install download lib
