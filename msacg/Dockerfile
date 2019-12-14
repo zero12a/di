@@ -9,7 +9,7 @@ FROM php:7.4-fpm
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip nginx cron wget
+RUN apt-get install -y curl unzip nginx wget
 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim telnet procps net-tools
@@ -37,7 +37,7 @@ RUN rm master.zip
 WORKDIR /data/www
 RUN wget https://github.com/zero12a/common/archive/master.zip
 RUN unzip master.zip
-RUN mv common-master/ commmon/
+RUN mv common-master/ common/
 RUN rm master.zip
 
 # install download lib
@@ -56,8 +56,8 @@ RUN wget https://github.com/zero12a/cg/raw/master/libcustom/PHP-SQL-Parser.zip
 RUN unzip PHP-SQL-Parser.zip
 
 # make log folder
-RUN mkdir /data/www/c.g/log
-RUN chmod 777 /data/www/c.g/log
+RUN mkdir /data/www/log
+RUN chmod 777 /data/www/log
 
 
 # nginx
@@ -78,8 +78,6 @@ WORKDIR /
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/entrypoint.sh
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
-# install cron
-# cron add
 
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
