@@ -68,10 +68,9 @@ RUN unzip PHP-SQL-Parser.zip
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
 
-
 # php.ini 가져오기
 WORKDIR /usr/local/etc/php
-
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/php.ini
 
 # nginx
 # conf copy
