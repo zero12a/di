@@ -24,6 +24,9 @@ RUN apt-get install -y vim telnet procps net-tools
 RUN curl -sS https://getcomposer.org/installer | php  
 RUN mv composer.phar /usr/bin/composer
 
+# mysqli
+RUN docker-php-ext-install mysqli
+
 # step 4
 RUN apt-get install -y zlib1g-dev && apt-get install -y libzip-dev
 RUN docker-php-ext-install zip
@@ -64,6 +67,10 @@ RUN unzip PHP-SQL-Parser.zip
 # make log folder
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
+
+
+# php.ini 가져오기
+WORKDIR /usr/local/etc/php
 
 
 # nginx
