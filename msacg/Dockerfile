@@ -115,13 +115,3 @@ ENTRYPOINT [ \
         "--", \
     "/entrypoint.sh" \
 ]
-
-
-# test page
-# RUN cp cg_test.php /var/www/html/
-
-
-# step 6
-
-# CMD ["php-fpm"]
-
