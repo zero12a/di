@@ -71,7 +71,7 @@ RUN wget https://momentjs.com/downloads/moment.min.js
 RUN wget https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js
 
 
-# 110. dhtmlx lib
+# 110. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
 WORKDIR /data/www/lib/dhtmlxSuite
 RUN curl -u zero12a@EAMIL:PASSWORD https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip

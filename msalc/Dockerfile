@@ -53,10 +53,6 @@ RUN mkdir /data/www/lib/php
 WORKDIR /data/www/lib/php
 RUN composer require predis/predis
 
-
-
-
-
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
 RUN wget https://github.com/progrium/entrykit/releases/download/v0.4.0/entrykit_0.4.0_Linux_x86_64.tgz
