@@ -63,6 +63,7 @@ RUN composer require phpoffice/phpexcel
 WORKDIR /data/www/lib/php
 RUN wget https://github.com/zero12a/cg/raw/master/libcustom/PHP-SQL-Parser.zip
 RUN unzip PHP-SQL-Parser.zip
+RUN rm PHP-SQL-Parser.zip && rm -rf __MACOSX
 
 # make log folder
 RUN mkdir /data/www/log

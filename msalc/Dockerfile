@@ -3,6 +3,13 @@
 # (포그라운드 실행/port없음) docker run -i -t --name lc msalc
 # (백그라운드 실행/port없음) docker run -i -t -d --name lc msalc
 
+# (백그라운드 실행/내PC개발)
+ docker run -i -t -d \
+ -v /Users/zeroone/Documents/docker/common:/data/www/common \
+ -v /Users/zeroone/Documents/docker/l.c:/data/www/l.c \
+ --name lc msalc
+
+
 FROM php:7.4-cli
 
 # step 2
@@ -17,6 +24,12 @@ WORKDIR /root
 RUN pecl install redis-5.1.1 \
     && docker-php-ext-enable redis
 
+# mysqli
+RUN docker-php-ext-install mysqli
+
+# install opcache
+RUN docker-php-ext-install opcache
+
 # down lc source
 RUN mkdir /data && mkdir /data/www
 WORKDIR /data/www
@@ -24,6 +37,8 @@ RUN wget https://github.com/zero12a/lc/archive/master.zip
 RUN unzip master.zip
 RUN mv lc-master/ l.c/
 RUN rm master.zip
+
+
 
 # down common source
 WORKDIR /data/www
@@ -52,6 +67,13 @@ RUN mkdir /data/www/lib
 RUN mkdir /data/www/lib/php
 WORKDIR /data/www/lib/php
 RUN composer require predis/predis
+
+# install download custom lib
+WORKDIR /data/www/lib/php
+RUN wget https://github.com/zero12a/cg/raw/master/libcustom/PHP-SQL-Parser.zip
+RUN unzip PHP-SQL-Parser.zip
+RUN rm PHP-SQL-Parser.zip && rm -rf __MACOSX
+
 
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
