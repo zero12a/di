@@ -32,6 +32,10 @@ RUN unzip master.zip
 RUN mv common-master/ common/
 RUN rm master.zip
 
+# make log folder
+RUN mkdir /data/www/log
+RUN chmod 777 /data/www/log
+
 # cron tab add
 WORKDIR /data/www
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msalc/crontab.txt
@@ -48,6 +52,10 @@ RUN mkdir /data/www/lib
 RUN mkdir /data/www/lib/php
 WORKDIR /data/www/lib/php
 RUN composer require predis/predis
+
+
+
+
 
 # 엔트리킷 환경변수템플릿
 WORKDIR /data

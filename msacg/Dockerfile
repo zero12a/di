@@ -4,7 +4,7 @@
 # (백그라운드 실행) docker run -i -t -d -p 8090:80 --name cg msacg
 
 # step 1
-FROM php:7.3-fpm
+FROM php:7.4-fpm
 
 # step 2
 WORKDIR /root
@@ -110,7 +110,7 @@ ENTRYPOINT [ \
         "/usr/local/etc/php-fpm.d/www.conf", \
         "--", \
     "render", \
-        "/data/www/c.g/incConfig.php", \
+        "/data/www/common/include/incConfig.php", \
         "--", \
     "render", \
         "/etc/nginx/nginx.conf", \
