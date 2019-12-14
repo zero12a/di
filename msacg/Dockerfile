@@ -1,7 +1,13 @@
 ## debian linux 10
 # docker build -t msacg .
-# (포그라운드 실행) docker run -i -t -p 8090:80 --name cg msacg
-# (백그라운드 실행) docker run -i -t -d -p 8090:80 --name cg msacg
+# (포그라운드 실행/배포) docker run -i -t -p 8090:80 --name cg msacg
+# (백그라운드 실행/배포) docker run -i -t -d -p 8090:80 --name cg msacg
+
+# (백그라운드 실행/내PC개발)
+# docker run -i -t -d \
+# -v /Users/zeroone/Documents/docker/common:/data/www/common \
+# -v /Users/zeroone/Documents/docker/c.g:/data/www/c.g \
+# -p 8090:80 --name cg msacg
 
 # step 1
 FROM php:7.4-fpm

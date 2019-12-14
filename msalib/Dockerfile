@@ -1,9 +1,12 @@
-# docker build -t msalib .
+# docker build --build-arg GIT_EMAIL=id --build-arg GIT_PASSWD=pw -t msalib .
 # (포그라운드 실행) docker run -i -t -p 8070:80 --name lib msalib
 # (백그라운드 실행) docker run -i -t -d -p 8070:80 --name lib msalib
 # nginx config 수정시 재시작 : nginx -s reload
 
 FROM ubuntu:latest
+
+ARG GIT_EMAIL
+ARG GIT_PASSWD
 
 # 작업폴더 만들기
 RUN mkdir /data
@@ -74,7 +77,7 @@ RUN wget https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js
 # 110. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
 WORKDIR /data/www/lib/dhtmlxSuite
-RUN curl -u zero12a@EAMIL:PASSWORD https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
+RUN curl -u ${GIT_EMAIL}:${GIT_PASSWD} https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
 RUN unzip dhtmlx.zip
 RUN rm dhtmlx.zip
 
