@@ -1,7 +1,9 @@
 ## debian linux 10
 # docker build -t msapm .
+# docker build -t msapm:TAG .
 # (포그라운드 실행/배포) docker run -i -t -p 8060:80 --name pm msapm
 # (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name pm msapm
+# (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name pm msapm:TAG
 
 # step 1
 FROM php:7.4-fpm
@@ -93,7 +95,7 @@ ENTRYPOINT [ \
         "/etc/nginx/nginx.conf", \
         "--", \
     "render", \
-        "/data/php/p.m/config.inc.php", \
+        "/data/www/p.m/config.inc.php", \
         "--", \        
     "/entrypoint.sh" \
 ]
