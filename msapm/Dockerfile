@@ -1,7 +1,7 @@
 ## debian linux 10
 # docker build -t msapm .
-# (포그라운드 실행/배포) docker run -i -t -p 8060:80 --name cg msapm
-# (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name cg msapm
+# (포그라운드 실행/배포) docker run -i -t -p 8060:80 --name pm msapm
+# (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name pm msapm
 
 # step 1
 FROM php:7.4-fpm
@@ -34,6 +34,11 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/4.9.2/phpMyAdmin-4.9.2-all-lang
 RUN unzip phpMyAdmin-*.zip
 RUN mv phpMyAdmin-4.9.2-all-languages/ p.m/
 RUN rm phpMyAdmin-*.zip
+
+# phpmyadmin config
+WORKDIR /data/www/p.m
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msapm/config.inc.php.tmpl
+
 
 # php.ini 가져오기
 WORKDIR /usr/local/etc/php
@@ -72,6 +77,9 @@ RUN entrykit --symlink
 ENV FASTCGI_PASS "unix:/var/run/php-fpm.sock"
 # php fpm
 ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
+# phpmyadmin
+ENV SERVER_HOST "172.17.0.1"
+ENV SERVER_PORT "3306"
 
 # port open
 EXPOSE 80
@@ -84,5 +92,8 @@ ENTRYPOINT [ \
     "render", \
         "/etc/nginx/nginx.conf", \
         "--", \
+    "render", \
+        "/data/php/p.m/config.inc.php", \
+        "--", \        
     "/entrypoint.sh" \
 ]
