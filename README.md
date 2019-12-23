@@ -1,6 +1,14 @@
 # di
 docker images
 
+# index
+msacg : code generate
+msalc : logger collector
+msalib : javascript library
+msapm : phpMyAdmin 
+msaredis : redis server
+msamysql : mysql server 5.7
+
 # logstash 설치
 docker pull docker.elastic.co/logstash/logstash:7.4.2
 

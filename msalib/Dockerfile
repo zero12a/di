@@ -10,6 +10,7 @@
 
 FROM ubuntu:latest
 
+# ARG는 빌드시에만 사용가능하고, ENV는 실제싱행 RUN/CMD에 사용가능
 # ARG GIT_EMAIL
 # ARG GIT_PASSWD
 ARG GIT_TOKEN
