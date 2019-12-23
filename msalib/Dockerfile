@@ -1,7 +1,10 @@
-# docker build --build-arg GIT_EMAIL=id --build-arg GIT_PASSWD=pw -t msalib .
+# OLD : docker build --build-arg GIT_EMAIL=id --build-arg GIT_PASSWD=pw -t msalib .
+# NEW : docker build --build-arg GIT_TOKEN=AAAAAAAA -t msalib .
 # (포그라운드 실행) docker run -i -t -p 8070:80 --name lib msalib
 # (백그라운드 실행) docker run -i -t -d -p 8070:80 --name lib msalib
 # nginx config 수정시 재시작 : nginx -s reload
+
+# make github token : github > setting > developer setting > Personal access token > Generate new token
 
 FROM ubuntu:latest
 
@@ -77,7 +80,11 @@ RUN wget https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js
 # 110. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
 WORKDIR /data/www/lib/dhtmlxSuite
-RUN curl -u ${GIT_EMAIL}:${GIT_PASSWD} https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
+
+# NEW github Auth
+RUN curl -H "Authorization: OAuth ${GIT_TOKEN}" https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
+
+# OLD github Auth : RUN curl -u ${GIT_EMAIL}:${GIT_PASSWD} https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
 RUN unzip dhtmlx.zip
 RUN rm dhtmlx.zip
 
