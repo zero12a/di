@@ -5,11 +5,14 @@
 # nginx config 수정시 재시작 : nginx -s reload
 
 # make github token : github > setting > developer setting > Personal access token > Generate new token
+# 권한 : repo 및 read:packages 권한 주기
+# 도움말 : https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/
 
 FROM ubuntu:latest
 
-ARG GIT_EMAIL
-ARG GIT_PASSWD
+# ARG GIT_EMAIL
+# ARG GIT_PASSWD
+ARG GIT_TOKEN
 
 # 작업폴더 만들기
 RUN mkdir /data
@@ -82,7 +85,8 @@ RUN mkdir /data/www/lib/dhtmlxSuite
 WORKDIR /data/www/lib/dhtmlxSuite
 
 # NEW github Auth
-RUN curl -H "Authorization: OAuth ${GIT_TOKEN}" https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
+RUN echo -H "Authorization: token ${GIT_TOKEN}" https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
+RUN curl -H "Authorization: token ${GIT_TOKEN}"  https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
 
 # OLD github Auth : RUN curl -u ${GIT_EMAIL}:${GIT_PASSWD} https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
 RUN unzip dhtmlx.zip
