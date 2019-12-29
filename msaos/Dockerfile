@@ -4,6 +4,7 @@
 # (포그라운드 실행/port없음) docker run -i -t -p 8082:8080 -p 8081:8081 --name os msaos
 # (백그라운드 실행/port없음) docker run -i -t -d -p 8082:8080 -p 8081:8081 --name os msaos
 
+
 # (백그라운드 실행/내PC개발)
 # docker run -i -t -d \
 # -v /Users/zeroone/Documents/docker/common:/data/www/common \
@@ -72,9 +73,12 @@ RUN entrykit --symlink
 
 # entry
 # conf make conf
-ENTRYPOINT [ \
-    "/entrypoint.sh", \
-]
 
-# 단일 명령일때
-# CMD cron -f
+# old
+#ENTRYPOINT [ \
+#    "/entrypoint.sh", \
+#]
+
+# new
+ENTRYPOINT ["/usr/local/bin/php","-S","0.0.0.0:8080"]
+CMD ["-t","/data/www/oauth2-demo-php/web"]

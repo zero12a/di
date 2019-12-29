@@ -1,0 +1,11 @@
+{
+    "client_id": "demoapp",
+    "client_secret": "demopass",
+    "token_route": "http://localhost:8081/lockdin/token",
+    "authorize_route": "http://localhost:8081/lockdin/authorize",
+    "resource_route": "http://localhost:8081/lockdin/access",
+    "resource_params": {},
+    "user_credentials": ["demouser", "testpass"],
+    "http_options": { "exceptions": false }
+  }
+  

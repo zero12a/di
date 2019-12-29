@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <script type="text/javascript" src="/js/simpletabs_1.3.packed.js"></script>
+
+        <link rel="stylesheet" href="/css/demo.css">
+        <link rel="stylesheet" href="/css/shared.css">
+        <link rel="stylesheet" href="/css/simpletabs.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+        <![endif]-->
+
+                <a href="https://github.com/bshaffer/oauth2-demo-php"><img style="position: absolute; top: 0; right: 0; border: 0;z-index:100000" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+        <div id="container">
+            <header role="banner">
+                            <hgroup>
+                  <h1>Demo App</h1>
+                  <h2>Demo a Better You</h2>
+                                    </hgroup>
+              <nav class="primary">
+                  <ul class="menu">
+                      <li class="current">
+                          <a href="/">Home</a>
+                      </li>
+                      <li>
+                          <a href="http://brentertainment.com">Blog</a>
+                      </li>
+                      <li>
+                          <a href="http://morehazards.com">Music</a>
+                      </li>
+                      <li>
+                          <a href="http://github.com/bshaffer">Github</a>
+                      </li>
+                      <li>
+                          <a href="http://twitter.com/bshaffer">Twitter</a>
+                      </li>
+                  </ul>
+              </nav>
+                          </header>
+
+            <article class="home" role="main">
+                <div  role="main">
+                      <h3>OAuth2.0 Demo Application</h3>
+    <p>
+        Welcome to the OAuth2.0 Demo Application!  This is an application that demos some of the basic OAuth2.0 Workflows.
+    </p>
+
+    <div class="simpleTabs">
+        <ul class="simpleTabsNavigation">
+            <li><a href="#authcode">Authorization Code</a></li>
+            <li><a href="#implicit">Implicit</a></li>
+            <li><a href="#usercred">User Credentials</a></li>
+            <li><a href="#refresh">Refresh Token</a></li>
+            <li><a href="#openid">OpenID Connect</a></li>
+        </ul>
+        <div class="simpleTabsContent"><p>
+    The <code>Authorization Code</code> grant type is the most common workflow for OAuth2.0.  Clicking the "Authorize" button below will send you to an OAuth2.0 Server to authorize:
+</p>
+<a class="button" href="http://localhost:8080/lockdin/authorize?response_type=code&client_id=demoapp&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fclient%2Freceive_authcode&state=6df37185e6147914b580605bbe9031ff">Authorize</a></div>
+        <div class="simpleTabsContent"><p>
+    The <code>Implicit</code> grant type is very similar to the <code>Authorization Code</code> grant type,
+    except that the <code>Access Token</code> is returned as part of the URL fragment instead of an API
+    request to the OAuth2.0 Server. Clicking the "Authorize" button below will send you to an
+    OAuth2.0 Server to authorize:
+</p>
+<a class="button" href="http://localhost:8080/lockdin/authorize?response_type=token&client_id=demoapp&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fclient%2Freceive_implicit_token&state=6df37185e6147914b580605bbe9031ff">Authorize</a>
+</div>
+        <div class="simpleTabsContent"><p>
+    The <code>User Credentials</code> grant type is a Two-Legged approach that allows you to
+    obtain an <code>Access Token</code> in exchange for a set of end-user credentials.
+</p>
+
+<p>
+    The OAuth2 Server supports the following user credentials:
+</p>
+
+<ul>
+    <li><strong>Username</strong>: demouser</li>
+    <li><strong>Password</strong>: testpass</li>
+</ul>
+
+<p>Make the following cURL request to receive an access token:</p>
+
+<pre><code>  $ curl -v "http://localhost:8080/lockdin/token" \
+    -d "grant_type=password&client_id=demoapp&client_secret=demopass&username=demouser&password=testpass"
+</code></pre>
+
+<p>...or just click below to let us do it for you<p>
+
+<a class="button" href="http://localhost:8080/client/request_token/user_credentials?username=demouser&password=testpass">Get Access Token</a>
+</div>
+        <div class="simpleTabsContent"><p>
+    The <code>Refresh Token</code> grant type is typically used in tandem with the <code>Authorization Code</code> grant type. Click the "Authorize" button to receive an authorization code:
+</p>
+<a class="button" href="http://localhost:8080/lockdin/authorize?response_type=code&client_id=demoapp&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fclient%2Freceive_authcode%3Fshow_refresh_token%3D1&state=6df37185e6147914b580605bbe9031ff">Authorize</a></div>
+        <div class="simpleTabsContent"><p>
+    <strong>OpenID Connect</strong> is a special way of obtaining information about a user. Click the button below to go through the OpenID connect flow. It is initiated with an authorize request (just like in <code>Authorization Code</code>) but with the <code>scope</code> querystring parameter including the value <code>"openid"</code>.
+</p>
+
+
+<p>
+    <a class="button" href="http://localhost:8080/lockdin/authorize?response_type=code&client_id=demoapp&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fclient%2Freceive_authcode&scope=openid&state=6df37185e6147914b580605bbe9031ff&nonce=316981314">Authorization Code</a>
+    <div class="help">
+        Uses the Authorization Code Grant and adds the "openid" scope parameter. An ID Token comes back with the Access Token
+    </div>
+</p>
+
+<p>
+    <a class="button" href="http://localhost:8080/lockdin/authorize?response_type=code%20id_token&client_id=demoapp&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fclient%2Freceive_authcode&scope=openid&state=6df37185e6147914b580605bbe9031ff&nonce=529433078">Authorization Code + ID Token</a>
+    <div class="help">
+        Same as above, but with the "code id_token" response type. The ID Token comes back with the Authorization Code.
+    </div>
+</p>
+
+<p>
+    <a class="button" href="http://localhost:8080/lockdin/authorize?response_type=token%20id_token&client_id=demoapp&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fclient%2Freceive_implicit_token&scope=openid&state=6df37185e6147914b580605bbe9031ff&nonce=699969429">Implicit</a>
+    <div class="help">
+        Same as above, but with the "token id_token" response type. Similar to the <code>implicit</code> grant type, but the Access Token also returns with an ID Token.
+    </div>
+</p></div>
+    </div>
+                </div>
+            </article>
+        </div>
+    </body>
+</html>
