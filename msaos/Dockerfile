@@ -47,9 +47,10 @@ RUN mv composer.phar /usr/bin/composer
 
 
 # down demo source N oauth2-server-php lib install
-WORKDIR /data/www
+RUN mkdir /data/www/o.s
+WORKDIR /data/www/o.s
 RUN git clone git://github.com/bshaffer/oauth2-demo-php.git
-WORKDIR /data/www/oauth2-demo-php
+WORKDIR /data/www/o.s/oauth2-demo-php
 RUN composer install
 
 
@@ -75,10 +76,10 @@ RUN entrykit --symlink
 # conf make conf
 
 # old
-#ENTRYPOINT [ \
-#    "/entrypoint.sh", \
-#]
+ENTRYPOINT [ \
+    "/entrypoint.sh", \
+]
 
 # new
-ENTRYPOINT ["/usr/local/bin/php","-S","0.0.0.0:8080"]
-CMD ["-t","/data/www/oauth2-demo-php/web"]
+# ENTRYPOINT ["/usr/local/bin/php","-S","0.0.0.0:8080"]
+# CMD ["-t","/data/www/oauth2-demo-php/web"]
