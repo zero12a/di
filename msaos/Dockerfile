@@ -6,10 +6,11 @@
 
 
 # (백그라운드 실행/내PC개발)
-# docker run -i -t -d \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
-# --name os msaos
+docker run -i -t -d \
+-p 8080:8080 -p 8081:8081 \
+-v /Users/zeroone/Documents/docker/common:/data/www/common \
+-v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
+--name os msaos:191231
 
 
 FROM php:7.4-cli
@@ -35,6 +36,9 @@ RUN docker-php-ext-install mysqli
 
 # install opcache
 RUN docker-php-ext-install opcache
+
+# install pdo
+RUN docker-php-ext-install pdo pdo_mysql zip
 
 # make log folder
 RUN mkdir /data/www/log
@@ -76,10 +80,10 @@ RUN entrykit --symlink
 # conf make conf
 
 # old
-ENTRYPOINT [ \
-    "/entrypoint.sh", \
-]
+#ENTRYPOINT [ \
+#    "/entrypoint.sh", \
+#]
 
 # new
-# ENTRYPOINT ["/usr/local/bin/php","-S","0.0.0.0:8080"]
-# CMD ["-t","/data/www/oauth2-demo-php/web"]
+ENTRYPOINT ["/usr/local/bin/php","-S","0.0.0.0:8080"]
+CMD ["-t","/data/www/o.s/oauth2-demo-php/web"]

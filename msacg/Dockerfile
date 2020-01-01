@@ -13,6 +13,9 @@
 FROM php:7.4-fpm
 
 # step 2
+ARG APCU_VERSION=5.1.18
+
+# step 2
 WORKDIR /root
 RUN apt-get update            
 RUN apt-get install -y curl unzip nginx wget
@@ -100,6 +103,8 @@ RUN rm entrykit_0.4.0_Linux_x86_64.tgz
 RUN mv entrykit /usr/local/bin
 RUN entrykit --symlink
 
+# local mem cache apc
+RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 
 ### env define
 # nginx
