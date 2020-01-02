@@ -1,7 +1,9 @@
 ## debian linux 10
 # docker build -t msacm .
+# (캐쉬 미사용) docker build --no-cache -t msacm .
+
 # (포그라운드 실행/port없음) docker run -i -t --name cm msacm
-# (백그라운드 실행/port없음) docker run -i -t -d --name lc msacm
+# (백그라운드 실행/port없음) docker run -i -t -d --name cm msacm
 
 # (백그라운드 실행/내PC개발)
 # docker run -i -t -d \
@@ -33,41 +35,21 @@ RUN docker-php-ext-install mysqli
 # install opcache
 RUN docker-php-ext-install opcache
 
-# down lc source
-RUN mkdir /data && mkdir /data/www
-WORKDIR /data/www
-RUN wget https://github.com/zero12a/cm/archive/master.zip
-RUN unzip master.zip
-RUN mv cm-master/ c.m/
-RUN rm master.zip
-
-
-
-# down common source
-WORKDIR /data/www
-RUN wget https://github.com/zero12a/common/archive/master.zip
-RUN unzip master.zip
-RUN mv common-master/ common/
-RUN rm master.zip
-
+##############################################
+##  make folder permision
+##############################################
 # make log folder
+RUN mkdir /data && mkdir /data/www
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
-
-# cron tab add
-WORKDIR /data/www
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msalc/crontab.txt
-RUN cp /data/www/crontab.txt /etc/cron.d/crontab-watcher
-RUN chmod 0644 /etc/cron.d/crontab-watcher
-RUN crontab /etc/cron.d/crontab-watcher
+RUN mkdir /data/www/lib && mkdir /data/www/lib/php
 
 # install composer
 RUN curl -sS https://getcomposer.org/installer | php  
 RUN mv composer.phar /usr/bin/composer
 
 # install lib
-RUN mkdir /data/www/lib
-RUN mkdir /data/www/lib/php
+
 WORKDIR /data/www/lib/php
 RUN composer require predis/predis
 
@@ -93,6 +75,34 @@ RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 # time  set seoul
 RUN rm -f /etc/localtime
 RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+##############################################
+## application
+##############################################
+# down cm source
+WORKDIR /data/www
+RUN wget -O master.zip https://github.com/zero12a/cm/archive/master.zip?2
+RUN unzip master.zip
+RUN mv cm-master/ c.m/
+RUN rm master.zip
+
+# down common source
+WORKDIR /data/www
+RUN wget -O master.zip https://github.com/zero12a/common/archive/master.zip?2
+RUN unzip master.zip
+RUN mv common-master/ common/
+RUN rm master.zip
+
+# cron tab add
+WORKDIR /data/www
+RUN wget -O crontab.txt https://raw.githubusercontent.com/zero12a/di/master/msacm/crontab.txt?2
+RUN cp /data/www/crontab.txt /etc/cron.d/crontab-watcher
+RUN chmod 0644 /etc/cron.d/crontab-watcher
+RUN crontab /etc/cron.d/crontab-watcher
+
+
+
+
 
 
 ### env define
