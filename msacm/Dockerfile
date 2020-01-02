@@ -6,10 +6,10 @@
 # (백그라운드 실행/port없음) docker run -i -t -d --name cm msacm
 
 # (백그라운드 실행/내PC개발)
-# docker run -i -t -d \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/c.m:/data/www/c.m \
-# --name cm msacm
+ docker run -i -t -d \
+ -v /Users/zeroone/Documents/docker/common:/data/www/common \
+ -v /Users/zeroone/Documents/docker/c.m:/data/www/c.m \
+ --name cm msacm
 
 
 FROM php:7.4-cli
@@ -51,7 +51,9 @@ RUN mv composer.phar /usr/bin/composer
 # install lib
 
 WORKDIR /data/www/lib/php
+RUN composer require monolog/monolog
 RUN composer require predis/predis
+RUN composer require aws/aws-sdk-php
 
 # install download custom lib
 WORKDIR /data/www/lib/php
@@ -71,6 +73,9 @@ RUN entrykit --symlink
 # local mem cache apcu
 RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 
+# php.ini 가져오기
+WORKDIR /usr/local/etc/php
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacm/php.ini
 
 # time  set seoul
 RUN rm -f /etc/localtime
@@ -84,6 +89,7 @@ WORKDIR /data/www
 RUN wget -O master.zip https://github.com/zero12a/cm/archive/master.zip?2
 RUN unzip master.zip
 RUN mv cm-master/ c.m/
+RUN chmod 777 /data/www/c.m/*.sh
 RUN rm master.zip
 
 # down common source
