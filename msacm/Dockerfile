@@ -1,13 +1,13 @@
 ## debian linux 10
-# docker build -t msalc .
-# (포그라운드 실행/port없음) docker run -i -t --name lc msalc
-# (백그라운드 실행/port없음) docker run -i -t -d --name lc msalc
+# docker build -t msacm .
+# (포그라운드 실행/port없음) docker run -i -t --name cm msacm
+# (백그라운드 실행/port없음) docker run -i -t -d --name lc msacm
 
 # (백그라운드 실행/내PC개발)
- docker run -i -t -d \
- -v /Users/zeroone/Documents/docker/common:/data/www/common \
- -v /Users/zeroone/Documents/docker/l.c:/data/www/l.c \
- --name lc msalc
+# docker run -i -t -d \
+# -v /Users/zeroone/Documents/docker/common:/data/www/common \
+# -v /Users/zeroone/Documents/docker/c.m:/data/www/c.m \
+# --name cm msacm
 
 
 FROM php:7.4-cli
@@ -36,9 +36,9 @@ RUN docker-php-ext-install opcache
 # down lc source
 RUN mkdir /data && mkdir /data/www
 WORKDIR /data/www
-RUN wget https://github.com/zero12a/lc/archive/master.zip
+RUN wget https://github.com/zero12a/cm/archive/master.zip
 RUN unzip master.zip
-RUN mv lc-master/ l.c/
+RUN mv cm-master/ c.m/
 RUN rm master.zip
 
 

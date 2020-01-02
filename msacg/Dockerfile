@@ -106,6 +106,11 @@ RUN entrykit --symlink
 # local mem cache apc
 RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 
+# time  set seoul
+RUN rm -f /etc/localtime
+RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+
 ### env define
 # nginx
 ENV FASTCGI_PASS "unix:/var/run/php-fpm.sock"
