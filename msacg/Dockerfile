@@ -15,6 +15,10 @@ FROM php:7.4-fpm
 # step 2
 ARG APCU_VERSION=5.1.18
 
+
+##############################################
+## install os package
+##############################################
 # step 2
 WORKDIR /root
 RUN apt-get update            
@@ -34,27 +38,33 @@ RUN docker-php-ext-install mysqli
 RUN apt-get install -y zlib1g-dev && apt-get install -y libzip-dev
 RUN docker-php-ext-install zip
 
-# step 5
-# RUN cd /var/www/html
+##############################################
+## config os
+##############################################
+# time  set seoul
+RUN rm -f /etc/localtime
+RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+
+
+##############################################
+## make folder
+##############################################
 RUN mkdir /data
 RUN mkdir /data/www
-WORKDIR /data/www
-RUN wget https://github.com/zero12a/cg/archive/master.zip
-RUN unzip master.zip
-RUN mv cg-master/ c.g/
-RUN rm master.zip
-
-# step 6
-# common download
-WORKDIR /data/www
-RUN wget https://github.com/zero12a/common/archive/master.zip
-RUN unzip master.zip
-RUN mv common-master/ common/
-RUN rm master.zip
-
-# install download lib
 RUN mkdir /data/www/lib
 RUN mkdir /data/www/lib/php
+# make log folder
+RUN mkdir /data/www/log
+RUN chmod 777 /data/www/log
+
+
+
+##############################################
+## install apps package
+##############################################
+# install download lib
+
 WORKDIR /data/www/lib/php
 RUN composer require monolog/monolog
 RUN composer require predis/predis
@@ -68,10 +78,25 @@ RUN wget https://github.com/zero12a/cg/raw/master/libcustom/PHP-SQL-Parser.zip
 RUN unzip PHP-SQL-Parser.zip
 RUN rm PHP-SQL-Parser.zip && rm -rf __MACOSX
 
-# make log folder
-RUN mkdir /data/www/log
-RUN chmod 777 /data/www/log
 
+# 엔트리킷 환경변수템플릿
+WORKDIR /data
+RUN wget https://github.com/progrium/entrykit/releases/download/v0.4.0/entrykit_0.4.0_Linux_x86_64.tgz
+RUN tar -xvzf entrykit_0.4.0_Linux_x86_64.tgz
+RUN rm entrykit_0.4.0_Linux_x86_64.tgz
+RUN mv entrykit /usr/local/bin
+RUN entrykit --symlink
+
+# local mem cache apc
+RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
+
+
+
+
+
+##############################################
+## install apps config
+##############################################
 # crontab add
 WORKDIR /data/www
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/crontab.txt
@@ -102,22 +127,33 @@ RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/entrypoint.sh
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
-# 엔트리킷 환경변수템플릿
-WORKDIR /data
-RUN wget https://github.com/progrium/entrykit/releases/download/v0.4.0/entrykit_0.4.0_Linux_x86_64.tgz
-RUN tar -xvzf entrykit_0.4.0_Linux_x86_64.tgz
-RUN rm entrykit_0.4.0_Linux_x86_64.tgz
-RUN mv entrykit /usr/local/bin
-RUN entrykit --symlink
-
-# local mem cache apc
-RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
-
-# time  set seoul
-RUN rm -f /etc/localtime
-RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
 
+##############################################
+## application
+##############################################
+# step 5
+# RUN cd /var/www/html
+
+WORKDIR /data/www
+RUN wget https://github.com/zero12a/cg/archive/master.zip
+RUN unzip master.zip
+RUN mv cg-master/ c.g/
+RUN rm master.zip
+
+# step 6
+# common download
+WORKDIR /data/www
+RUN wget https://github.com/zero12a/common/archive/master.zip
+RUN unzip master.zip
+RUN mv common-master/ common/
+RUN rm master.zip
+
+
+
+##############################################
+## application env
+##############################################
 ### env define
 # nginx
 ENV FASTCGI_PASS "unix:/var/run/php-fpm.sock"
