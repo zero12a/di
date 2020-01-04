@@ -18,7 +18,7 @@ ARG APCU_VERSION=5.1.18
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip nginx wget
+RUN apt-get install -y curl unzip nginx wget cron
 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim telnet procps net-tools
@@ -71,6 +71,13 @@ RUN rm PHP-SQL-Parser.zip && rm -rf __MACOSX
 # make log folder
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
+
+# crontab add
+WORKDIR /data/www
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msacg/crontab.txt
+RUN cp /data/www/crontab.txt /etc/cron.d/crontab-watcher
+RUN chmod 0644 /etc/cron.d/crontab-watcher
+RUN crontab /etc/cron.d/crontab-watcher
 
 # php.ini 가져오기
 WORKDIR /usr/local/etc/php
