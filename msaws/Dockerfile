@@ -4,10 +4,10 @@
 # (백그라운드 실행/port없음) docker run -i -t -d -p 8050:80 --name ws msaws
 
 # (백그라운드 실행/내PC개발)
- docker run -i -t -d -p 8050:80 \
- -v /Users/zeroone/Documents/docker/common:/data/www/common \
- -v /Users/zeroone/Documents/docker/w.s:/data/www/w.s \
- --name ws msaws
+# docker run -i -t -d -p 8050:80 \
+# -v /Users/zeroone/Documents/docker/common:/data/www/common \
+# -v /Users/zeroone/Documents/docker/w.s:/data/www/w.s \
+# --name ws msaws
 
 ##############################################
 ## install os package
@@ -18,10 +18,11 @@ FROM php:7.4-cli
 ARG APCU_VERSION=5.1.18
 ARG REDIS_VERSION=5.1.1
 ARG SWOOLE_VERSION=4.4.14
+ARG SWOOLE_ASYNC_VERSION=4.4.14
 
 # step 2
 RUN apt-get update            
-RUN apt-get install -y curl unzip wget cron sudo
+RUN apt-get install -y curl unzip wget sudo
 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim telnet procps net-tools
@@ -55,7 +56,17 @@ RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 # swoole install
 RUN pecl install swoole-${SWOOLE_VERSION} && docker-php-ext-enable swoole
 
+# swoole-async base hiredis
 
+# swoole-async install
+RUN wget https://github.com/swoole/ext-async/archive/v${SWOOLE_ASYNC_VERSION}.tar.gz
+RUN tar -xvzf v${SWOOLE_ASYNC_VERSION}.tar.gz
+RUN cd ext-async-${SWOOLE_ASYNC_VERSION}
+RUN phpize
+RUN ./configure
+RUN make -j 4
+RUN sudo make install
+RUN docker-php-ext-enable swoole_async
 
 ##############################################
 ## config os
@@ -120,8 +131,8 @@ ENTRYPOINT [ \
     "render", \
         "/data/www/common/include/incConfig.php", \
         "--", \
-    "cron", \
-        "-f" \
+    "/usr/local/bin/php", \
+        "/data/www/w.s/index.php" \
 ]
 
 # 단일 명령일때

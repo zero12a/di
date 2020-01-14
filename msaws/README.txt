@@ -1,3 +1,13 @@
+# swoole 비동기 redis의 경우 https://github.com/swoole/ext-async 프로젝트 변경됨
+wget https://github.com/swoole/ext-async/archive/v4.4.14.tar.gz
+tar xvfz v4.4.14.tar.gz
+cd ext-async
+phpize
+./configure
+make -j 4
+sudo make install
+=> php.ini 에  ㄷㅌ swoole_aync.so 활성화필요
+
 # swoole 설치 상태 보기
 php --ri swoole
 
