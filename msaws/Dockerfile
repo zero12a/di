@@ -62,7 +62,7 @@ RUN pecl install swoole-${SWOOLE_VERSION} && docker-php-ext-enable swoole
 RUN wget https://github.com/swoole/ext-async/archive/v${SWOOLE_ASYNC_VERSION}.tar.gz
 RUN tar -xvzf v${SWOOLE_ASYNC_VERSION}.tar.gz
 RUN cd ext-async-${SWOOLE_ASYNC_VERSION}
-RUN phpize
+RUN ./phpize
 RUN ./configure
 RUN make -j 4
 RUN sudo make install
