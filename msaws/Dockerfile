@@ -1,7 +1,7 @@
 ## debian linux 10
 # docker build -t msaws .
 # (포그라운드 실행/port없음) docker run -i -t -p 8050:80 --name ws msaws
-# (백그라운드 실행/port없음) docker run -i -t -d -p 8050:80 --name ws msaws
+# (백그라운드 실행/port없음) docker run -i -t -d -p 8050:80 --name ws2 msaws
 
 # (백그라운드 실행/내PC개발)
 # docker run -i -t -d -p 8050:80 \
@@ -9,12 +9,15 @@
 # -v /Users/zeroone/Documents/docker/w.s:/data/www/w.s \
 # --name ws msaws
 
+# (php 패키지 정상설치확인) php -m | grep swoole
+
 ##############################################
 ## install os package
 ##############################################
 FROM php:7.4-cli
 
 # step 2
+ARG ENTRYKIT_VERSION=0.4.0
 ARG APCU_VERSION=5.1.18
 ARG REDIS_VERSION=5.1.1
 ARG SWOOLE_VERSION=4.4.14
@@ -44,29 +47,43 @@ RUN mv composer.phar /usr/bin/composer
 
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
-RUN wget https://github.com/progrium/entrykit/releases/download/v0.4.0/entrykit_0.4.0_Linux_x86_64.tgz
-RUN tar -xvzf entrykit_0.4.0_Linux_x86_64.tgz
-RUN rm entrykit_0.4.0_Linux_x86_64.tgz
+RUN wget https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN tar -xvzf entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN rm entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
 RUN mv entrykit /usr/local/bin
 RUN entrykit --symlink
 
 # local mem cache apcu
 RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 
-# swoole install
-RUN pecl install swoole-${SWOOLE_VERSION} && docker-php-ext-enable swoole
+# swoole install(type1 : this is swoole-async install error.)
+# RUN pecl install swoole-${SWOOLE_VERSION} && docker-php-ext-enable swoole
+
+# swoole install(type2 : this is src compile)
+WORKDIR /data
+RUN wget -O swoole-v${SWOOLE_VERSION}.tar.gz https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz
+RUN tar -xvzf swoole-v${SWOOLE_VERSION}.tar.gz
+WORKDIR /data/swoole-src-${SWOOLE_VERSION}
+RUN /usr/local/bin/phpize
+RUN ./configure
+RUN make -j 4
+RUN sudo make install
+RUN docker-php-ext-enable swoole
+#RUN rm -rf swoole-v${SWOOLE_VERSION}.tar.gz
 
 # swoole-async base hiredis
 
 # swoole-async install
-RUN wget https://github.com/swoole/ext-async/archive/v${SWOOLE_ASYNC_VERSION}.tar.gz
-RUN tar -xvzf v${SWOOLE_ASYNC_VERSION}.tar.gz
-RUN cd ext-async-${SWOOLE_ASYNC_VERSION}
-RUN ./phpize
+WORKDIR /data
+RUN wget -O ext-async-v${SWOOLE_ASYNC_VERSION}.tar.gz https://github.com/swoole/ext-async/archive/v${SWOOLE_ASYNC_VERSION}.tar.gz
+RUN tar -xvzf ext-async-v${SWOOLE_ASYNC_VERSION}.tar.gz
+WORKDIR /data/ext-async-${SWOOLE_ASYNC_VERSION}
+RUN /usr/local/bin/phpize
 RUN ./configure
 RUN make -j 4
 RUN sudo make install
 RUN docker-php-ext-enable swoole_async
+#RUN rm -rf ext-async-v${SWOOLE_ASYNC_VERSION}.tar.gz
 
 ##############################################
 ## config os
@@ -112,6 +129,14 @@ RUN unzip master.zip
 RUN mv common-master/ common/
 RUN rm master.zip
 
+##############################################
+## down apps source
+##############################################
+WORKDIR /data/www
+RUN wget https://github.com/zero12a/ws/archive/master.zip
+RUN unzip master.zip
+RUN mv ws-master/ w.s/
+RUN rm master.zip
 
 
 ##############################################
