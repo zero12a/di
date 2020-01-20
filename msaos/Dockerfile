@@ -4,10 +4,10 @@
 # (백그라운드 실행/port없음) docker run -i -t -d -p 8052:8052 --name os msaos
 
 # (백그라운드 실행/내PC개발)
-# docker run -i -t -d -p 8052:8052 \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
-# --name os msaos
+ docker run -i -t -d -p 8052:8052 \
+ -v /Users/zeroone/Documents/docker/common:/data/www/common \
+ -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
+ --name os msaos
 
 
 # (php 패키지 정상설치확인) php -m | grep swoole
@@ -158,7 +158,7 @@ ENTRYPOINT [ \
         "/data/www/common/include/incConfig.php", \
         "--", \
     "/usr/local/bin/php", \
-        "/data/www/w.s/index.php" \
+        "/data/www/o.s/oauthsvr.php" \
 ]
 
 # 단일 명령일때
