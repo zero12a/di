@@ -1,89 +1,165 @@
-# this is oauth2 server
 ## debian linux 10
 # docker build -t msaos .
-# (포그라운드 실행/port없음) docker run -i -t -p 8082:8080 -p 8081:8081 --name os msaos
-# (백그라운드 실행/port없음) docker run -i -t -d -p 8082:8080 -p 8081:8081 --name os msaos
-
+# (포그라운드 실행/port없음) docker run -i -t -p 8052:8052 --name os msaos
+# (백그라운드 실행/port없음) docker run -i -t -d -p 8052:8052 --name os msaos
 
 # (백그라운드 실행/내PC개발)
-docker run -i -t -d \
--p 8080:8080 -p 8081:8081 \
--v /Users/zeroone/Documents/docker/common:/data/www/common \
--v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
---name os msaos:191231
+# docker run -i -t -d -p 8052:8052 \
+# -v /Users/zeroone/Documents/docker/common:/data/www/common \
+# -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
+# --name os msaos
 
 
+# (php 패키지 정상설치확인) php -m | grep swoole
+
+##############################################
+## install os package
+##############################################
 FROM php:7.4-cli
 
-# step 1 make folder
-RUN mkdir /data
-RUN mkdir /data/www
+# step 2
+ARG ENTRYKIT_VERSION=0.4.0
+ARG APCU_VERSION=5.1.18
+ARG REDIS_VERSION=5.1.1
+ARG SWOOLE_VERSION=4.4.14
+ARG SWOOLE_ASYNC_VERSION=4.4.14
 
 # step 2
 RUN apt-get update            
-RUN apt-get install -y curl unzip wget git
+RUN apt-get install -y curl unzip wget sudo
 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim telnet procps net-tools
 
-# install redis xdebug
+# install redis
 WORKDIR /root
-RUN pecl install redis-5.1.1 \
+RUN pecl install redis-${REDIS_VERSION} \
     && docker-php-ext-enable redis
 
-# mysqli
+# install mysqli
 RUN docker-php-ext-install mysqli
 
 # install opcache
 RUN docker-php-ext-install opcache
 
-# install pdo
-RUN docker-php-ext-install pdo pdo_mysql zip
+# install composer
+RUN curl -sS https://getcomposer.org/installer | php  
+RUN mv composer.phar /usr/bin/composer
+
+# 엔트리킷 환경변수템플릿
+WORKDIR /data
+RUN wget https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN tar -xvzf entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN rm entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN mv entrykit /usr/local/bin
+RUN entrykit --symlink
+
+# local mem cache apcu
+RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
+
+# swoole install(type1 : this is swoole-async install error.)
+# RUN pecl install swoole-${SWOOLE_VERSION} && docker-php-ext-enable swoole
+
+# swoole install(type2 : this is src compile)
+WORKDIR /data
+RUN wget -O swoole-v${SWOOLE_VERSION}.tar.gz https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz
+RUN tar -xvzf swoole-v${SWOOLE_VERSION}.tar.gz
+WORKDIR /data/swoole-src-${SWOOLE_VERSION}
+RUN /usr/local/bin/phpize
+RUN ./configure
+RUN make -j 4
+RUN sudo make install
+RUN docker-php-ext-enable swoole
+#RUN rm -rf swoole-v${SWOOLE_VERSION}.tar.gz
+
+# swoole-async base hiredis
+
+# swoole-async install
+WORKDIR /data
+RUN wget -O ext-async-v${SWOOLE_ASYNC_VERSION}.tar.gz https://github.com/swoole/ext-async/archive/v${SWOOLE_ASYNC_VERSION}.tar.gz
+RUN tar -xvzf ext-async-v${SWOOLE_ASYNC_VERSION}.tar.gz
+WORKDIR /data/ext-async-${SWOOLE_ASYNC_VERSION}
+RUN /usr/local/bin/phpize
+RUN ./configure
+RUN make -j 4
+RUN sudo make install
+RUN docker-php-ext-enable swoole_async
+#RUN rm -rf ext-async-v${SWOOLE_ASYNC_VERSION}.tar.gz
+
+##############################################
+## config os
+##############################################
+# time  set seoul
+RUN rm -f /etc/localtime
+RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+
+##############################################
+## make folder
+##############################################
+# make www root folder
+#RUN mkdir /data //뭔지 모르겠으나 이미 이 폴더는 존재해서 폴더 생성 불필요
+RUN mkdir /data/www
 
 # make log folder
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
 
-
-# install composer
-RUN curl -sS https://getcomposer.org/installer | php  
-RUN mv composer.phar /usr/bin/composer
-
-
-# down demo source N oauth2-server-php lib install
-RUN mkdir /data/www/o.s
-WORKDIR /data/www/o.s
-RUN git clone git://github.com/bshaffer/oauth2-demo-php.git
-WORKDIR /data/www/o.s/oauth2-demo-php
-RUN composer install
+# install lib
+RUN mkdir /data/www/lib
+RUN mkdir /data/www/lib/php
 
 
-# down entrypoint.sh
-WORKDIR /
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msaos/entrypoint.sh
-RUN ["chmod", "+x", "/entrypoint.sh"]
+##############################################
+## install app-libs package
+##############################################
+WORKDIR /data/www/lib/php
+# predis library install
+RUN composer require predis/predis
+# swolle library install
+RUN composer require swoole/library
 
 
-# 엔트리킷 환경변수템플릿
-WORKDIR /data
-RUN wget https://github.com/progrium/entrykit/releases/download/v0.4.0/entrykit_0.4.0_Linux_x86_64.tgz
-RUN tar -xvzf entrykit_0.4.0_Linux_x86_64.tgz
-RUN rm entrykit_0.4.0_Linux_x86_64.tgz
-RUN mv entrykit /usr/local/bin
-RUN entrykit --symlink
+##############################################
+## install apps package
+##############################################
+# down common source
+WORKDIR /data/www
+RUN wget https://github.com/zero12a/common/archive/master.zip
+RUN unzip master.zip
+RUN mv common-master/ common/
+RUN rm master.zip
+
+##############################################
+## down apps source
+##############################################
+WORKDIR /data/www
+RUN wget https://github.com/zero12a/os/archive/master.zip
+RUN unzip master.zip
+RUN mv os-master/ o.s/
+RUN rm master.zip
+
+
+##############################################
+## application env
+##############################################
 
 ### env define
 # php incConfig apps
-
+ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/predis/predis/autoload.php"
+ENV REDIS_HOST "172.17.0.1"
+ENV REDIS_PORT 1234
+ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # entry
 # conf make conf
+ENTRYPOINT [ \
+    "render", \
+        "/data/www/common/include/incConfig.php", \
+        "--", \
+    "/usr/local/bin/php", \
+        "/data/www/w.s/index.php" \
+]
 
-# old
-#ENTRYPOINT [ \
-#    "/entrypoint.sh", \
-#]
-
-# new
-ENTRYPOINT ["/usr/local/bin/php","-S","0.0.0.0:8080"]
-CMD ["-t","/data/www/o.s/oauth2-demo-php/web"]
+# 단일 명령일때
+# CMD cron -f

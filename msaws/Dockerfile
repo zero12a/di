@@ -9,6 +9,13 @@
 # -v /Users/zeroone/Documents/docker/w.s:/data/www/w.s \
 # --name ws msaws
 
+ docker run -i -t -d -p 8051:80 -p 8052:8052 \
+ -v /Users/zeroone/Documents/docker/common:/data/www/common \
+ -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
+ -v /Users/zeroone/Documents/docker/w.s:/data/www/w.s \
+ --name os2 msaws:200115
+
+
 # (php 패키지 정상설치확인) php -m | grep swoole
 
 ##############################################
