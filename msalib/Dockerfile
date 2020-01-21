@@ -56,6 +56,9 @@ RUN mv jquery-1.12.4.min.js jquery/
 RUN wget https://code.jquery.com/jquery-3.4.1.min.js
 RUN mv jquery-3.4.1.min.js jquery/
 
+RUN wget https://code.jquery.com/jquery-3.4.1.slim.min.js
+RUN mv jquery-3.4.1.slim.min.js jquery/
+
 RUN wget https://jqueryui.com/resources/download/jquery-ui-1.12.1.zip
 RUN unzip jquery-ui-1.12.1.zip
 RUN rm jquery-ui-1.12.1.zip
@@ -79,9 +82,11 @@ RUN wget https://raw.githubusercontent.com/ValYouW/jqPropertyGrid/master/jqPrope
 RUN wget https://momentjs.com/downloads/moment.min.js
 # 110. json2.min.js
 RUN wget https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js
+# 120. uuidv4.js
+RUN wget -O uuidv4.js https://wzrd.in/standalone/uuid%2Fv4@latest
 
 
-# 110. (private project) dhtmlx lib
+# 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
 WORKDIR /data/www/lib/dhtmlxSuite
 
