@@ -4,10 +4,10 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 8080:80 --name rd msard
 
 # (백그라운드 실행/내PC개발)
-# docker run -i -t -d \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/r.d:/data/www/r.d \
-# -p 8080:80 --name rd msard
+ docker run -i -t -d \
+ -v /Users/zeroone/Documents/docker/common:/data/www/common \
+ -v /Users/zeroone/Documents/docker/r.d:/data/www/r.d \
+ -p 8080:80 --name rd msard
 
 # step 1
 FROM php:7.4-fpm
