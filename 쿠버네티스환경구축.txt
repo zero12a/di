@@ -1,0 +1,57 @@
+1. macos 에서 쿠버네티스 활성화
+ - (UI) 도커아이콘 > preference > kubernetes탭
+  . "Enable Kubernetes" 체크활성화
+  . "Deploy Docker stack to kubernetes by default" 체크활성화
+  . "Show system containers" 체크활성화
+
+2. 쿠버네티스 대시보드 설치
+ <준비>
+ - 설치 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc2/aio/deploy/recommended.yaml
+ - 설치확인 kubectl get pod --namespace=kube-system -l k8s-app=kubernetes-dashboard
+ - 실행 kubectl proxy
+ <확인>
+ - 웹에서 확인 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+ - token타입 선택하고 
+ - token 생성
+  . kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+
+ - 위에서 생성된 토근 웹화면에 입력해서 로그인
+
+3. 쿠버네티스 기초
+ - (마스터에서) node 목록 확인 
+  . kubectl get nodes
+ - (마스터에서) 네임스페이스(클러스터) 확인 / 이 단위로 권한설정가능.
+  . kubectl get namespace
+ - (마스터에서) pod 목록 확인
+  . kubectl get pod
+
+4. pod 생성하기
+ - 테스트 도커이미지 2개 불러오기 
+  . docker pull gihyodocker/nginx:latest
+  . docker pull gihyodocker/echo:latest
+ - simple-pod.yaml (컨테이너 2개짜리) 파일 생성하기 ( 책 192p )
+ - pod 생성하기하고 실행하기
+  . kubectl apply -f simple-pod.yaml
+ - pod 확인 
+  . kubectl get pod
+  NAME          READY   STATUS    RESTARTS   AGE
+  simple-echo   2/2     Running   0          16m
+  => 해석 
+   . NAME : 컬럼은 pod임
+   . READY : 2개의 컨테이너 존재, 2면 컨테이너모두실행중, 1이면 1개실패, 0이면 2개모두 구동실패)
+   . STATUS : "Running"이면 정상
+
+ - 2개 컨테이너중 특정 컨테이너(-c "nginx") 쉘로 진입하기
+  . kubectl exec -it simple-echo bash -c nginx
+ - 2개 컨테이너중 특정 컨테이너 tail
+  . kubectl logs -f simple-echo -c echo 
+ - pod 삭제하기
+  . kubectl delete pod simple-echo
+
+5. pod 기타 명령어
+ - pod 정보 상세조회
+ . kubectl describe pods simple-echo
+
+# 에러 FAQ
+1. error: error parsing simple-pod.yaml: error converting YAML to JSON: yaml: line 8: mapping values are not allowed in this context
+- re : "kubectl apply -f simple-pod.yaml"명령어 실행시 발생하며, 띄워쓰기 및 TAB 반드시 맞춰야 함.
