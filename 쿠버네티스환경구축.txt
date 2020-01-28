@@ -84,11 +84,45 @@
  - 특정 리비전의 상세 내용 확인하기
   . kubectl rollout history deployment echo --revision=1
  - 이전 리비전으로 롤백 하기(롤백이 될때 pod는 모드 롤백되고, 리플리카세트는 2개가 남음)
-  . kubectl rollout undo deployment echo
+  . kubectl rollout undo deployment echo #이전 리비전으로 롤백
+  . kubectl rollout undo deployment echo --to-revision=2 #특정 리비전으로 롤백
  - 리비전 확인하기(REVISION:2과3)
   . kubectl rollout history deployment echo
  - 디폴로이먼트 삭제하기 (리플리카, 파드 모두 삭제됨)
   . kubectl delete -f simple-deployment.yaml
+
+8. 서비스 디스커버리 오픈("kind: Service"옵션, pod끼리 통신만 가능하고 외부에서 접속 불가)
+ - 서비스 공개 야믈 작성 (210p, simple-service.yaml)
+ - 서비스 생성하기
+  . kubectl apply -f simple-service.yaml # "summer"릴리즈만 활성화
+  . docker pull gihyodocker/fundamental:0.1.0
+  . kubectl run -i --rm --tty debug --image=gihyodocker/fundamental:0.1.0 --restart=Never -- bash -il #"debug"파드 생성
+  . debug:/# curl http://echo/ #디버그모드에서 echo서비스 호출
+  . 모든 컨테이너 로그 보기("summer" 1개에서 접속로그 존재)
+  . kubectl logs -f echo-summer-4lqn2 -c echo # "echo-summer-4lqn2"파드의 "echo" 컨테이너
+  . kubectl logs -f echo-summer-d4spc -c echo # "echo-summer-d4spc"파드의 "echo" 컨테이너
+  . kubectl logs -f echo-spring-pnqm2 -c echo # "echo-summer-pnqm2"파드의 "echo" 컨테이너
+
+  . kubectl delete pod debug # debug파드가 위 명령어 에서 잘못 생성된 경우 삭제하기
+  . kubectl get svc echo # "echo"서비스 확인하기 ( "PORT(S)" 내부port:외부port )
+
+  NAME   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+  echo   ClusterIP   10.103.189.22   <none>        80/TCP    1s
+
+
+9. 외부에 서비스 오픈("kind: Service"옵션에 "type: NodePort"추가 옵션 설정)
+  - 야믈 파일 생성 (213p)
+  - 서비스 생성하기
+  . kubectl apply -f simple-serviceNodePort.yaml
+  - kubectl get svc echo #서비스 port확인하기( "PORT(S)" 내부port:외부port )
+
+  NAME   TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+  echo   NodePort   10.105.79.123   <none>        80:30015/TCP   3s
+
+  - curl http://127.0.0.1:30015 #해당 서비스 port로 요청시 성공
+  - curl http://127.0.0.1:80 #해당 서비스 80 port로 요청시 실패
+   => curl: (7) Failed to connect to 127.0.0.1 port 80: Connection refused
+
 
 # 에러 FAQ
 1. error: error parsing simple-pod.yaml: error converting YAML to JSON: yaml: line 8: mapping values are not allowed in this context
