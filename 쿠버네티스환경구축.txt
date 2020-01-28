@@ -1,5 +1,7 @@
 # 좋은 참고 사이트
 명령어 모음 https://kubernetes.io/ko/docs/reference/kubectl/cheatsheet/
+서비스 https://kubernetes.io/ko/docs/concepts/services-networking/connect-applications-service/
+서비스오픈 https://kubernetes.io/ko/docs/tutorials/services/source-ip/
 
 # 쿠버네티스 환경 구축
 1. macos 에서 쿠버네티스 활성화
@@ -122,7 +124,24 @@
   - curl http://127.0.0.1:30015 #해당 서비스 port로 요청시 성공
   - curl http://127.0.0.1:80 #해당 서비스 80 port로 요청시 실패
    => curl: (7) Failed to connect to 127.0.0.1 port 80: Connection refused
+  - 외부 오픈된 port가 임의 포트이므로, 로드밸런서를 위한 포트 타입으로 변경
+   . kubectl edit svc echo # Type 을 NodePort 에서 LoadBalancer 로 변경한다. 
+   . kubectl get svc echo # "CLUSTER-IP", "EXTERNAL-IP", 외부port가 변경됨
 
+   NAME   TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+   echo   LoadBalancer   10.96.41.131   localhost     80:30745/TCP   24m
+
+   . curl http://localhost:80/ # 이제 "80"port로 해서 접속됨.
+   . EXTERNAL-IP 의 IP 주소는 공용 인터넷에서 이용할 수 있는 주소이다. CLUSTER-IP 는 클러스터/프라이빗 클라우드 네트워크 내에서만 사용할 수 있다.
+
+10. aws 로드밸런서 연결하기
+AWS에서는 LoadBalancer 유형은 IP가 아닌 (긴)호스트네임을 사용하는 ELB를 생성한다는 점을 참고한다. 
+이것은 일반적인 kubectl get svc 의 출력에 맞추기에는 매우 길기 때문에 실제로 이를 보려면 kubectl describe service my-nginx 를 수행해야 한다. 
+다음과 같은 것을 보게 된다.
+kubectl describe service echo
+...
+LoadBalancer Ingress:   a320587ffd19711e5a37606cf4a74574-1142138393.us-east-1.elb.amazonaws.com
+...
 
 # 에러 FAQ
 1. error: error parsing simple-pod.yaml: error converting YAML to JSON: yaml: line 8: mapping values are not allowed in this context
