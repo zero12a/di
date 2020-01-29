@@ -121,9 +121,9 @@ RUN ["chmod", "+x", "/entrypoint.sh"]
 # RUN cd /var/www/html
 
 WORKDIR /data/www
-RUN wget https://github.com/zero12a/msamk/archive/master.zip
+RUN wget https://github.com/zero12a/mk/archive/master.zip
 RUN unzip master.zip
-RUN mv rd-master/ r.d/
+RUN mv mk-master/ m.k/
 RUN rm master.zip
 
 # step 6
