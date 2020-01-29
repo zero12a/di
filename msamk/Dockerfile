@@ -1,13 +1,13 @@
 ## debian linux 10
 # docker build -t msamk .
-# (포그라운드 실행/배포) docker run -i -t -p 8070:80 --name mk msamk
-# (백그라운드 실행/배포) docker run -i -t -d -p 8070:80 --name mk msamk
+# (포그라운드 실행/배포) docker run -i -t -p 8060:80 --name mk msamk
+# (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name mk msamk
 
 # (백그라운드 실행/내PC개발)
-# docker run -i -t -d \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/m.k:/data/www/m.k \
-# -p 8080:80 --name mk msamk
+docker run -i -t -d \
+ -v /Users/zeroone/Documents/docker/common:/data/www/common \
+ -v /Users/zeroone/Documents/docker/m.k:/data/www/m.k \
+ -p 8060:80 --name mk msamk
 
 # step 1
 FROM php:7.4-fpm
