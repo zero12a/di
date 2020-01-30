@@ -55,6 +55,9 @@ RUN mkdir /data
 RUN mkdir /data/www
 RUN mkdir /data/www/lib
 RUN mkdir /data/www/lib/php
+# makeer folder
+RUN mkdir /data/www/c.g
+RUN mkdir /data/www/c.g/CG
 # make log folder
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
