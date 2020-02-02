@@ -22,7 +22,7 @@ ARG ENTRYKIT_VERSION=0.4.0
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip nginx wget sudo
+RUN apt-get install -y curl unzip nginx wget sudo git
 # sudo : batch log file is target user owner.
 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
@@ -46,7 +46,8 @@ RUN docker-php-ext-install zip
 RUN rm -f /etc/localtime
 RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
-
+# www-data 사용자전환su 가능하게 쉘 변경하기(nologin to /bin/bash)
+RUN chsh -s /bin/bash www-data
 
 ##############################################
 ## make folder
