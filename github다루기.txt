@@ -1,0 +1,28 @@
+* github 명령어 모음
+https://unikys.tistory.com/323
+
+1. "git push -u origin master" 실행시 오류
+ - 메시지 : ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'https://github.com/zero12a/DS.git'
+
+ - 원인 : github사이트의 소스와 로컬이 불일치
+ - 해결법 : 로컬소스를 github에 강제(-f) 업데이트
+   . git push -f origin
+
+
+2. "git commit -m "first commit"" 실행시 오류
+ - 메시지 : 
+*** Please tell me who you are.
+
+Run
+
+  git config --global user.email "zero12a@gmail.com"
+  git config --global user.name "kim haha"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+ - 원인 : 나의 이메일, 이름 미설정
+ 
+ 3. api토큰 생성
+  - 게정 > setting > developer settings > new personal access token
+  

@@ -1,0 +1,6 @@
+1. 사용자 홈폴더 변경 
+ - usermod -d 폴더위치 아이디
+ - 예시 : usermod -d /var/www/ testuser
+
+2. 사용자 목록 ID만 보기
+ - cut -f1 -d: /etc/passwd
