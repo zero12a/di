@@ -7,6 +7,7 @@
 docker run -i -t -d \
  -v /Users/zeroone/Documents/docker/common:/data/www/common \
  -v /Users/zeroone/Documents/docker/m.k:/data/www/m.k \
+ -v /Users/zeroone/Documents/docker/c.g/CG:/data/www/c.g/CG \
  -p 8060:80 --name mk msamk
 
 # step 1
@@ -59,6 +60,7 @@ RUN mkdir /data/www/lib/php
 # makeer folder
 RUN mkdir /data/www/c.g
 RUN mkdir /data/www/c.g/CG
+RUN chmod 777 /data/www/c.g/CG
 # make log folder
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log

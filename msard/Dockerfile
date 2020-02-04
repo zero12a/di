@@ -7,6 +7,7 @@
  docker run -i -t -d \
  -v /Users/zeroone/Documents/docker/common:/data/www/common \
  -v /Users/zeroone/Documents/docker/r.d:/data/www/r.d \
+ -v /Users/zeroone/Documents/docker/c.g/CG:/data/www/c.g/CG \
  -p 8080:80 --name rd msard
 
 # step 1
@@ -58,8 +59,10 @@ RUN mkdir /data/www/lib/php
 # make log folder
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
-
-
+# make source folder
+RUN mkdir /data/c.g/
+RUN mkdir /data/c.g/CG
+RUN chmod 777 /data/c.g/CG
 
 ##############################################
 ## install apps package
@@ -134,6 +137,12 @@ RUN unzip master.zip
 RUN mv common-master/ common/
 RUN rm master.zip
 
+# make source download
+WORKDIR /data/www/c.g
+RUN wget https://github.com/zero12a/ds/archive/master.zip
+RUN unzip master.zip
+RUN mv ds-master/ CG/
+RUN rm master.zip
 
 
 ##############################################
