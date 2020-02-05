@@ -117,6 +117,13 @@ RUN curl -H "Authorization: token ${GIT_TOKEN}"  https://raw.githubusercontent.c
 RUN unzip dhtmlx.zip
 RUN rm dhtmlx.zip
 
+# 300. (img, "-L옵션은 리다이렉트처리")
+WORKDIR /data/www/
+RUN curl -L -o img.zip -H "Authorization: token ${GIT_TOKEN}"  https://github.com/zero12a/img/archive/master.zip 
+RUN unzip img.zip
+RUN mv img-master img/
+RUN rm img.zip
+
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
 RUN wget https://github.com/progrium/entrykit/releases/download/v0.4.0/entrykit_0.4.0_Linux_x86_64.tgz
