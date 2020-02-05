@@ -47,6 +47,21 @@ RUN mv jquery-3.4.1.min.js bootstrap4/
 # 40. bootstrap4 popper.js
 RUN wget https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js
 RUN mv popper.min.js bootstrap4/
+# 42. bootstrap table
+RUN wget -O bootstrap-table.zip https://github.com/wenzhixin/bootstrap-table/archive/master.zip
+RUN unzip bootstrap-table.zip
+RUN mv bootstrap-table-master/src/ bootstrap-table/
+RUN rm -rf bootstrap-table.zip bootstrap-table-master/
+# 44. tableExport
+RUN mkdir /data/www/lib/tableExport
+RUN wget -O ./tableExport/tableExport.min.js https://github.com/hhurz/tableExport.jquery.plugin/raw/master/tableExport.min.js
+RUN wget -O ./tableExport/FileSaver.min.js https://github.com/eligrey/FileSaver.js/raw/master/dist/FileSaver.min.js
+RUN wget -O ./tableExport/jspdf.min.js https://github.com/BiggA94/jsPDF/raw/master/dist/jspdf.min.js
+RUN wget -O ./tableExport/xlsx.core.min.js https://github.com/hhurz/tableExport.jquery.plugin/raw/master/libs/js-xlsx/xlsx.core.min.js
+RUN wget -O ./tableExport/jspdf.plugin.autotable.min.js https://github.com/simonbengtsson/jsPDF-AutoTable/raw/master/dist/jspdf.plugin.autotable.min.js
+RUN wget -O ./tableExport/jspdf.plugin.autotable.js https://github.com/simonbengtsson/jsPDF-AutoTable/raw/master/dist/jspdf.plugin.autotable.js
+
+
 # 50. jquery
 RUN mkdir /data/www/lib/jquery
 
