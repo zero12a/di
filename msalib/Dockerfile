@@ -52,6 +52,10 @@ RUN wget -O bootstrap-table.zip https://github.com/wenzhixin/bootstrap-table/arc
 RUN unzip bootstrap-table.zip
 RUN mv bootstrap-table-master/src/ bootstrap-table/
 RUN rm -rf bootstrap-table.zip bootstrap-table-master/
+RUN wget -O ./bootstrap-table/bootstrap-table.min.css https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css
+RUN wget -O ./bootstrap-table/bootstrap-table.min.js https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js
+RUN wget -O ./bootstrap-table/locale/bootstrap-table-ko-KR.min.js https://unpkg.com/bootstrap-table@1.15.5/dist/locale/bootstrap-table-ko-KR.min.js
+
 # 44. tableExport
 RUN mkdir /data/www/lib/tableExport
 RUN wget -O ./tableExport/tableExport.min.js https://github.com/hhurz/tableExport.jquery.plugin/raw/master/tableExport.min.js
