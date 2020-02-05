@@ -113,10 +113,6 @@ WORKDIR /data/www/lib/dhtmlxSuite
 RUN echo -H "Authorization: token ${GIT_TOKEN}" https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
 RUN curl -H "Authorization: token ${GIT_TOKEN}"  https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
 
-# OLD github Auth : RUN curl -u ${GIT_EMAIL}:${GIT_PASSWD} https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
-RUN unzip dhtmlx.zip
-RUN rm dhtmlx.zip
-
 # 300. (img, "-L옵션은 리다이렉트처리")
 WORKDIR /data/www/
 RUN curl -L -o img.zip -H "Authorization: token ${GIT_TOKEN}"  https://github.com/zero12a/img/archive/master.zip 
