@@ -137,7 +137,7 @@ RUN unzip master.zip
 RUN mv common-master/ common/
 RUN rm master.zip
 
-# make source download
+# make demo source download
 WORKDIR /data/www/c.g
 RUN wget https://github.com/zero12a/ds/archive/master.zip
 RUN unzip master.zip
