@@ -55,6 +55,9 @@ RUN rm -rf bootstrap-table.zip bootstrap-table-master/
 RUN wget -O ./bootstrap-table/bootstrap-table.min.css https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css
 RUN wget -O ./bootstrap-table/bootstrap-table.min.js https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js
 RUN wget -O ./bootstrap-table/locale/bootstrap-table-ko-KR.min.js https://unpkg.com/bootstrap-table@1.15.5/dist/locale/bootstrap-table-ko-KR.min.js
+RUN wget -O ./bootstrap-table/extensions/resizable/bootstrap-table-resizable.min.js https://unpkg.com/bootstrap-table@1.15.5/dist/extensions/resizable/bootstrap-table-resizable.min.js
+RUN wget -O ./bootstrap-table/jquery.resizableColumns.min.js https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.min.js
+
 
 # 44. tableExport
 RUN mkdir /data/www/lib/tableExport
