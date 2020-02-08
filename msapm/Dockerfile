@@ -43,8 +43,8 @@ RUN rm phpMyAdmin-*.zip
 
 # phpmyadmin config
 WORKDIR /data/www/p.m
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msapm/config.inc.php.tmpl
-
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msapm/v5_config.inc.php.tmpl
+RUN mv v5_config.inc.php.tmpl config.inc.php.tmpl
 
 # php.ini 가져오기
 WORKDIR /usr/local/etc/php
