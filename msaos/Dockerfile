@@ -4,10 +4,10 @@
 # (백그라운드 실행/port없음) docker run -i -t -d -p 8052:8052 --name os msaos
 
 # (백그라운드 실행/내PC개발)
-# docker run -i -t -d -p 8052:8052 \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
-# --name os msaos
+docker run -i -t -d -p 8052:8052 \
+-v /Users/zeroone/Documents/docker/common:/data/www/common \
+-v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
+--name os msaos
 
 
 # (php 패키지 정상설치확인) php -m | grep swoole
@@ -115,9 +115,10 @@ RUN mkdir /data/www/lib/php
 ##############################################
 WORKDIR /data/www/lib/php
 # predis library install
+RUN composer require monolog/monolog
 RUN composer require predis/predis
-# swolle library install
-RUN composer require swoole/library
+# swolle library install ( swoole_exec redeclare 에러)
+#RUN composer require swoole/library
 
 
 ##############################################
@@ -146,7 +147,7 @@ RUN rm master.zip
 
 ### env define
 # php incConfig apps
-ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/predis/predis/autoload.php"
+ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
 ENV REDIS_CONFIG_ID "CONFIG_CG"
