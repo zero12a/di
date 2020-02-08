@@ -12,6 +12,9 @@ FROM php:7.4-fpm
 ARG PHPMYADMIN_VERSION=5.0.1
 ARG ENTRYKIT_VERSION=0.4.0
 
+##############################################
+## install os package
+##############################################
 # step 2
 WORKDIR /root
 RUN apt-get update            
@@ -31,16 +34,48 @@ RUN docker-php-ext-install mysqli
 RUN apt-get install -y zlib1g-dev && apt-get install -y libzip-dev
 RUN docker-php-ext-install zip
 
-# step 5
-# RUN cd /var/www/html
+
+# 엔트리킷 환경변수템플릿
+WORKDIR /data
+RUN wget https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN tar -xvzf entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN rm entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN mv entrykit /usr/local/bin
+RUN entrykit --symlink
+
+
+
+##############################################
+## config os
+##############################################
+# time  set seoul
+RUN rm -f /etc/localtime
+RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+
+##############################################
+## make folder
+##############################################
 RUN mkdir /data
 RUN mkdir /data/www
+
+
+##############################################
+## install apps package
+##############################################
+# step 5
+# RUN cd /var/www/html
+
 WORKDIR /data/www
 RUN wget https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.zip
 RUN unzip phpMyAdmin-*.zip
 RUN mv phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages/ p.m/
 RUN rm phpMyAdmin-*.zip
 
+
+##############################################
+## install apps config
+##############################################
 # phpmyadmin config
 WORKDIR /data/www/p.m
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msapm/v5_config.inc.php.tmpl
@@ -69,13 +104,6 @@ RUN wget https://raw.githubusercontent.com/zero12a/di/master/msapm/entrypoint.sh
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
-# 엔트리킷 환경변수템플릿
-WORKDIR /data
-RUN wget https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
-RUN tar -xvzf entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
-RUN rm entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
-RUN mv entrykit /usr/local/bin
-RUN entrykit --symlink
 
 
 ### env define
