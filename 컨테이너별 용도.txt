@@ -1,6 +1,7 @@
 컨테이너 프로세스 목록
 
 이미지 서비스포트 컨테이너명 #용도
+msapm 8050?->80/tcp  pm #phpmyadmin
 msamk 8060->80/tcp   mk #메이커
 msard 8080->80/tcp   rd #서비스
 msaos 8052->8052/tcp           os #인증

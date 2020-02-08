@@ -1,12 +1,16 @@
 ## debian linux 10
 # docker build -t msapm .
 # docker build -t msapm:TAG .
-# (포그라운드 실행/배포) docker run -i -t -p 8060:80 --name pm msapm
-# (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name pm msapm
-# (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name pm msapm:TAG
+# (포그라운드 실행/배포) docker run -i -t -p 8050:80 --name pm msapm
+# (백그라운드 실행/배포) docker run -i -t -d -p 8050:80 --name pm msapm
+# (백그라운드 실행/배포) docker run -i -t -d -p 8050:80 --name pm msapm:TAG
 
 # step 1
 FROM php:7.4-fpm
+
+# step 2
+ARG PHPMYADMIN_VERSION=5.0.1
+ARG ENTRYKIT_VERSION=0.4.0
 
 # step 2
 WORKDIR /root
@@ -32,9 +36,9 @@ RUN docker-php-ext-install zip
 RUN mkdir /data
 RUN mkdir /data/www
 WORKDIR /data/www
-RUN wget https://files.phpmyadmin.net/phpMyAdmin/4.9.2/phpMyAdmin-4.9.2-all-languages.zip
+RUN wget https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.zip
 RUN unzip phpMyAdmin-*.zip
-RUN mv phpMyAdmin-4.9.2-all-languages/ p.m/
+RUN mv phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages/ p.m/
 RUN rm phpMyAdmin-*.zip
 
 # phpmyadmin config
@@ -67,9 +71,9 @@ RUN ["chmod", "+x", "/entrypoint.sh"]
 
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
-RUN wget https://github.com/progrium/entrykit/releases/download/v0.4.0/entrykit_0.4.0_Linux_x86_64.tgz
-RUN tar -xvzf entrykit_0.4.0_Linux_x86_64.tgz
-RUN rm entrykit_0.4.0_Linux_x86_64.tgz
+RUN wget https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN tar -xvzf entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN rm entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
 RUN mv entrykit /usr/local/bin
 RUN entrykit --symlink
 
