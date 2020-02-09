@@ -22,8 +22,9 @@ ARG APCU_VERSION=5.1.18
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip nginx wget cron sudo
+RUN apt-get install -y curl unzip nginx wget cron sudo mariadb-client
 # sudo : batch log file is target user owner.
+# mariadb-client : mysql-client no install, mariadb-client good install
 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim telnet procps net-tools
