@@ -66,7 +66,6 @@ RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
 
 
-
 ##############################################
 ## install apps package
 ##############################################
@@ -77,6 +76,8 @@ RUN composer require monolog/monolog
 RUN composer require predis/predis
 RUN composer require aws/aws-sdk-php
 RUN composer require ezyang/htmlpurifier
+#캐쉬폴더 777권한 변경
+RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
 RUN composer require phpoffice/phpexcel
 
 # 엔트리킷 환경변수템플릿
