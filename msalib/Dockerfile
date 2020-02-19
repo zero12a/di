@@ -106,7 +106,9 @@ RUN wget https://momentjs.com/downloads/moment.min.js
 RUN wget https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js
 # 120. uuidv4.js
 RUN wget -O uuidv4.js https://wzrd.in/standalone/uuid%2Fv4@latest
-
+# 130. summernote
+RUN wget -O summernote-bs4.min.css https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css
+RUN wget -O summernote-bs4.min.js https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js
 
 # 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
