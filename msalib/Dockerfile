@@ -107,8 +107,12 @@ RUN wget https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js
 # 120. uuidv4.js
 RUN wget -O uuidv4.js https://wzrd.in/standalone/uuid%2Fv4@latest
 # 130. summernote
-RUN wget -O summernote-bs4.min.css https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css
-RUN wget -O summernote-bs4.min.js https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js
+RUN mkdir /data/www/lib/summernote
+WORKDIR /data/www/lib/summernote
+RUN wget -O summernote-dist.zip https://github.com/summernote/summernote/releases/download/v0.8.16/summernote-0.8.16-dist.zip
+RUN unzip summernote-dist.zip
+RUN rm summernote-dist.zip
+
 
 # 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
