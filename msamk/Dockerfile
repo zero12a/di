@@ -4,11 +4,11 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name mk msamk
 
 # (백그라운드 실행/내PC개발)
-#docker run -i -t -d \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/m.k:/data/www/m.k \
-# -v /Users/zeroone/Documents/docker/c.g/CG:/data/www/c.g/CG \
-# -p 8060:80 --name mk msamk
+docker run -i -t -d \
+ -v /Users/zeroone/Documents/docker/common:/data/www/common \
+ -v /Users/zeroone/Documents/docker/m.k:/data/www/m.k \
+ -v /Users/zeroone/Documents/docker/c.g/CG:/data/www/c.g/CG \
+ -p 8060:80 --name mk msamk
 
 # step 1
 FROM php:7.4-fpm
@@ -164,7 +164,7 @@ ENV FASTCGI_PASS "unix:/var/run/php-fpm.sock"
 # php fpm
 ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
 # php apps
-ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/predis/predis/autoload.php"
+ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
 ENV REDIS_CONFIG_ID "CONFIG_CG"

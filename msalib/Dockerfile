@@ -121,6 +121,7 @@ WORKDIR /data/www/lib/dhtmlxSuite
 # NEW github Auth
 RUN echo -H "Authorization: token ${GIT_TOKEN}" https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
 RUN curl -H "Authorization: token ${GIT_TOKEN}"  https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
+RUN unzip dhtmlx.zip
 
 # 300. (img, "-L옵션은 리다이렉트처리")
 WORKDIR /data/www/
