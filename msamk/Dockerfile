@@ -1,17 +1,22 @@
 ## debian linux 10
-# docker build -t msamk .
+# docker build --build-arg GIT_TOKEN=AAAAAAAA -t msamk .
 # (포그라운드 실행/배포) docker run -i -t -p 8060:80 --name mk msamk
 # (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name mk msamk
 
 # (백그라운드 실행/내PC개발)
-docker run -i -t -d \
- -v /Users/zeroone/Documents/docker/common:/data/www/common \
- -v /Users/zeroone/Documents/docker/m.k:/data/www/m.k \
- -v /Users/zeroone/Documents/docker/c.g/CG:/data/www/c.g/CG \
- -p 8060:80 --name mk msamk
+#docker run -i -t -d \
+# -v /Users/zeroone/Documents/docker/common:/data/www/common \
+# -v /Users/zeroone/Documents/docker/m.k:/data/www/m.k \
+# -v /Users/zeroone/Documents/docker/c.g/CG:/data/www/c.g/CG \
+# -p 8060:80 --name mk msamk
 
 # step 1
 FROM php:7.4-fpm
+
+# ARG는 빌드시에만 사용가능하고, ENV는 실제싱행 RUN/CMD에 사용가능
+# ARG GIT_EMAIL
+# ARG GIT_PASSWD
+ARG GIT_TOKEN
 
 # step 2
 ARG APCU_VERSION=5.1.18
@@ -135,7 +140,7 @@ RUN ["chmod", "+x", "/entrypoint.sh"]
 # RUN cd /var/www/html
 
 WORKDIR /data/www
-RUN wget https://github.com/zero12a/mk/archive/master.zip
+RUN curl -L -o master.zip -H "Authorization: token ${GIT_TOKEN}" https://github.com/zero12a/mk/archive/master.zip
 RUN unzip master.zip
 RUN mv mk-master/ m.k/
 RUN rm master.zip
