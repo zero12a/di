@@ -114,6 +114,11 @@ RUN unzip summernote-dist.zip
 RUN rm summernote-dist.zip
 # 140. dojo, gridx 
 
+# 150. cleave.js
+WORKDIR /data/www/lib/
+RUN wget -O cleave.min.js https://cdn.jsdelivr.net/npm/cleave.js@1.5.4/dist/cleave.min.js
+
+
 # 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
 WORKDIR /data/www/lib/dhtmlxSuite
