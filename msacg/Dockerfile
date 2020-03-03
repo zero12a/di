@@ -22,10 +22,11 @@ ARG APCU_VERSION=5.1.18
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip nginx wget cron sudo mariadb-client
+RUN apt-get install -y curl unzip nginx wget cron sudo mariadb-client libpq-dev
 # sudo : batch log file is target user owner.
 # mariadb-client : mysql-client no install, mariadb-client good install
-
+# libpq-dev : postgre bib
+ 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim telnet procps net-tools
 
@@ -92,9 +93,12 @@ RUN entrykit --symlink
 # local mem cache apc
 RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 
+# install pdo_mysql, pdo_postgresql
+RUN docker-php-ext-install pdo_mysql
 
-
-
+# install pdo_postgresql
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+RUN docker-php-ext-install pgsql pdo_pgsql
 
 ##############################################
 ## install apps config
