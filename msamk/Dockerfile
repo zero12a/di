@@ -30,7 +30,7 @@ WORKDIR /root
 RUN apt-get update            
 RUN apt-get install -y curl unzip nginx wget cron sudo git libpq-dev
 # sudo : batch log file is target user owner.
-# libpq-dev : postgre bib
+# libpq-dev : postgre lib
  
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim telnet procps net-tools
