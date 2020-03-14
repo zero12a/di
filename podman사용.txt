@@ -1,0 +1,26 @@
+# 설치하기
+brew cask install podman
+=> 실제 설치 파일 : https://github.com/containers/libpod/releases/download/v1.6.0/podman-remote-v1.6.0-28-gdac7889d-master-darwin-amd64.tgz
+
+# 그냥 하면 안되고, 악성코드 앱 허용하기
+1) sudo spctl --master-enable
+2) 설정 > 보안 및 개인정보 보호 > 개발자 도구 > podman 추가
+
+# 키파일 만들기
+ ssh-keygen -f id_rsa
+
+# 원격로그인을 오픈해야함
+ 설정 > 공유 > 원격로그인
+
+# $HOME에 podman-remote.conf 만들기 
+[connections]
+    [connections.host1]
+    destination = "localhost"
+    username = "zeroone"
+    default = true
+    identity_file = "/Users/zeroone/id_rsa"
+
+# 버전 확인하기
+podman — version
+
+# 
