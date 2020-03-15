@@ -132,7 +132,7 @@ RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/www.conf.tmpl
 
 # down entrypoint.sh
 WORKDIR /
-RUN wget -O entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh
+RUN wget -O entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?22
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
