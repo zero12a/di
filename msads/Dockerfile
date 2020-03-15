@@ -130,13 +130,6 @@ RUN mv www.conf www.conf.default
 RUN mv zz-docker.conf zz-docker.conf.default
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/www.conf.tmpl
 
-# down entrypoint.sh
-WORKDIR /
-RUN wget -O entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?22
-RUN ["chmod", "+x", "/entrypoint.sh"]
-
-
-
 ##############################################
 ## application
 ##############################################
@@ -166,6 +159,17 @@ RUN apk del .build-dependencies
 #RUN apk del .phpize-deps-configure
 RUN docker-php-source delete
 
+
+
+# down entrypoint.sh
+WORKDIR /
+RUN wget -O entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh
+RUN ["chmod", "+x", "/entrypoint.sh"]
+
+
+
+
+
 ##############################################
 ## application env
 ##############################################
@@ -184,15 +188,4 @@ ENV REDIS_CONFIG_ID "CONFIG_CG"
 EXPOSE 80
 
 # conf make conf
-ENTRYPOINT [ \
-    "render", \
-        "/usr/local/etc/php-fpm.d/www.conf", \
-        "--", \
-    "render", \
-        "/data/www/common/include/incConfig.php", \
-        "--", \
-    "render", \
-        "/etc/nginx/nginx.conf", \
-        "--", \
-    "/entrypoint.sh" \
-]
+CMD ["/entrypoint.sh"]
