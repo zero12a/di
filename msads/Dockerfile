@@ -23,8 +23,10 @@ ARG ENTRYKIT_VERSION=0.4.0
 # cron, vi, procps(ps) 은 처음부터 설치되어 있음, 
 # libpq-dev는 postgresql-dev로 변경
 # telnet은 busybox-extras로 변경
-RUN apk update
-RUN apk add curl unzip nginx wget sudo git postgresql-dev net-tools busybox-extras
+# tzdata는 타이존데이터
+# apuc컴파일 위해 autoconf, build-base(gcc) 필요
+RUN apk update && apk upgrade
+RUN apk add curl unzip nginx wget sudo git postgresql-dev net-tools busybox-extras autoconf libzip-dev tzdata
 
 RUN curl -sS https://getcomposer.org/installer | php  
 RUN mv composer.phar /usr/bin/composer
@@ -33,8 +35,16 @@ RUN mv composer.phar /usr/bin/composer
 RUN docker-php-ext-install mysqli
 
 # zip설치 zlib1g-dev는 불필요
-RUN apk add libzip-dev
 RUN docker-php-ext-install zip
+
+
+##############################################
+## config os
+##############################################
+# time  set seoul
+RUN cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+RUN echo "Asia/Seoul" > /etc/timezone
+
 
 ##############################################
 ## make folder
@@ -85,7 +95,11 @@ RUN entrykit --symlink
 
 
 # local mem cache apc
-RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
+#RUN apk add php7-pecl-apcu
+# gcc컴파일러(build-base)
+RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS
+RUN pecl install apcu-${APCU_VERSION} 
+RUN docker-php-ext-enable apcu
 
 # install pdo_mysql, pdo_postgresql
 RUN docker-php-ext-install pdo_mysql
@@ -118,7 +132,7 @@ RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/www.conf.tmpl
 
 # down entrypoint.sh
 WORKDIR /
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh
+RUN wget -O entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
@@ -130,7 +144,7 @@ RUN ["chmod", "+x", "/entrypoint.sh"]
 # RUN cd /var/www/html
 
 WORKDIR /data/www
-RUN curl -o master.zip https://github.com/zero12a/ds/archive/master.zip
+RUN wget https://github.com/zero12a/ds/archive/master.zip
 RUN unzip master.zip
 RUN mv ds-master/ d.s/
 RUN rm master.zip
@@ -143,7 +157,14 @@ RUN unzip master.zip
 RUN mv common-master/ common/
 RUN rm master.zip
 
-
+##############################################
+## 불필요 패키지/데이터 삭제하기
+##############################################
+RUN apk del build-base tzdata autoconf libzip-dev postgresql-dev
+RUN pecl clear-cache
+RUN apk del .build-dependencies
+#RUN apk del .phpize-deps-configure
+RUN docker-php-source delete
 
 ##############################################
 ## application env

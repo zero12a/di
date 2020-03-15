@@ -1,7 +1,7 @@
 #!/bin/bash
 
 printf "\n\nStarting crontab...\n\n"
-cron -f &
+/usr/sbin/crond -f &
 
 printf "\n\nStarting PHP daemon...\n\n"
 php-fpm --daemonize
