@@ -163,7 +163,7 @@ RUN docker-php-source delete
 
 # down entrypoint.sh
 WORKDIR /
-RUN wget -O entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?11
+RUN wget -O entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?33
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 

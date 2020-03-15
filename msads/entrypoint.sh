@@ -7,4 +7,4 @@ printf "\n\nStarting PHP daemon...\n\n"
 php-fpm --daemonize
 
 printf "Starting Nginx...\n\n"
-rc-service nginx start
+/etc/init.d/nginx start
