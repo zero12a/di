@@ -1,17 +1,21 @@
 ## debian linux 10
-# docker build -t msard .
-# (포그라운드 실행/배포) docker run -i -t -p 8080:80 --name rd msard
-# (백그라운드 실행/배포) docker run -i -t -d -p 8080:80 --name rd msard
+# docker build  -t msads .
+# (포그라운드 실행/배포) docker run -i -t -p 8040:80 --name ds msads
+# (백그라운드 실행/배포) docker run -i -t -d -p 8040:80 --name mk msads
 
 # (백그라운드 실행/내PC개발)
- docker run -i -t -d \
- -v /Users/zeroone/Documents/docker/common:/data/www/common \
- -v /Users/zeroone/Documents/docker/r.d:/data/www/r.d \
- -v /Users/zeroone/Documents/docker/c.g/CG:/data/www/c.g/CG \
- -p 8080:80 --name rd msard
+#docker run -i -t -d \
+# -v /Users/zeroone/Documents/docker/common:/data/www/common \
+# -v /Users/zeroone/Documents/docker/d.s:/data/www/d.s \
+# -p 8040:80 --name ds msads
 
 # step 1
 FROM php:7.4-fpm
+
+# ARG는 빌드시에만 사용가능하고, ENV는 실제싱행 RUN/CMD에 사용가능
+# ARG GIT_EMAIL
+# ARG GIT_PASSWD
+# ARG GIT_TOKEN
 
 # step 2
 ARG APCU_VERSION=5.1.18
@@ -23,9 +27,10 @@ ARG ENTRYKIT_VERSION=0.4.0
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip nginx wget sudo
+RUN apt-get install -y curl unzip nginx wget cron sudo git libpq-dev
 # sudo : batch log file is target user owner.
-
+# libpq-dev : postgre lib
+ 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim telnet procps net-tools
 
@@ -47,7 +52,8 @@ RUN docker-php-ext-install zip
 RUN rm -f /etc/localtime
 RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
-
+# www-data 사용자전환su 가능하게 쉘 변경하기(nologin to /bin/bash)
+RUN chsh -s /bin/bash www-data
 
 ##############################################
 ## make folder
@@ -56,13 +62,13 @@ RUN mkdir /data
 RUN mkdir /data/www
 RUN mkdir /data/www/lib
 RUN mkdir /data/www/lib/php
+# make folder
+RUN mkdir /data/www/d.s
+RUN chown www-data:www-data /data/www/d.s
 # make log folder
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
-# make source folder
-RUN mkdir /data/c.g/
-RUN mkdir /data/c.g/CG
-RUN chmod 777 /data/c.g/CG
+
 
 ##############################################
 ## install apps package
@@ -78,6 +84,13 @@ RUN composer require ezyang/htmlpurifier
 RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
 RUN composer require phpoffice/phpexcel
 
+# crontab add
+WORKDIR /data/www
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/crontab.txt
+RUN cp /data/www/crontab.txt /etc/cron.d/crontab-watcher
+RUN chmod 0644 /etc/cron.d/crontab-watcher
+RUN crontab /etc/cron.d/crontab-watcher
+
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
 RUN wget https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
@@ -89,31 +102,36 @@ RUN entrykit --symlink
 # local mem cache apc
 RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 
+# install pdo_mysql, pdo_postgresql
+RUN docker-php-ext-install pdo_mysql
 
+# install pdo_postgresql
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+RUN docker-php-ext-install pgsql pdo_pgsql
 
 ##############################################
 ## install apps config
 ##############################################
 # php.ini 가져오기
 WORKDIR /usr/local/etc/php
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msard/php.ini
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/php.ini
 
 # nginx
 # conf copy
 WORKDIR /etc/nginx/
 RUN mv nginx.conf nginx.conf.default
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msard/nginx.conf.tmpl
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/nginx.conf.tmpl
 
 # php-fpm www.conf
 # conf copy
 WORKDIR /usr/local/etc/php-fpm.d/
 RUN mv www.conf www.conf.default
 RUN mv zz-docker.conf zz-docker.conf.default
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msard/www.conf.tmpl
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/www.conf.tmpl
 
 # down entrypoint.sh
 WORKDIR /
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msard/entrypoint.sh
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
@@ -126,9 +144,9 @@ RUN ["chmod", "+x", "/entrypoint.sh"]
 # RUN cd /var/www/html
 
 WORKDIR /data/www
-RUN wget https://github.com/zero12a/rd/archive/master.zip
+RUN curl -o master.zip https://github.com/zero12a/ds/archive/master.zip
 RUN unzip master.zip
-RUN mv rd-master/ r.d/
+RUN mv ds-master/ d.s/
 RUN rm master.zip
 
 # step 6
@@ -139,12 +157,6 @@ RUN unzip master.zip
 RUN mv common-master/ common/
 RUN rm master.zip
 
-# make demo source download
-WORKDIR /data/www/c.g
-RUN wget https://github.com/zero12a/ds/archive/master.zip
-RUN unzip master.zip
-RUN mv ds-master/ CG/
-RUN rm master.zip
 
 
 ##############################################
@@ -165,6 +177,7 @@ ENV REDIS_CONFIG_ID "CONFIG_CG"
 EXPOSE 80
 
 # conf make conf
+USER www-data:data-data
 ENTRYPOINT [ \
     "render", \
         "/usr/local/etc/php-fpm.d/www.conf", \
