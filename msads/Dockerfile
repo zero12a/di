@@ -90,9 +90,9 @@ RUN crontab /etc/crontabs/crontab-watcher
 
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
-RUN wget https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
-RUN tar -xvzf entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
-RUN rm entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN wget -O entrykit.tgz https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN tar -xvzf entrykit.tgz
+RUN rm entrykit.tgz
 RUN mv entrykit /usr/local/bin
 RUN entrykit --symlink
 
@@ -165,7 +165,7 @@ RUN docker-php-source delete
 
 
 # down entrypoint.sh
-RUN wget -O /entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?44
+RUN wget -O /entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?11
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
