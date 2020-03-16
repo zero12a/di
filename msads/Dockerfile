@@ -28,8 +28,8 @@ ARG ENTRYKIT_VERSION=0.4.0
 RUN apk update && apk upgrade
 RUN apk add curl unzip nginx wget sudo git postgresql-dev net-tools busybox-extras autoconf libzip-dev tzdata
 
-#whereis
-#RUN apk add --update util-linux
+#whereis는 util-linux에 
+RUN apk add --update util-linux
 
 RUN curl -sS https://getcomposer.org/installer | php  
 RUN mv composer.phar /usr/bin/composer
@@ -115,23 +115,19 @@ RUN docker-php-ext-install pgsql pdo_pgsql
 ##############################################
 ## install apps config
 ##############################################
-
+# 사용자 변경하기 (서비스 설정파일 및 app소스 일일)
 # php.ini 가져오기
-WORKDIR /usr/local/etc/php
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/php.ini
+RUN wget -O /usr/local/etc/php/php.ini https://raw.githubusercontent.com/zero12a/di/master/msads/php.ini
 
 # nginx
-# conf copy
-WORKDIR /etc/nginx/
-RUN mv nginx.conf nginx.conf.default
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/nginx.conf.tmpl
+RUN wget -O /etc/nginx/nginx.conf.tmpl https://raw.githubusercontent.com/zero12a/di/master/msads/nginx.conf.tmpl
 
 # php-fpm www.conf
 # conf copy
 WORKDIR /usr/local/etc/php-fpm.d/
 RUN mv www.conf www.conf.default
 RUN mv zz-docker.conf zz-docker.conf.default
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/www.conf.tmpl
+RUN wget -O www.conf.tmpl https://raw.githubusercontent.com/zero12a/di/master/msads/www.conf.tmpl
 
 ##############################################
 ## application
@@ -165,7 +161,7 @@ RUN docker-php-source delete
 
 
 # down entrypoint.sh
-RUN wget -O /entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?11
+RUN wget -O /entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?22
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
@@ -190,6 +186,9 @@ ENV REDIS_CONFIG_ID "CONFIG_CG"
 EXPOSE 80
 
 # conf make conf
+##############################################
+## start
+##############################################
 ENTRYPOINT [ \
     "render", \
         "/usr/local/etc/php-fpm.d/www.conf", \
