@@ -7,7 +7,7 @@
 docker run -i -t -d \
  -v /Users/zeroone/Documents/docker/common:/data/www/common \
  -v /Users/zeroone/Documents/docker/m.k:/data/www/m.k \
- -v /Users/zeroone/Documents/docker/c.g/CG:/data/www/c.g/CG \
+ -v /Users/zeroone/Documents/docker/d.s:/data/www/d.s \
  -p 8060:80 --name mk msamk
 
 # step 1
