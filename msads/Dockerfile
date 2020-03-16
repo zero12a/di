@@ -26,7 +26,7 @@ ARG ENTRYKIT_VERSION=0.4.0
 # tzdata는 타이존데이터
 # apuc컴파일 위해 autoconf, build-base(gcc) 필요
 RUN apk update && apk upgrade
-RUN apk add curl unzip nginx wget sudo git postgresql-dev net-tools busybox-extras autoconf libzip-dev tzdata
+RUN apk add curl unzip nginx wget sudo git postgresql-dev net-tools busybox-extras autoconf libzip-dev tzdata bash
 
 #whereis는 util-linux에 
 RUN apk add --update util-linux
