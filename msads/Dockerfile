@@ -28,6 +28,9 @@ ARG ENTRYKIT_VERSION=0.4.0
 RUN apk update && apk upgrade
 RUN apk add curl unzip nginx wget sudo git postgresql-dev net-tools busybox-extras autoconf libzip-dev tzdata
 
+#whereis
+#RUN apk add --update util-linux
+
 RUN curl -sS https://getcomposer.org/installer | php  
 RUN mv composer.phar /usr/bin/composer
 
@@ -162,8 +165,7 @@ RUN docker-php-source delete
 
 
 # down entrypoint.sh
-WORKDIR /
-RUN wget -O entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?44
+RUN wget -O /entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msads/entrypoint.sh?44
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
@@ -188,4 +190,15 @@ ENV REDIS_CONFIG_ID "CONFIG_CG"
 EXPOSE 80
 
 # conf make conf
-CMD ["/entrypoint.sh"]
+ENTRYPOINT [ \
+    "render", \
+        "/usr/local/etc/php-fpm.d/www.conf", \
+        "--", \
+    "render", \
+        "/data/www/common/include/incConfig.php", \
+        "--", \
+    "render", \
+        "/etc/nginx/nginx.conf", \
+        "--", \
+    "/entrypoint.sh" \
+]

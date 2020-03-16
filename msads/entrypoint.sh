@@ -1,8 +1,10 @@
 #!/bin/sh
 
+echo "\n\nStarting crontab...\n\n"
+crond -f 
 
-printf "\n\nStarting PHP daemon...\n\n"
+echo "\n\nStarting PHP daemon...\n\n"
 php-fpm --daemonize
 
-printf "\n\nStarting crontab...\n\n"
-crond -f 
+echo "Starting Nginx...\n\n"
+/usr/sbin/nginx 
