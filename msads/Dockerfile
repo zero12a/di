@@ -4,10 +4,10 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 8040:80 --name ds msads
 
 # (백그라운드 실행/내PC개발)
-#docker run -i -t -d \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/d.s:/data/www/d.s \
-# -p 8040:80 --name ds msads
+docker run -i -t -d \
+ -v /Users/zeroone/Documents/docker/common:/data/www/common \
+ -v /Users/zeroone/Documents/docker/d.s:/data/www/d.s \
+ -p 8040:80 --name ds msads
 
 # step 1
 FROM php:7.4-fpm-alpine
@@ -36,10 +36,11 @@ RUN mv composer.phar /usr/bin/composer
 
 # mysqli
 RUN docker-php-ext-install mysqli
+#동작안함 RUN apk del --no-cache .build-dependencies
 
 # zip설치 zlib1g-dev는 불필요
 RUN docker-php-ext-install zip
-
+#동작안함 RUN apk del --no-cache .build-dependencies
 
 ##############################################
 ## config os
@@ -106,11 +107,12 @@ RUN docker-php-ext-enable apcu
 
 # install pdo_mysql, pdo_postgresql
 RUN docker-php-ext-install pdo_mysql
+#동작안함 RUN apk del --no-cache .build-dependencies
 
 # install pdo_postgresql
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pgsql pdo_pgsql
-
+#동작안함 RUN apk del --no-cache .build-dependencies
 
 ##############################################
 ## install apps config
@@ -121,6 +123,9 @@ RUN wget -O /usr/local/etc/php/php.ini https://raw.githubusercontent.com/zero12a
 
 # nginx
 RUN wget -O /etc/nginx/nginx.conf.tmpl https://raw.githubusercontent.com/zero12a/di/master/msads/nginx.conf.tmpl
+
+# nginx upstream folder auth change (alpine linux error : "[crit] 24#24: *151 open() /var/lib/nginx/~" )
+RUN chown -R www-data:www-data /var/lib/nginx
 
 # php-fpm www.conf
 # conf copy
@@ -154,7 +159,7 @@ RUN rm master.zip
 ##############################################
 RUN apk del build-base tzdata autoconf libzip-dev postgresql-dev
 RUN pecl clear-cache
-RUN apk del .build-dependencies
+#RUN apk del .build-dependencies
 #RUN apk del .phpize-deps-configure
 RUN docker-php-source delete
 
