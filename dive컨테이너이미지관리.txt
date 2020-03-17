@@ -7,7 +7,7 @@ dive imagename
 # 명령어
 tab
 
-# 불필요 파일삭제
+# 불필요 파일삭제 (alpine DS)
 1. (178M) apk add .build-dependencies $PHPIZE_DEV
 2. (29M) monolog
 3. (26M) aws-sdk-php
