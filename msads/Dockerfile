@@ -17,7 +17,7 @@ FROM php:7.4-fpm-alpine
 ARG APCU_VERSION=5.1.18
 ARG ENTRYKIT_VERSION=0.4.0
 
-##############################################
+##############################################2
 ## install os package
 ##############################################
 # cron, vi, procps(ps) 은 처음부터 설치되어 있음, 
@@ -41,6 +41,9 @@ RUN docker-php-ext-install mysqli
 # zip설치 zlib1g-dev는 불필요
 RUN docker-php-ext-install zip
 #동작안함 RUN apk del --no-cache .build-dependencies
+
+# exif (이미지 타입 알기 함수)
+RUN docker-php-ext-install exif && docker-php-ext-enable exif
 
 ##############################################
 ## config os

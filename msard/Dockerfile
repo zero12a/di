@@ -96,6 +96,8 @@ RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pgsql pdo_pgsql
 
+# exif (이미지 타입 알기 함수)
+RUN docker-php-ext-install exif && docker-php-ext-enable exif
 
 ##############################################
 ## install apps config
