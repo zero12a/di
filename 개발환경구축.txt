@@ -70,7 +70,8 @@ docker 윈도우 환경 구성
 
 17. 도커 허브에 올리기
  - https://hub.docker.com 가입
- - docker login
+ - docker login 
+  . username은 이메일 아니고 그냥 ID
  - 업로드 할 "이미지이름" 레파지토리를 먼저 생성함 (없으면 자동 생성됨)
  - 기존 이미지에 별명주기 ( docker tag 이미지이름(or id) 새이름(zero12a/redis):NEW_TAG )
   . TAG는 참조본을 생성하는 것을 이미지ID가 동일하다.

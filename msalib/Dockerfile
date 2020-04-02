@@ -118,6 +118,8 @@ RUN rm summernote-dist.zip
 WORKDIR /data/www/lib/
 RUN wget -O cleave.min.js https://cdn.jsdelivr.net/npm/cleave.js@1.5.4/dist/cleave.min.js
 
+# 160. signature_pad
+RUN wget -O signature_pad.min.js https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js
 
 # 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
