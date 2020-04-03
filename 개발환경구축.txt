@@ -358,8 +358,9 @@ docker run -d -p 80:80 --name nginx1.14 --net host nginx
    4. php.ini 세션스토어를 redis 핸들러 를 설치 하기 위한 개발 툴 설치 ( yum install gcc make )
    5. redis 설치 ( pecl install redis ) ==> 설치 경로 : /usr/lib64/php/modules/redis.so, 버전3.1.4설치됨
    6. php.ini에 redis 확장 활성화
-   7. igbinary설치 ( pelcl install igbinary) ==> 설치 경로 : /usr/lib64/php/modules/igbinary.so
-
+   7. igbinary설치 ( pecl install igbinary) ==> 설치 경로 : /usr/lib64/php/modules/igbinary.so
+ - ldap인증 붙이기
+  yum install php-install 설치후에 ==> 설치 경로 : /usr/lib64/php/modules/ldap.so
 
 
 < php7/nginx OS에 wget 설치 >
