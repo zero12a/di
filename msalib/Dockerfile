@@ -72,14 +72,11 @@ RUN wget -O ./tableExport/jspdf.plugin.autotable.js https://github.com/simonbeng
 # 50. jquery
 RUN mkdir /data/www/lib/jquery
 
-RUN wget https://code.jquery.com/jquery-1.12.4.min.js
-RUN mv jquery-1.12.4.min.js jquery/
+RUN wget -O jquery/jquery-1.12.4.min.js https://code.jquery.com/jquery-1.12.4.min.js
 
-RUN wget https://code.jquery.com/jquery-3.4.1.min.js
-RUN mv jquery-3.4.1.min.js jquery/
+RUN wget -O jquery/jquery-3.4.1.min.js https://code.jquery.com/jquery-3.4.1.min.js
 
-RUN wget https://code.jquery.com/jquery-3.4.1.slim.min.js
-RUN mv jquery-3.4.1.slim.min.js jquery/
+RUN wget -O jquery/jquery-3.4.1.slim.min.js https://code.jquery.com/jquery-3.4.1.slim.min.js
 
 RUN wget https://jqueryui.com/resources/download/jquery-ui-1.12.1.zip
 RUN unzip jquery-ui-1.12.1.zip
@@ -87,9 +84,13 @@ RUN rm jquery-ui-1.12.1.zip
 RUN mv jquery-ui-1.12.1/jquery-ui.min.* jquery/
 RUN rm -rf jquery-ui-1.12.1
 
-RUN wget https://raw.githubusercontent.com/dobtco/jquery-resizable-columns/gh-pages/dist/jquery.resizableColumns.min.js
-RUN wget https://raw.githubusercontent.com/dobtco/jquery-resizable-columns/gh-pages/dist/jquery.resizableColumns.css
-RUN mv jquery.resizableColumns.* jquery/
+RUN wget -O jquery/jquery.resizableColumns.min.js https://raw.githubusercontent.com/dobtco/jquery-resizable-columns/gh-pages/dist/jquery.resizableColumns.min.js
+RUN wget -O jquery/jquery.resizableColumns.css https://raw.githubusercontent.com/dobtco/jquery-resizable-columns/gh-pages/dist/jquery.resizableColumns.css
+
+RUN wget -O jquery/jquery.multiselect.js https://raw.githubusercontent.com/nobleclem/jQuery-MultiSelect/master/jquery.multiselect.js
+RUN wget -O jquery/jquery.multiselect.css https://raw.githubusercontent.com/nobleclem/jQuery-MultiSelect/master/jquery.multiselect.css
+
+
 # 60. chart.js
 RUN wget https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js
 # 70. feather
