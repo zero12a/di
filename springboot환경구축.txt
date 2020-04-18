@@ -1,0 +1,34 @@
+1. java 설치
+2. mvn 설치
+ - brew install maven
+ - mvn -v
+3. spring 부드 설치
+ - brew tap pivotal/tap
+ - brew install springboot # 신규 설치시
+ - spring --version
+  . v2.1.2
+ - brew upgrade pivotal/tap/springboot # 업그레이드시 
+  . v2.2.6
+ 
+4. ~/.profile 에 프로필에 bin폴더 지정
+ $PATH = "/Users/zeroone/Documents/docker/java/apache-maven-3.6.3/bin:"
+
+5. 단일 그루비 파일 실행
+ - spring run test.groovy
+
+6. mvn 지대로된 프로젝트 실행
+ - https://start.spring.io/ 에서 프로젝트 생성
+ - 다운로드해서 압축 풀고
+ - db연결정보 설정 (resources/application.properties)
+  spring.datasource.url=jdbc:mysql://localhost:3306/CG?autoReconnect=true&useSSL=false
+  spring.datasource.username= 
+  spring.datasource.password= 
+  spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+
+ - 의존성 확인해서 jar생성 
+  > mvn install  ( 첫실행시 엄청 오래 걸림 )
+ - 실행하기
+  > java -jar target/demo-0.0.1-SNAPSHOT.jar
+
+ - target 폴더 지우기
+  > mvn clean
