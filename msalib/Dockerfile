@@ -122,6 +122,9 @@ RUN wget -O cleave.min.js https://cdn.jsdelivr.net/npm/cleave.js@1.5.4/dist/clea
 # 160. signature_pad
 RUN wget -O signature_pad.min.js https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js
 
+# 170. excel import
+RUN wget -O xlsx.full.min.js https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js
+
 # 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
 WORKDIR /data/www/lib/dhtmlxSuite
