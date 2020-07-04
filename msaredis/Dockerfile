@@ -1,4 +1,6 @@
-docker run -d -p 7379:6379 --name redis1 redis
+## debian linux 10 (/etc/issue, /etc/debian_version)
+# docker build -t msaredis .
+# docker run -d -p 7379:6379 --name redis1 msaredis
 
 
 FROM redis
@@ -14,7 +16,9 @@ RUN apt-get install -y vim telnet procps net-tools
 
 
 # 엔트리킷 환경변수템플릿
-WORKDIR /data
+RUN mkdir /usr_data
+RUN chmod 755 /usr_data
+WORKDIR /usr_data
 RUN wget https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
 RUN tar -xvzf entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
 RUN rm entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
@@ -23,5 +27,17 @@ RUN entrykit --symlink
 
 
 # redis.conf 가져오기
-RUN wget https://github.com/zero12a/di/archive/master.zip
+WORKDIR /usr_data
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msaredis/redis.conf.tmpl
 
+# redis 비밀번호 설정하기
+ENV REDIS_PASSWD "1234"
+
+# 렌더링하기
+ENTRYPOINT [ \
+    "render", \
+        "/usr_data/redis.conf", \
+        "--", \
+    "/usr/local/bin/redis-server", \
+        "/usr_data/redis.conf" \
+]
