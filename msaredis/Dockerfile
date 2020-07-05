@@ -2,8 +2,8 @@
 # docker build -t msaredis .
 # docker run -d -p 7379:6379 --name redis1 msaredis
 
-
-FROM redis
+#검증버전 ; 4.0.2, 최신버전 : 6.0.5
+FROM redis 
 
 
 ARG ENTRYKIT_VERSION=0.4.0
