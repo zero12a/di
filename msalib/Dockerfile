@@ -73,8 +73,8 @@ RUN wget -O ./tableExport/jspdf.plugin.autotable.js https://github.com/simonbeng
 RUN mkdir /data/www/lib/jquery
 
 RUN wget -O jquery/jquery-1.12.4.min.js https://code.jquery.com/jquery-1.12.4.min.js
-
 RUN wget -O jquery/jquery-3.4.1.min.js https://code.jquery.com/jquery-3.4.1.min.js
+RUN wget -O jquery/jquery-3.5.1.min.js https://code.jquery.com/jquery-3.5.1.min.js
 
 RUN wget -O jquery/jquery-3.4.1.slim.min.js https://code.jquery.com/jquery-3.4.1.slim.min.js
 
@@ -124,6 +124,27 @@ RUN wget -O signature_pad.min.js https://cdn.jsdelivr.net/npm/signature_pad@2.3.
 
 # 170. excel import
 RUN wget -O xlsx.full.min.js https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js
+
+# 180. fontawesome (vuetify)
+RUN mkdir fontawesome
+RUN mkdir fontawesome/css
+RUN mkdir fontawesome/webfonts
+RUN wget -O fontawesome/css/fontawesome.css https://use.fontawesome.com/releases/v5.0.13/css/all.css
+RUN wget -O fontawesome/webfonts/fa-solid-900.woff2 https://use.fontawesome.com/releases/v5.0.13/webfonts/fa-solid-900.woff2
+RUN wget -O fontawesome/webfonts/fa-solid-900.woff https://use.fontawesome.com/releases/v5.0.13/webfonts/fa-solid-900.woff
+
+# 190. materialdesignicons (vuetify)
+RUN mkdir materialdesignicons
+RUN mkdir materialdesignicons/css
+RUN mkdir materialdesignicons/fonts
+RUN wget -O materialdesignicons/css/materialdesignicons.min.css https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css
+RUN wget -O materialdesignicons/fonts/materialdesignicons-webfont.woff2 https://cdn.jsdelivr.net/npm/@mdi/font@5.x/fonts/materialdesignicons-webfont.woff2?v=5.3.45
+RUN wget -O materialdesignicons/fonts/materialdesignicons-webfont.eot https://cdn.jsdelivr.net/npm/@mdi/font@5.x/fonts/materialdesignicons-webfont.eot
+
+# 191. vue & vuetify
+RUN wget -O vue2x.js https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js
+RUN wget -O vuetify2x.js https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js
+
 
 # 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
