@@ -23,7 +23,7 @@ ARG ENTRYKIT_VERSION=0.4.0
 # step 2
 WORKDIR /root
 RUN apt-get update            
-RUN apt-get install -y curl unzip nginx wget sudo libpq-dev
+RUN apt-get install -y curl unzip nginx wget sudo libpq-dev cron
 # sudo : batch log file is target user owner.
 
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
@@ -77,6 +77,14 @@ RUN composer require ezyang/htmlpurifier
 #캐쉬폴더 777권한 변경
 RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
 RUN composer require phpoffice/phpexcel
+
+# crontab add
+WORKDIR /data/www
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msard/crontab.txt
+RUN cp /data/www/crontab.txt /etc/crontabs/crontab-watcher
+RUN chmod 0644 /etc/crontabs/crontab-watcher
+RUN crontab /etc/crontabs/crontab-watcher
+
 
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
