@@ -145,6 +145,11 @@ RUN wget -O materialdesignicons/fonts/materialdesignicons-webfont.eot https://cd
 RUN wget -O vue2x.js https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js
 RUN wget -O vuetify2x.js https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js
 
+# 192. jodit
+RUN wget -O jodit.min.js https://cdnjs.cloudflare.com/ajax/libs/jodit/3.4.22/jodit.min.js
+RUN wget -O jodit.min.css https://cdnjs.cloudflare.com/ajax/libs/jodit/3.4.22/jodit.min.css
+
+
 
 # 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
