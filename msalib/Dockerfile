@@ -149,6 +149,9 @@ RUN wget -O vuetify2x.js https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.j
 RUN wget -O jodit.min.js https://cdnjs.cloudflare.com/ajax/libs/jodit/3.4.22/jodit.min.js
 RUN wget -O jodit.min.css https://cdnjs.cloudflare.com/ajax/libs/jodit/3.4.22/jodit.min.css
 
+# 193. select2 (multi tag select)
+RUN wget -O jquery/select2.min.css https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css
+RUN wget -O jquery/select2.min.js https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js
 
 
 # 200. (private project) dhtmlx lib
