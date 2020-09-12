@@ -58,7 +58,7 @@ RUN echo "Asia/Seoul" > /etc/timezone
 RUN mkdir /data
 RUN mkdir /data/www
 
-RUN chmod 777 /data/www/log
+#RUN chmod 777 /data/www/log
 
 
 
