@@ -146,3 +146,15 @@ LoadBalancer Ingress:   a320587ffd19711e5a37606cf4a74574-1142138393.us-east-1.el
 # 에러 FAQ
 1. error: error parsing simple-pod.yaml: error converting YAML to JSON: yaml: line 8: mapping values are not allowed in this context
 - re : "kubectl apply -f simple-pod.yaml"명령어 실행시 발생하며, 띄워쓰기 및 TAB 반드시 맞춰야 함.
+
+#사용자 컨피크(~.aws/config)
+[default]
+output = json
+region = ap-northeast-2
+[eks]
+output = json
+region = ap-northeast-2
+[profile eksadmin]
+role_arn = arn:aws:iam::776092519253:role/myEksCluster
+source_profile = eks
+
