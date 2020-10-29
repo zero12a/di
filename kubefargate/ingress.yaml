@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "my-ingress"
+  name: test-ingress
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/target-type: ip
@@ -10,7 +10,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /*
+          - path: /hello
             backend:
-              serviceName: "my-nginx-svc"
+              serviceName: clusterip-service-1
               servicePort: 80
