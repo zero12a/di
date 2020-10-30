@@ -7,7 +7,7 @@
 
  - 1개의 인스턴스 그룹이 생성되며(무조건1개임)
     이름, 상태, 영역, 인스턴스, 생성일
-    gke-cluster-1-default-pool-81639882-grp 	실행 중 us-central1-c 	1 	2020. 10. 30. PM 1:41:57 	
+    gke-cluster-1-default-pool-xxx-grp 	실행 중 us-central1-c 	1 	2020. 10. 30. PM 1:41:57 	
 
  - (1개의 디펄트풀 안에는 노드수 3의 설정정보 때문에) 아래와 같이 3개의 디펄트풀이 3개 생성되며
     gke-cluster-1-default-pool-xxxxx1 	Ready 	463 mCPU 	940 mCPU 	377.49 MB 	2.97 GB 	0 B 	0 B 	
