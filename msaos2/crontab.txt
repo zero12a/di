@@ -1,0 +1,3 @@
+# must newline 1
+* * * * * sudo -u www-data /data/www/common/cron/predis_watcher.sh
+# must newline 2
