@@ -1,13 +1,13 @@
 ## debian linux 10
 # docker build  -t msaos2 .
-# (포그라운드 실행/배포) docker run -i -t -p 8040:80 --name os2 msads2
-# (백그라운드 실행/배포) docker run -i -t -d -p 8040:80 --name os2 msads2
+# (포그라운드 실행/배포) docker run -i -t -p 8052:80 --name os2 msads2
+# (백그라운드 실행/배포) docker run -i -t -d -p 8052:80 --name os2 msads2
 
 # (백그라운드 실행/내PC개발)
-#docker run -i -t -d \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
-# -p 8040:80 --name os2 msaos2
+docker run -i -t -d \
+ -v /Users/zeroone/Documents/docker/common:/data/www/common \
+ -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
+ -p 8052:80 --name os2 msaos2
 
 # step 1
 FROM php:7.4-fpm-alpine
