@@ -10,11 +10,11 @@ docker run -i -t -d \
  -p 8052:80 --name os2 msaos2
 
 # step 1
-FROM php:7.4-fpm-alpine
+FROM php:7.4.13-fpm-alpine3.12
 
 # 패키지 찾기 : apk search gcc | grep ^gcc
 
-ARG APCU_VERSION=5.1.18
+ARG APCU_VERSION=5.1.19
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################2
@@ -58,11 +58,10 @@ RUN echo "Asia/Seoul" > /etc/timezone
 ##############################################
 RUN mkdir /data
 RUN mkdir /data/www
-RUN mkdir /data/www/o.s
 RUN mkdir /data/www/lib
 RUN mkdir /data/www/lib/php
 # make folder
-RUN mkdir /data/www/d.s
+RUN mkdir /data/www/o.s
 RUN chown www-data:www-data /data/www/o.s
 # make log folder
 RUN mkdir /data/www/log
@@ -138,8 +137,8 @@ RUN wget -O www.conf.tmpl https://raw.githubusercontent.com/zero12a/di/master/ms
 WORKDIR /data/www
 RUN wget https://github.com/zero12a/os/archive/master.zip
 RUN unzip master.zip
-RUN mv os-master/ o.s/
-RUN rm master.zip
+RUN mv os-master/* o.s/
+RUN rm -rf master.zip os-master
 
 # step 6
 # common download
