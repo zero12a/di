@@ -6,7 +6,7 @@
 # (백그라운드 실행/내PC개발)
 #docker run -i -t -d \
 # -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/d.s:/data/www/o.s \
+# -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
 # -p 8040:80 --name os2 msaos2
 
 # step 1
@@ -58,6 +58,7 @@ RUN echo "Asia/Seoul" > /etc/timezone
 ##############################################
 RUN mkdir /data
 RUN mkdir /data/www
+RUN mkdir /data/www/o.s
 RUN mkdir /data/www/lib
 RUN mkdir /data/www/lib/php
 # make folder
@@ -81,15 +82,6 @@ RUN composer require ezyang/htmlpurifier
 #캐쉬폴더 777권한 변경
 RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
 RUN composer require phpoffice/phpexcel
-
-
-
-# crontab add
-WORKDIR /data/www
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msaos2/crontab.txt
-RUN cp /data/www/crontab.txt /etc/crontabs/crontab-watcher
-RUN chmod 0644 /etc/crontabs/crontab-watcher
-RUN crontab /etc/crontabs/crontab-watcher
 
 
 # 엔트리킷 환경변수템플릿
@@ -146,7 +138,7 @@ RUN wget -O www.conf.tmpl https://raw.githubusercontent.com/zero12a/di/master/ms
 WORKDIR /data/www
 RUN wget https://github.com/zero12a/os/archive/master.zip
 RUN unzip master.zip
-RUN mv ds-master/ d.s/
+RUN mv os-master/ o.s/
 RUN rm master.zip
 
 # step 6
