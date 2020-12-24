@@ -4,10 +4,10 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 8052:80 --name os2 msads2
 
 # (백그라운드 실행/내PC개발)
-docker run -i -t -d \
- -v /Users/zeroone/Documents/docker/common:/data/www/common \
- -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
- -p 8052:80 --name os2 msaos2
+# docker run -i -t -d \
+#  -v /Users/zeroone/Documents/docker/common:/data/www/common \
+#  -v /Users/zeroone/Documents/docker/o.s:/data/www/o.s \
+#  -p 8052:80 --name os2 msaos2
 
 # step 1
 FROM php:7.4.13-fpm-alpine3.12
@@ -82,6 +82,12 @@ RUN composer require ezyang/htmlpurifier
 RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
 RUN composer require phpoffice/phpexcel
 
+# crontab add
+WORKDIR /data/www
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msads/crontab.txt
+RUN cp /data/www/crontab.txt /etc/crontabs/crontab-watcher
+RUN chmod 0644 /etc/crontabs/crontab-watcher
+RUN crontab /etc/crontabs/crontab-watcher
 
 # 엔트리킷 환경변수템플릿
 WORKDIR /data

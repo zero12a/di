@@ -6,7 +6,8 @@ msapm 8050->80/tcp  pm #phpmyadmin
 msamk 8060->80/tcp   mk #메이커
 msamk 8040->80/tcp   ds #데모서비스
 msard 8080->80/tcp   rd #서비스
-msaos 8052->8052/tcp           os #인증 (msaos는 swoole버전, masos2는 nginx-fpm버전)
+msaos 8052->80/tcp           os #인증 (msaos는 swoole버전, masos2는 nginx-fpm버전)
+msaos 18052->80/tcp           os2 #인증 (msaos는 swoole버전, masos2는 nginx-fpm버전)
 msacg:200105 0.0.0.0:8090->80/tcp   cg #코드젠
 msalib 0.0.0.0:8070->80/tcp    lib #라이브러리 및 img
 msalc lc #로그수집기(오픈포트 없음)
