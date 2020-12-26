@@ -107,6 +107,9 @@ RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 # install pdo_mysql, pdo_postgresql
 RUN docker-php-ext-install pdo_mysql
 
+# install opcache
+RUN docker-php-ext-install opcache
+
 # install pdo_postgresql
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pgsql pdo_pgsql
