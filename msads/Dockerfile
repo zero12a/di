@@ -112,6 +112,9 @@ RUN docker-php-ext-enable apcu
 RUN docker-php-ext-install pdo_mysql
 #동작안함 RUN apk del --no-cache .build-dependencies
 
+# install opcache
+RUN docker-php-ext-install opcache
+
 # install pdo_postgresql
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pgsql pdo_pgsql

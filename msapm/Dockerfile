@@ -30,6 +30,9 @@ RUN mv composer.phar /usr/bin/composer
 # mysqli
 RUN docker-php-ext-install mysqli
 
+# install opcache
+RUN docker-php-ext-install opcache
+
 # step 4
 RUN apt-get install -y zlib1g-dev && apt-get install -y libzip-dev
 RUN docker-php-ext-install zip
