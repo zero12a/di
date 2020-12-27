@@ -27,6 +27,22 @@ RUN apt-get install -y vim telnet procps net-tools
 RUN curl -sS https://getcomposer.org/installer | php  
 RUN mv composer.phar /usr/bin/composer
 
+
+##############################################
+## make folder
+##############################################
+RUN mkdir /data
+RUN mkdir /data/www
+RUN mkdir /data/www/lib
+RUN mkdir /data/www/lib/php
+
+
+##############################################
+## install apps package
+##############################################
+# install download lib
+WORKDIR /data/www/lib/php
+
 # mysqli
 RUN docker-php-ext-install mysqli
 
@@ -56,11 +72,7 @@ RUN rm -f /etc/localtime
 RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
 
-##############################################
-## make folder
-##############################################
-RUN mkdir /data
-RUN mkdir /data/www
+
 
 
 ##############################################
