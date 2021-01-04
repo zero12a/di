@@ -6,7 +6,7 @@
  - os2 : redis정보
  - lib : x
  - lc : redis정보
- - redis : 초기pw 
+ - redis : 초기pw (버전6이상은 id/비번 인증.)
  - mysql : 초기 빈db, 사용자id/비번
 
 2. 엔터프라이즈 환경 인증
