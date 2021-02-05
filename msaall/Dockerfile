@@ -27,6 +27,10 @@ ARG ENTRYKIT_VERSION=0.4.0
 RUN apk update && apk upgrade
 RUN apk add curl unzip nginx wget sudo git postgresql-dev net-tools busybox-extras autoconf libzip-dev tzdata bash
 
+#ldap설치
+RUN apk add openldap-dev
+RUN docker-php-ext-install ldap && docker-php-ext-enable ldap
+
 #whereis는 util-linux에 
 RUN apk add --update util-linux
 
