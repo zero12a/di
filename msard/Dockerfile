@@ -29,6 +29,10 @@ RUN apt-get install -y curl unzip nginx wget sudo libpq-dev cron
 # Install debug tool (vi:bim, ps:procps, netstat:net-tools)
 RUN apt-get install -y vim telnet procps net-tools
 
+#ldap설치
+RUN apt-get install openldap-dev
+RUN docker-php-ext-install ldap && docker-php-ext-enable ldap
+
 # step 3
 RUN curl -sS https://getcomposer.org/installer | php  
 RUN mv composer.phar /usr/bin/composer
