@@ -27,7 +27,7 @@ ARG ENTRYKIT_VERSION=0.4.0
 # cron, vi, procps(ps) 은 처음부터 설치되어 있음, 
 # libpq-dev는 postgresql-dev로 변경
 # telnet은 busybox-extras로 변경
-# tzdata는 타이존데이터
+# tzdata는 타임존데이터
 # apuc컴파일 위해 autoconf, build-base(gcc) 필요
 RUN apk update && apk upgrade
 RUN apk add curl unzip wget sudo net-tools busybox-extras autoconf mysql-dev libzip-dev tzdata bash
@@ -115,7 +115,7 @@ EXPOSE 514/tcp
 ##############################################
 ENTRYPOINT [ \
     "render", \
-    "/usr/local/etc/php-fpm.d/www.conf", \
+    "/etc/rsyslog.conf", \
     "--", \    
     "/entrypoint.sh" \
 ]
