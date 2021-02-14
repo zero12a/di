@@ -4,10 +4,10 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 514:514/tcp -p 514:514/udp --name lc2 msalc2
 
 # (백그라운드 실행/내PC개발)
-docker run -i -t -d --log-driver json-file \
- -e "TO_MYSQL_HOST=172.17.0.1" -e "TO_MYSQL_PORT=3306" -e "TO_MYSQL_DBNM=RSYSLOG" -e "TO_MYSQL_UID=cg" -e "TO_MYSQL_PWD=cg1234qwer" \
- -v /Users/zeroone/Documents/docker:/data/www \
- -p 514:514/tcp -p 514:514/udp --name lc2 msalc2
+#docker run -i -t -d --log-driver json-file \
+# -e "TO_MYSQL_HOST=172.17.0.1" -e "TO_MYSQL_PORT=3306" -e "TO_MYSQL_DBNM=RSYSLOG" -e "TO_MYSQL_UID=cg" -e "TO_MYSQL_PWD=cg1234qwer" \
+# -v /Users/zeroone/Documents/docker:/data/www \
+# -p 514:514/tcp -p 514:514/udp --name lc2 msalc2
 
 # step 1
 FROM alpine:3.13.1
@@ -90,7 +90,7 @@ RUN wget -O /etc/rsyslog.conf.tmpl https://raw.githubusercontent.com/zero12a/di/
 RUN apk del build-base tzdata autoconf libzip-dev
 
 # down entrypoint.sh
-RUN wget -O /entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msalc2/entrypoint.sh?4
+RUN wget -O /entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msalc2/entrypoint.sh?5
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
