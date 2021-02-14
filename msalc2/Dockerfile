@@ -37,7 +37,7 @@ RUN apk add curl unzip wget sudo net-tools busybox-extras autoconf mysql-dev lib
 RUN apk add --update util-linux
 
 #rsyslog 설치
-RUN apk add rsyslog
+RUN apk add rsyslog rsyslog-mysql
 
 
 ##############################################
@@ -91,7 +91,7 @@ RUN wget -O /etc/rsyslog.conf.tmpl https://raw.githubusercontent.com/zero12a/di/
 RUN apk del build-base tzdata autoconf libzip-dev
 
 # down entrypoint.sh
-RUN wget -O /entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msalc2/entrypoint.sh?1
+RUN wget -O /entrypoint.sh https://raw.githubusercontent.com/zero12a/di/master/msalc2/entrypoint.sh?2
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
