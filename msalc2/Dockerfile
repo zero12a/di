@@ -5,9 +5,10 @@
 
 # (백그라운드 실행/내PC개발)
 #docker run -i -t -d \
-# -e "TO_MYSQL_HOST=" -e "TO_MYSQL_PORT=" -e "TO_MYSQL_DBNM=" -e "TO_MYSQL_UID=" -e "TO_MYSQL_PWD="
+# --log-driver json-file \
+ #-e "TO_MYSQL_HOST=172.17.0.1" -e "TO_MYSQL_PORT=3306" -e "TO_MYSQL_DBNM=RSYSLOG" -e "TO_MYSQL_UID=cg" -e "TO_MYSQL_PWD=cg1234qwer" \
 # -v /Users/zeroone/Documents/docker:/data/www \
-# -p 8030:80 --name all msaall
+# -p 514:514/tcp -p 514:514/udp --name lc2 msalc2
 
 # step 1
 FROM alpine:3.13.1
@@ -113,9 +114,6 @@ EXPOSE 514/tcp
 ##############################################
 ## start
 ##############################################
-ENTRYPOINT [ \
-    "render", \
-    "/etc/rsyslog.conf", \
-    "--", \    
+ENTRYPOINT [  \
     "/entrypoint.sh" \
 ]
