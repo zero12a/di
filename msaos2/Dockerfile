@@ -31,6 +31,10 @@ RUN apk add curl unzip nginx wget sudo git postgresql-dev net-tools busybox-extr
 #whereis는 util-linux에 
 RUN apk add --update util-linux
 
+#ldap설치
+RUN apk add openldap-dev
+RUN docker-php-ext-install ldap && docker-php-ext-enable ldap
+
 RUN curl -sS https://getcomposer.org/installer | php  
 RUN mv composer.phar /usr/bin/composer
 
