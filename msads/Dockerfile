@@ -78,6 +78,14 @@ RUN composer require monolog/monolog
 RUN composer require predis/predis
 RUN composer require aws/aws-sdk-php
 RUN composer require ezyang/htmlpurifier
+
+#event driven framework ( workerman require pcntl.so )
+RUN composer require gotzmann/comet  
+RUN composer require workerman/workerman
+
+RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
+
+
 #캐쉬폴더 777권한 변경
 RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
 RUN composer require phpoffice/phpexcel

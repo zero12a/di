@@ -4,9 +4,10 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 8030:80 --name all msaall
 
 # (백그라운드 실행/내PC개발)
-docker run -i -t -d \
+ docker run -i -t -d \
  -v /Users/zeroone/Documents/docker:/data/www \
- -p 8030:80 --name all msaall
+ -p 9080:80 -p 9081:81 -p 9082:82 -p 9083:83 \
+ --name all msaall
 
 # step 1
 FROM php:7.4-fpm-alpine
@@ -47,6 +48,14 @@ RUN docker-php-ext-install zip
 
 # exif (이미지 타입 알기 함수)
 RUN docker-php-ext-install exif && docker-php-ext-enable exif
+
+
+#event driven framework ( workerman require pcntl.so )
+RUN composer require workerman/workerman
+RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
+
+RUN docker-php-ext-install openssl && docker-php-ext-enable openssl
+
 
 ##############################################
 ## config os
@@ -153,7 +162,7 @@ ENV REDIS_PORT 1234
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # port open
-EXPOSE 80
+EXPOSE 80 81 82 83 84 85 86 87 88 89
 
 # conf make conf
 ##############################################
