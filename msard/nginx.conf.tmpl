@@ -50,9 +50,10 @@ http {
 
         root   /data/www;
         index  index.php index.html index.htm;
-
+        error_page 403 = /common/403.html;
+        error_page 404 = /common/404.html;
         location / {
-            try_files $uri $uri/ @extensionless-php;
+            try_files $uri $uri/ @extensionless-php =404;
         }
 
         # SubPath is first adoption
@@ -71,10 +72,12 @@ http {
 
         location ~ \.php$ {
             root           /data/www;
-		
+            try_files $uri $uri.php =404;
+
             fastcgi_pass {{ var "FASTCGI_PASS" | default "unix:/var/run/php-fpm.sock" }};
             fastcgi_index  index.php;
  	        fastcgi_read_timeout 300;
+             fastcgi_intercept_errors on;
             fastcgi_param  SCRIPT_FILENAME  /$document_root$fastcgi_script_name;
             include        fastcgi_params;
         }
