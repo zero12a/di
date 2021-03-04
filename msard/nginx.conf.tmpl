@@ -53,7 +53,8 @@ http {
         error_page 403 = /common/403.html;
         error_page 404 = /common/404.html;
         location / {
-            try_files $uri $uri/ @extensionless-php =404;
+            #try_files $uri $uri/ @extensionless-php =404;
+            try_files $uri $uri/ @extensionless-php;
         }
 
         # SubPath is first adoption
@@ -72,7 +73,7 @@ http {
 
         location ~ \.php$ {
             root           /data/www;
-            try_files $uri $uri.php =404;
+            #try_files $uri $uri.php =404;
 
             fastcgi_pass {{ var "FASTCGI_PASS" | default "unix:/var/run/php-fpm.sock" }};
             fastcgi_index  index.php;
