@@ -11,8 +11,22 @@
 ,"log-opts": {
 		"syslog-address": "tcp://172.17.0.1:514"
 		,"tag": "{{.Name}}"
+		,"labels": "{{.FullID}}"
+		,"env": "{{.ImageName}}"
 	}
 }
+
+//Markup ( https://docs.docker.com/config/containers/logging/log_tags/ )
+{{.ID}} 	The first 12 characters of the container ID.
+{{.FullID}} 	The full container ID.
+{{.Name}} 	The container name.
+{{.ImageID}} 	The first 12 characters of the container’s image ID.
+{{.ImageFullID}} 	The container’s full image ID.
+{{.ImageName}} 	The name of the image used by the container.
+{{.DaemonName}} 	The name of the docker program (docker).
+
+ex> --log-opt tag="{{.ImageName}}/{{.Name}}/{{.ID}}
+
 
 2. docker ui툴을에서 "Restart docker"를 실행하고
 

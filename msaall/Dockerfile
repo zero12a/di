@@ -3,18 +3,14 @@
 # (포그라운드 실행/배포) docker run -i -t -p 8030:80 --name all msaall
 # (백그라운드 실행/배포) docker run -i -t -d -p 8030:80 --name all msaall
 
-# (백그라운드 실행/내PC개발)
- docker run -i -t -d \
- -v /Users/zeroone/Documents/docker:/data/www \
- -p 9080:80 -p 9081:81 -p 9082:82 -p 9083:83 \
- --name all msaall
+
 
 # step 1
-FROM php:7.4-fpm-alpine
+FROM php:8-fpm-alpine
 
 # 패키지 찾기 : apk search gcc | grep ^gcc
 
-ARG APCU_VERSION=5.1.18
+ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################2
@@ -49,12 +45,18 @@ RUN docker-php-ext-install zip
 # exif (이미지 타입 알기 함수)
 RUN docker-php-ext-install exif && docker-php-ext-enable exif
 
+#폴더 이동
+WORKDIR /data/www/lib/php
+
+#guzzlehttp
+RUN composer require guzzlehttp/guzzle:^7.0
+
 
 #event driven framework ( workerman require pcntl.so )
 RUN composer require workerman/workerman
 RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
 
-RUN docker-php-ext-install openssl && docker-php-ext-enable openssl
+#RUN docker-php-ext-install openssl && docker-php-ext-enable openssl
 
 
 ##############################################
