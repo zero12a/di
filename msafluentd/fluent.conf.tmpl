@@ -1,0 +1,27 @@
+<source>
+  @type  forward
+  @id    input1
+  @label @mainstream
+  port  24224
+</source>
+
+<filter **>
+  @type stdout
+</filter>
+
+<label @mainstream>
+
+    <match **>
+        @type mysql_bulk
+        host 172.17.0.1
+        port 3306
+        database RSYSLOG
+        username cg
+        password cg1234qwer
+        column_names SRC,CONTAINERNM,CONTAINERID,LOG
+        key_names source,container_name,container_id,log
+        table FLUENTLOG
+        flush_interval 10s
+    </match>
+
+</label>
