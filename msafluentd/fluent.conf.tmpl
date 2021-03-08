@@ -13,11 +13,11 @@
 
     <match **>
         @type mysql_bulk
-        host 172.17.0.1
-        port 3306
-        database RSYSLOG
-        username cg
-        password cg1234qwer
+        host {{ var "TO_MYSQL_HOST" | default "172.17.0.1" }}
+        port {{ var "TO_MYSQL_PORT" | default "3306" }}
+        database {{ var "TO_MYSQL_DBNM" | default "TESTDB" }} 
+        username {{ var "TO_MYSQL_UID" | default "TESTUSER" }} 
+        password {{ var "TO_MYSQL_PWD" | default "TESTPWD" }} 
         column_names SRC,CONTAINERNM,CONTAINERID,LOG
         key_names source,container_name,container_id,log
         table FLUENTLOG

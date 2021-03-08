@@ -1,10 +1,20 @@
+## debian linux 10
+# docker build  -t msafluentd .
+# (포그라운드 실행/배포) docker run -i -t -p 8030:80 --name fluentd msafluentd
+# (백그라운드 실행/배포) docker run -i -t -d -p 8030:80 --name fluentd msafluentd
+
+
+
 FROM fluent/fluentd:v1.12-1
 
+# user commend line arg
 ARG TO_MYSQL_HOST
 ARG TO_MYSQL_PORT
 ARG TO_MYSQL_DBNM
 ARG TO_MYSQL_UID
 ARG TO_MYSQL_PWD
+
+ARG ENTRYKIT_VERSION=0.4.0
 
 # Use root account to use apk
 USER root
@@ -24,6 +34,14 @@ RUN apk add --no-cache --update --virtual .build-deps \
  && apk del .build-deps \
  && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
 
+# 엔트리킷 환경변수템플릿
+WORKDIR /etc
+RUN wget -O entrykit.tgz https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
+RUN tar -xvzf entrykit.tgz
+RUN rm entrykit.tgz
+RUN mv entrykit /usr/local/bin
+RUN entrykit --symlink
+
 ##############################################
 ## config os
 ##############################################
@@ -36,8 +54,9 @@ RUN echo "Asia/Seoul" > /etc/timezone
 ##############################################
 ## config daemon
 ##############################################
-RUN wget -O /fluent.conf.tmpl https://raw.githubusercontent.com/zero12a/di/master/msafluentd/fluent.conf.tmpl
-
+RUN wget -O /fluentd/etc/fluent.conf.tmpl https://raw.githubusercontent.com/zero12a/di/master/msafluentd/fluent.conf.tmpl
+RUN ["chmod", "777", "/fluentd/etc/fluent.conf.tmpl"]
+RUN ["chmod", "777", "/fluentd/etc/fluent.conf"]
 
 
 USER fluent
@@ -67,3 +86,5 @@ ENTRYPOINT [ \
         "--", \
     "/bin/entrypoint.sh" \
 ]
+
+CMD ["fluentd"]
