@@ -3,8 +3,8 @@
 이미지 서비스포트 컨테이너명 #용도
 msapm 8030->80/tcp  pm #전체 개발용
 msapm 8050->80/tcp  pm #phpmyadmin
-msamk 8060->80/tcp   mk #메이커
-msamk 8040->80/tcp   ds #데모서비스
+msamk 8060->80/tcp   mk #메이커 8061(workerman test)->80/tcp
+msamk 8040->80/tcp   ds #데모서비스 
 msard 8080->80/tcp   rd #서비스
 msaos 8052->80/tcp           os #[미사용] 인증 (msaos는 swoole버전, masos2는 nginx-fpm버전)
 msaos 18052->80/tcp           os2 #인증 (msaos는 swoole버전, masos2는 nginx-fpm버전)

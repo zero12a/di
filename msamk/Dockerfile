@@ -3,15 +3,8 @@
 # (포그라운드 실행/배포) docker run -i -t -p 8060:80 --name mk msamk
 # (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name mk msamk
 
-# (백그라운드 실행/내PC개발)
-docker run -i -t -d \
- -v /Users/zeroone/Documents/docker/common:/data/www/common \
- -v /Users/zeroone/Documents/docker/m.k:/data/www/m.k \
- -v /Users/zeroone/Documents/docker/d.s:/data/www/d.s \
- -p 8060:80 --name mk msamk
-
 # step 1
-FROM php:7.4-fpm
+FROM php:8.0-fpm
 
 # ARG는 빌드시에만 사용가능하고, ENV는 실제싱행 RUN/CMD에 사용가능
 # ARG GIT_EMAIL
@@ -19,7 +12,7 @@ FROM php:7.4-fpm
 ARG GIT_TOKEN
 
 # step 2
-ARG APCU_VERSION=5.1.18
+ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################
@@ -80,11 +73,7 @@ RUN chmod 777 /data/www/log
 WORKDIR /data/www/lib/php
 RUN composer require monolog/monolog
 RUN composer require predis/predis
-RUN composer require aws/aws-sdk-php
-RUN composer require ezyang/htmlpurifier
-#캐쉬폴더 777권한 변경
-RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
-RUN composer require phpoffice/phpexcel
+RUN composer require workerman/workerman
 
 # crontab add
 WORKDIR /data/www
@@ -118,8 +107,7 @@ RUN docker-php-ext-install pgsql pdo_pgsql
 ## install apps config
 ##############################################
 # php.ini 가져오기
-WORKDIR /usr/local/etc/php
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msamk/php.ini
+RUN wget -O php2.ini -P /usr/local/etc/php https://raw.githubusercontent.com/zero12a/di/master/msamk/php.ini
 
 # nginx
 # conf copy
@@ -179,7 +167,7 @@ ENV REDIS_PORT 1234
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # port open
-EXPOSE 80
+EXPOSE 80 81
 
 # conf make conf
 ENTRYPOINT [ \
