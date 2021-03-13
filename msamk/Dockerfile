@@ -110,7 +110,7 @@ RUN docker-php-ext-install pgsql pdo_pgsql
 ## install apps config
 ##############################################
 # php.ini 가져오기
-RUN wget -O php.ini -P /usr/local/etc/php https://raw.githubusercontent.com/zero12a/di/master/msamk/php8.ini
+RUN wget -O /usr/local/etc/php/php.ini https://raw.githubusercontent.com/zero12a/di/master/msamk/php8.ini
 
 # nginx
 # conf copy
