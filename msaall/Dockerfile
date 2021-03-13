@@ -12,6 +12,7 @@ FROM php:8-fpm-alpine
 
 ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
+ARG GUZZLEHTTP_VERSION=7.2
 
 ##############################################2
 ## install os package
@@ -49,7 +50,7 @@ RUN docker-php-ext-install exif && docker-php-ext-enable exif
 WORKDIR /data/www/lib/php
 
 #guzzlehttp
-RUN composer require guzzlehttp/guzzle:^7.0
+RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
 
 
 #event driven framework ( workerman require pcntl.so )

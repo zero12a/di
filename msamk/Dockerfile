@@ -14,6 +14,7 @@ ARG GIT_TOKEN
 # step 2
 ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
+ARG GUZZLEHTTP_VERSION=7.2
 
 ##############################################
 ## install os package
@@ -74,6 +75,8 @@ WORKDIR /data/www/lib/php
 RUN composer require monolog/monolog
 RUN composer require predis/predis
 RUN composer require workerman/workerman
+RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
+
 
 # crontab add
 WORKDIR /data/www
@@ -107,7 +110,7 @@ RUN docker-php-ext-install pgsql pdo_pgsql
 ## install apps config
 ##############################################
 # php.ini 가져오기
-RUN wget -O php2.ini -P /usr/local/etc/php https://raw.githubusercontent.com/zero12a/di/master/msamk/php.ini
+RUN wget -O php.ini -P /usr/local/etc/php https://raw.githubusercontent.com/zero12a/di/master/msamk/php8.ini
 
 # nginx
 # conf copy
