@@ -70,13 +70,14 @@ RUN chmod 777 /data/www/log
 ## install apps package
 ##############################################
 # install download lib
+# react/mysql is workerman
 
 WORKDIR /data/www/lib/php
 RUN composer require monolog/monolog
 RUN composer require predis/predis
 RUN composer require workerman/workerman
 RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
-
+RUN composer require react/mysql
 
 # crontab add
 WORKDIR /data/www
