@@ -55,6 +55,7 @@ RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
 
 #event driven framework ( workerman require pcntl.so )
 RUN composer require workerman/workerman
+RUN composer require workerman/redis
 RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
 
 #RUN docker-php-ext-install openssl && docker-php-ext-enable openssl
