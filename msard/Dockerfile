@@ -5,7 +5,7 @@
 
 # (백그라운드 실행/내PC개발)
 
-# step 1
+# step 1 (php:7.4-fpm is debian linux)
 FROM php:7.4-fpm
 
 # step 2
