@@ -1,9 +1,7 @@
 ## debian linux 10
-# docker build  -t msaall .
-# (포그라운드 실행/배포) docker run -i -t -p 8030:80 --name all msaall
-# (백그라운드 실행/배포) docker run -i -t -d -p 8030:80 --name all msaall
-
-
+# docker build  -t msabatch .
+# (포그라운드 실행/배포) docker run -i -t  --name batch msabatch
+# (백그라운드 실행/배포) docker run -i -t -d  --name batch msabatch
 
 # step 1
 FROM php:8-fpm-alpine
@@ -51,7 +49,7 @@ WORKDIR /data/www/lib/php
 
 #guzzlehttp
 RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
-
+RUN compeser require mustache/mustache
 
 #event driven framework ( workerman require pcntl.so )
 RUN composer require workerman/workerman
@@ -76,6 +74,27 @@ RUN mkdir /data
 RUN mkdir /data/www
 
 #RUN chmod 777 /data/www/log
+
+##############################################
+## application
+##############################################
+# step 5
+# RUN cd /var/www/html
+
+WORKDIR /data/www
+RUN wget https://github.com/zero12a/bt/archive/master.zip
+RUN unzip master.zip
+RUN mv bt-master/ b.t/
+RUN rm master.zip
+
+# step 6
+# common download
+WORKDIR /data/www
+RUN wget https://github.com/zero12a/common/archive/master.zip
+RUN unzip master.zip
+RUN mv common-master/ common/
+RUN rm master.zip
+
 
 ##############################################
 ## install apps package
