@@ -69,7 +69,10 @@ RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION} && \
 composer require mustache/mustache && \
 composer require lavary/crunz && \
 composer require workerman/workerman && \
-composer require workerman/redis
+composer require workerman/redis && \
+composer require monolog/monolog && \
+composer require predis/predis && \
+composer require phpmailer/phpmailer 
 
 RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
 
