@@ -4,7 +4,7 @@
 # (백그라운드 실행/배포) docker run -i -t -d  --name batch msabatch
 
 # step 1
-FROM php:8-fpm-alpine
+FROM php:8-cli-alpine
 
 # 패키지 찾기 : apk search gcc | grep ^gcc
 
@@ -44,16 +44,33 @@ RUN docker-php-ext-install zip
 # exif (이미지 타입 알기 함수)
 RUN docker-php-ext-install exif && docker-php-ext-enable exif
 
+
+##############################################
+## make folder
+##############################################
+RUN mkdir /data
+RUN mkdir /data/www
+RUN mkdir /data/www/lib
+RUN mkdir /data/www/lib/php
+# make folder
+#RUN mkdir /data/www/b.t
+
+# make log folder
+RUN mkdir /data/www/log
+RUN chmod 777 /data/www/log
+
+
+
 #폴더 이동
 WORKDIR /data/www/lib/php
 
-#guzzlehttp
-RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
-RUN compeser require mustache/mustache
+#guzzlehttp ( workerman require pcntl.so )
+RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION} && \
+composer require mustache/mustache && \
+composer require lavary/crunz && \
+composer require workerman/workerman && \
+composer require workerman/redis
 
-#event driven framework ( workerman require pcntl.so )
-RUN composer require workerman/workerman
-RUN composer require workerman/redis
 RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
 
 #RUN docker-php-ext-install openssl && docker-php-ext-enable openssl
@@ -67,11 +84,7 @@ RUN cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 RUN echo "Asia/Seoul" > /etc/timezone
 
 
-##############################################
-## make folder
-##############################################
-RUN mkdir /data
-RUN mkdir /data/www
+
 
 #RUN chmod 777 /data/www/log
 
@@ -85,6 +98,7 @@ WORKDIR /data/www
 RUN wget https://github.com/zero12a/bt/archive/master.zip
 RUN unzip master.zip
 RUN mv bt-master/ b.t/
+RUN chown www-data:www-data /data/www/b.t
 RUN rm master.zip
 
 # step 6
@@ -100,6 +114,14 @@ RUN rm master.zip
 ## install apps package
 ##############################################
 # install download lib
+
+# crontab add
+WORKDIR /data/www
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msabatch/crontab.txt
+RUN cp /data/www/crontab.txt /etc/crontabs/crontab-watcher
+RUN chmod 0644 /etc/crontabs/crontab-watcher
+RUN crontab /etc/crontabs/crontab-watcher
+
 
 # 엔트리킷 환경변수템플릿
 WORKDIR /data
