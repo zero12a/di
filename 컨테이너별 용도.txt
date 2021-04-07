@@ -13,3 +13,4 @@ msalib 0.0.0.0:8070->80/tcp    lib #라이브러리 및 img
 msalc lc #로그수집기(오픈포트 없음)
 masall 9081~89->81~89  #all 테스트 용도 
 airflow 8010->8080/tcp   #배치 airflow
+msabatch no/tcp   #배치 batch
