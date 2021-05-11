@@ -75,7 +75,7 @@ RUN composer require aws/aws-sdk-php
 RUN composer require ezyang/htmlpurifier
 RUN composer require phpoffice/phpexcel
 #aws 의존성때문에 최신v7.x는 안되고 v6.5.5 해야함.
-RUL composer require guzzlehttp/guzzle:^6.5.5
+RUN composer require guzzlehttp/guzzle:^6.5.5
 
 # install download custom lib
 WORKDIR /data/www/lib/php
