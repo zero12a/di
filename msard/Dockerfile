@@ -96,6 +96,9 @@ RUN entrykit --symlink
 # local mem cache apc
 RUN pecl install apcu-${APCU_VERSION} && docker-php-ext-enable apcu
 
+# redis.so
+RUN pecl install redis && docker-php-ext-enable redis
+
 # install pdo_mysql, pdo_postgresql
 RUN docker-php-ext-install pdo_mysql
 

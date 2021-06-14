@@ -105,8 +105,11 @@ RUN wget https://raw.githubusercontent.com/ValYouW/jqPropertyGrid/master/jqPrope
 RUN wget https://momentjs.com/downloads/moment.min.js
 # 110. json2.min.js
 RUN wget https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js
-# 120. uuidv4.js
-RUN wget -O uuidv4.js https://wzrd.in/standalone/uuid%2Fv4@latest
+# 120. uuidv4.js (OLD, 불필요 common.js에 탑재됨)
+#RUN wget -O uuidv4.js https://wzrd.in/standalone/uuid%2Fv4@latest
+# 121. uuidv4.js (NEW, 불필요 common.js에 탑재됨)
+#RUN wget -O uuidv4.min.js https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuidv4.min.js
+
 # 130. summernote
 RUN mkdir /data/www/lib/summernote
 WORKDIR /data/www/lib/summernote
@@ -145,6 +148,12 @@ RUN wget -O materialdesignicons/fonts/materialdesignicons-webfont.eot https://cd
 RUN wget -O vue2x.js https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js
 RUN wget -O vuetify2x.js https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js
 
+RUN wget -O vue2x.min.js https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js
+RUN wget -O vuetify2x.min.js https://cdn.jsdelivr.net/npm/vuetify@2.5.3/dist/vuetify.min.js
+RUN wget -O vuetify2x.min.css https://cdn.jsdelivr.net/npm/vuetify@2.5.3/dist/vuetify.min.css
+
+
+
 # 192. jodit
 RUN wget -O jodit.min.js https://cdnjs.cloudflare.com/ajax/libs/jodit/3.4.22/jodit.min.js
 RUN wget -O jodit.min.css https://cdnjs.cloudflare.com/ajax/libs/jodit/3.4.22/jodit.min.css
@@ -153,6 +162,12 @@ RUN wget -O jodit.min.css https://cdnjs.cloudflare.com/ajax/libs/jodit/3.4.22/jo
 RUN wget -O jquery/select2.min.css https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css
 RUN wget -O jquery/select2.min.js https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js
 
+# 194. lodash
+RUN wget -O lodash.min.js https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js
+
+# 195. toastr
+RUN wget -O toastr.min.js https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js
+RUN wget -O toastr.min.css https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css
 
 # 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite
