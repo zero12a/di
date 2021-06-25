@@ -142,6 +142,9 @@ RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS
 RUN pecl install apcu-${APCU_VERSION} 
 RUN docker-php-ext-enable apcu
 
+# redis.so
+RUN pecl install redis && docker-php-ext-enable redis
+
 # install pdo_mysql, pdo_postgresql
 RUN docker-php-ext-install pdo_mysql
 #동작안함 RUN apk del --no-cache .build-dependencies

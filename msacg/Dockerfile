@@ -4,16 +4,13 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 8090:80 --name cg msacg
 
 # (백그라운드 실행/내PC개발)
-# docker run -i -t -d \
-# -v /Users/zeroone/Documents/docker/common:/data/www/common \
-# -v /Users/zeroone/Documents/docker/c.g:/data/www/c.g \
-# -p 8090:80 --name cg msacg
+
 
 # step 1
 FROM php:7.4-fpm
 
 # step 2
-ARG APCU_VERSION=5.1.18
+ARG APCU_VERSION=5.1.20
 
 
 ##############################################
@@ -102,6 +99,9 @@ RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pgsql pdo_pgsql
 
+# redis.so
+RUN pecl install redis && docker-php-ext-enable redis
+
 ##############################################
 ## install apps config
 ##############################################
@@ -171,7 +171,7 @@ ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
 ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
-ENV REDIS_PASSWD 1111
+ENV REDIS_PASSWD "1234"
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # port open

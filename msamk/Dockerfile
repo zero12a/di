@@ -168,6 +168,7 @@ ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
 ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
+END RDDIS_PASSWD "1234"
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # port open

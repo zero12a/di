@@ -4,11 +4,11 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 8052:80 --name os2 msads2
 
 # step 1
-FROM php:7.4.13-fpm-alpine3.12
+FROM php:7.4.20-fpm-alpine3.13
 
 # 패키지 찾기 : apk search gcc | grep ^gcc
 
-ARG APCU_VERSION=5.1.19
+ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################2
@@ -61,10 +61,6 @@ RUN mkdir /data/www/lib/php
 # make folder
 RUN mkdir /data/www/o.s
 RUN chown www-data:www-data /data/www/o.s
-# make log folder
-RUN mkdir /data/www/log
-RUN chmod 777 /data/www/log
-
 
 
 ##############################################
@@ -74,11 +70,6 @@ RUN chmod 777 /data/www/log
 WORKDIR /data/www/lib/php
 RUN composer require monolog/monolog
 RUN composer require predis/predis
-RUN composer require aws/aws-sdk-php
-RUN composer require ezyang/htmlpurifier
-#캐쉬폴더 777권한 변경
-RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
-RUN composer require phpoffice/phpexcel
 
 # crontab add
 WORKDIR /data/www
@@ -186,6 +177,7 @@ ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
 ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
+ENV REDIS_PASSWD "1234"
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # port open

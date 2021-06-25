@@ -9,7 +9,7 @@
 FROM php:7.4-fpm
 
 # step 2
-ARG APCU_VERSION=5.1.18
+ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################
@@ -25,7 +25,13 @@ RUN apt-get install -y curl unzip nginx wget sudo libpq-dev cron
 RUN apt-get install -y vim telnet procps net-tools
 
 #ldap설치  (apt-get install -y libldap2-dev)
-RUN apt-get install openldap-dev
+
+RUN apt-get install -y libldap2-dev
+
+#executor failed running [/bin/sh -c apt-get install openldap-dev]: exit code: 100
+#RUN apt-get install openldap-dev
+
+
 RUN docker-php-ext-install ldap && docker-php-ext-enable ldap
 
 # step 3
@@ -71,7 +77,6 @@ RUN chmod 777 /data/c.g/CG
 WORKDIR /data/www/lib/php
 RUN composer require monolog/monolog
 RUN composer require predis/predis
-RUN composer require aws/aws-sdk-php
 RUN composer require ezyang/htmlpurifier
 #캐쉬폴더 777권한 변경
 RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
@@ -80,9 +85,7 @@ RUN composer require phpoffice/phpexcel
 # crontab add
 WORKDIR /data/www
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msard/crontab.txt
-RUN cp /data/www/crontab.txt /etc/crontabs/crontab-watcher
-RUN chmod 0644 /etc/crontabs/crontab-watcher
-RUN crontab /etc/crontabs/crontab-watcher
+RUN crontab /data/www/crontab.txt
 
 
 # 엔트리킷 환경변수템플릿
@@ -117,7 +120,7 @@ RUN docker-php-ext-install exif && docker-php-ext-enable exif
 ##############################################
 # php.ini 가져오기
 WORKDIR /usr/local/etc/php
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msard/php.ini
+RUN wget -O php.ini https://raw.githubusercontent.com/zero12a/di/master/msard/php.ini?new
 
 # nginx
 # conf copy
@@ -180,7 +183,7 @@ ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
 ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
-ENV REDIS_PASSWD ""
+ENV REDIS_PASSWD "1234"
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # port open

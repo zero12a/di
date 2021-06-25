@@ -9,7 +9,7 @@ FROM php:7.4-fpm-alpine
 
 # 패키지 찾기 : apk search gcc | grep ^gcc
 
-ARG APCU_VERSION=5.1.18
+ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################2
@@ -71,12 +71,12 @@ RUN chmod 777 /data/www/log
 WORKDIR /data/www/lib/php
 RUN composer require monolog/monolog
 RUN composer require predis/predis
-RUN composer require aws/aws-sdk-php
 RUN composer require ezyang/htmlpurifier
 
 #event driven framework ( workerman require pcntl.so )
 RUN composer require gotzmann/comet  
 RUN composer require workerman/workerman
+RUN composer require guzzlehttp/guzzle:^6.5.5
 
 RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
 
@@ -110,6 +110,9 @@ RUN entrykit --symlink
 RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS
 RUN pecl install apcu-${APCU_VERSION} 
 RUN docker-php-ext-enable apcu
+
+# redis.so
+RUN pecl install redis && docker-php-ext-enable redis
 
 # install pdo_mysql, pdo_postgresql
 RUN docker-php-ext-install pdo_mysql
@@ -194,6 +197,7 @@ ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
 ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
+ENV REDIS_PASSWD "1234"
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # port open
