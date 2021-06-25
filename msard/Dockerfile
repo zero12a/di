@@ -11,6 +11,7 @@ FROM php:7.4-fpm
 # step 2
 ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
+ARG GUZZLEHTTP_VERSION=7.3
 
 ##############################################
 ## install os package
@@ -75,12 +76,14 @@ RUN chmod 777 /data/c.g/CG
 # install download lib
 
 WORKDIR /data/www/lib/php
-RUN composer require monolog/monolog
-RUN composer require predis/predis
-RUN composer require ezyang/htmlpurifier
+RUN composer require monolog/monolog && \
+  composer require predis/predis && \
+  composer require ezyang/htmlpurifier && \
+  composer require phpoffice/phpexcel && \
+  composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
+
 #캐쉬폴더 777권한 변경
 RUN chmod 777 /data/www/lib/php/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer 
-RUN composer require phpoffice/phpexcel
 
 # crontab add
 WORKDIR /data/www

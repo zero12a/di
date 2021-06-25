@@ -10,7 +10,7 @@ FROM php:8-cli-alpine
 
 ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
-ARG GUZZLEHTTP_VERSION=7.2
+ARG GUZZLEHTTP_VERSION=7.3
 
 ##############################################2
 ## install os package
