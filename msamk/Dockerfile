@@ -14,7 +14,7 @@ ARG GIT_TOKEN
 # step 2
 ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
-ARG GUZZLEHTTP_VERSION=7.2
+ARG GUZZLEHTTP_VERSION=7.3
 
 ##############################################
 ## install os package
@@ -73,11 +73,11 @@ RUN chmod 777 /data/www/log
 # react/mysql is workerman
 
 WORKDIR /data/www/lib/php
-RUN composer require monolog/monolog
-RUN composer require predis/predis
-RUN composer require workerman/workerman
-RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
-RUN composer require react/mysql
+RUN composer require monolog/monolog  && \
+  composer require predis/predis  && \
+  composer require workerman/workerman  && \
+  composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}  && \
+  composer require react/mysql
 
 # crontab add
 WORKDIR /data/www
@@ -168,7 +168,7 @@ ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
 ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
-END RDDIS_PASSWD "1234"
+ENV REDIS_PASSWD "1234"
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # port open
