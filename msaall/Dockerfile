@@ -12,7 +12,7 @@ FROM php:8-fpm-alpine
 
 ARG APCU_VERSION=5.1.20
 ARG ENTRYKIT_VERSION=0.4.0
-ARG GUZZLEHTTP_VERSION=7.2
+ARG GUZZLEHTTP_VERSION=7.3
 
 ##############################################2
 ## install os package
@@ -35,32 +35,6 @@ RUN apk add --update util-linux
 RUN curl -sS https://getcomposer.org/installer | php  
 RUN mv composer.phar /usr/bin/composer
 
-# mysqli
-RUN docker-php-ext-install mysqli
-#동작안함 RUN apk del --no-cache .build-dependencies
-
-# zip설치 zlib1g-dev는 불필요
-RUN docker-php-ext-install zip
-#동작안함 RUN apk del --no-cache .build-dependencies
-
-# exif (이미지 타입 알기 함수)
-RUN docker-php-ext-install exif && docker-php-ext-enable exif
-
-#폴더 이동
-WORKDIR /data/www/lib/php
-
-#guzzlehttp
-RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
-
-
-#event driven framework ( workerman require pcntl.so )
-RUN composer require workerman/workerman
-RUN composer require workerman/redis
-RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
-
-#RUN docker-php-ext-install openssl && docker-php-ext-enable openssl
-
-
 ##############################################
 ## config os
 ##############################################
@@ -74,8 +48,41 @@ RUN echo "Asia/Seoul" > /etc/timezone
 ##############################################
 RUN mkdir /data
 RUN mkdir /data/www
-
+RUN mkdir /data/www/lib
+RUN mkdir /data/www/lib/php
 #RUN chmod 777 /data/www/log
+
+
+##############################################
+## install apps package
+##############################################
+
+WORKDIR /data/www/lib/php
+RUN composer require monolog/monolog && \
+  composer require predis/predis && \
+  composer require ezyang/htmlpurifier && \
+  composer require phpoffice/phpexcel && \
+  composer require workerman/workerman && \
+  composer require workerman/redis && \
+  composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
+
+
+# mysqli
+RUN docker-php-ext-install mysqli
+#동작안함 RUN apk del --no-cache .build-dependencies
+
+# zip설치 zlib1g-dev는 불필요
+RUN docker-php-ext-install zip
+#동작안함 RUN apk del --no-cache .build-dependencies
+
+# exif (이미지 타입 알기 함수)
+RUN docker-php-ext-install exif && docker-php-ext-enable exif
+
+#event driven framework ( workerman require pcntl.so )
+RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
+
+
+
 
 
 
@@ -100,9 +107,15 @@ RUN apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS
 RUN pecl install apcu-${APCU_VERSION} 
 RUN docker-php-ext-enable apcu
 
+# redis.so
+RUN pecl install redis && docker-php-ext-enable redis
+
 # install pdo_mysql, pdo_postgresql
 RUN docker-php-ext-install pdo_mysql
 #동작안함 RUN apk del --no-cache .build-dependencies
+
+# install opcache
+RUN docker-php-ext-install opcache
 
 # install pdo_postgresql
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
@@ -163,6 +176,7 @@ ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
 ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
+ENV REDIS_PASSWD "1234"
 ENV REDIS_CONFIG_ID "CONFIG_CG"
 
 # port open
