@@ -9,7 +9,7 @@
 FROM php:7.4-fpm
 
 # step 2
-ARG PHPMYADMIN_VERSION=5.0.1
+ARG PHPMYADMIN_VERSION=5.1.1
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################
@@ -86,7 +86,8 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmi
 RUN unzip phpMyAdmin-*.zip
 RUN mv phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages/ p.m/
 RUN rm phpMyAdmin-*.zip
-
+RUN mkdir /data/www/p.m/tmp
+RUN chmod 777 /data/www/p.m/tmp
 
 ##############################################
 ## install apps config
