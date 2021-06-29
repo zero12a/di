@@ -33,6 +33,7 @@ RUN mv composer.phar /usr/bin/composer
 ##############################################
 RUN mkdir /data
 RUN mkdir /data/www
+RUN chown www-data:www-data /data/www
 RUN mkdir /data/www/lib
 RUN mkdir /data/www/lib/php
 
@@ -74,29 +75,10 @@ RUN ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
 
 
-
 ##############################################
-## install apps package
-##############################################
-# step 5
-# RUN cd /var/www/html
-
-WORKDIR /data/www
-RUN wget https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.zip
-RUN unzip phpMyAdmin-*.zip
-RUN mv phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages/ p.m/
-RUN rm phpMyAdmin-*.zip
-RUN mkdir /data/www/p.m/tmp
-RUN chmod 777 /data/www/p.m/tmp
-
-##############################################
-## install apps config
+## install middleware config
 ##############################################
 # phpmyadmin config
-WORKDIR /data/www/p.m
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msapm/v5_config.inc.php.tmpl
-RUN mv v5_config.inc.php.tmpl config.inc.php.tmpl
-
 # php.ini 가져오기
 WORKDIR /usr/local/etc/php
 RUN wget https://raw.githubusercontent.com/zero12a/di/master/msapm/php.ini
@@ -121,6 +103,35 @@ RUN ["chmod", "+x", "/entrypoint.sh"]
 
 
 
+
+
+##############################################
+## install apps package
+##############################################
+# step 5
+# RUN cd /var/www/html
+USER www-data
+
+
+
+WORKDIR /data/www
+RUN wget https://files.phpmyadmin.net/phpMyAdmin/${PHPMYADMIN_VERSION}/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.zip
+RUN unzip phpMyAdmin-*.zip
+RUN mv phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages/ p.m/
+RUN rm phpMyAdmin-*.zip
+#RUN mkdir /data/www/p.m/tmp
+#RUN chmod 777 /data/www/p.m/tmp
+
+##############################################
+## install apps config
+##############################################
+# phpmyadmin config
+WORKDIR /data/www/p.m/
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/msapm/v5_config.inc.php.tmpl
+RUN mv v5_config.inc.php.tmpl config.inc.php.tmpl
+
+
+USER root
 
 ### env define
 # nginx
