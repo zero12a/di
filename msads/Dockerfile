@@ -56,8 +56,8 @@ RUN mkdir /data/www
 RUN mkdir /data/www/lib
 RUN mkdir /data/www/lib/php
 # make folder
-RUN mkdir /data/www/d.s
-RUN chown www-data:www-data /data/www/d.s
+#RUN mkdir /data/www/d.s
+
 # make log folder
 RUN mkdir /data/www/log
 RUN chmod 777 /data/www/log
@@ -156,6 +156,7 @@ WORKDIR /data/www
 RUN wget https://github.com/zero12a/ds/archive/master.zip
 RUN unzip master.zip
 RUN mv ds-master/ d.s/
+RUN chown www-data:www-data /data/www/d.s
 RUN rm master.zip
 
 # step 6
