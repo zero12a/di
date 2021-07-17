@@ -3,13 +3,26 @@
   @id    input1
   @label @mainstream
   port  24224
+
+  <parse>
+    @type json
+  </parse>
 </source>
 
-<filter **>
-  @type stdout
-</filter>
+
+
 
 <label @mainstream>
+
+    <filter **>
+      @type record_transformer
+      enable_ruby true
+      auto_typecast yes
+      <record>
+        # rescue is JSON.parse exception 
+        msg ${ (JSON.parse(record["log"])["message"]) rescue nil }
+      </record>
+    </filter>
 
     <match **>
         @type mysql_bulk
@@ -18,10 +31,10 @@
         database {{ var "TO_MYSQL_DBNM" | default "TESTDB" }} 
         username {{ var "TO_MYSQL_UID" | default "TESTUSER" }} 
         password {{ var "TO_MYSQL_PWD" | default "TESTPWD" }} 
-        column_names SRC,CONTAINERNM,CONTAINERID,LOG
-        key_names source,container_name,container_id,log
+        column_names SRC,CONTAINERNM,CONTAINERID,LOG,MSG
+        key_names source,container_name,container_id,log,msg
         table FLUENTLOG
-        flush_interval 10s
+        flush_interval 1s
     </match>
 
 </label>
