@@ -139,8 +139,11 @@ ENV FASTCGI_PASS "unix:/var/run/php-fpm.sock"
 # php fpm
 ENV PHPFPM_LISTEN "/var/run/php-fpm.sock"
 # phpmyadmin
-ENV SERVER_HOST "172.17.0.1"
-ENV SERVER_PORT "3306"
+ENV SERVER_HOST1 "172.17.0.1"
+ENV SERVER_PORT1 "3306"
+
+ENV SERVER_HOST2 "172.17.0.1"
+ENV SERVER_PORT2 "4306"
 
 # port open
 EXPOSE 80

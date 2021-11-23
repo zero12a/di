@@ -15,5 +15,9 @@ masall 9081~89->81~89  #all 테스트 용도
 airflow 8010->8080/tcp   #배치 airflow
 msabatch no/tcp   #배치 batch
 
+postgre 6432->5432/tcp #postgresql
+pgadmin4 6480->80/tcp #pgadmin4
+justjs 9080->8080/tcp #justjs
+
 <미사용>
 msaos 8052->80/tcp           os #[미사용] 인증 (msaos는 swoole버전)

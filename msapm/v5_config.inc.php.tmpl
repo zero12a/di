@@ -29,10 +29,21 @@ $i++;
 /* Authentication type */
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
 /* Server parameters */
-$cfg['Servers'][$i]['host'] = '{{ var "SERVER_HOST" | default "localhost" }}';
-$cfg['Servers'][$i]['port'] = '{{ var "SERVER_PORT" | default "3306" }}';
+$cfg['Servers'][$i]['host'] = '{{ var "SERVER_HOST1" | default "localhost" }}';
+$cfg['Servers'][$i]['port'] = '{{ var "SERVER_PORT1" | default "3306" }}';
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = false;
+
+
+$i++;
+/* Authentication type */
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+/* Server parameters */
+$cfg['Servers'][$i]['host'] = '{{ var "SERVER_HOST2" | default "localhost" }}';
+$cfg['Servers'][$i]['port'] = '{{ var "SERVER_PORT2" | default "4306" }}';
+$cfg['Servers'][$i]['compress'] = false;
+$cfg['Servers'][$i]['AllowNoPassword'] = false;
+
 
 /**
  * phpMyAdmin configuration storage settings.

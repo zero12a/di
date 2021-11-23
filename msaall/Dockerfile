@@ -25,6 +25,9 @@ ARG GUZZLEHTTP_VERSION=7.3
 RUN apk update && apk upgrade
 RUN apk add curl unzip nginx wget sudo git postgresql-dev net-tools busybox-extras autoconf libzip-dev tzdata bash
 
+# postgre
+RUN apk add postgresql-dev
+
 #ldap설치
 RUN apk add openldap-dev
 RUN docker-php-ext-install ldap && docker-php-ext-enable ldap
@@ -81,8 +84,8 @@ RUN docker-php-ext-install exif && docker-php-ext-enable exif
 #event driven framework ( workerman require pcntl.so )
 RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
 
-
-
+#postgre
+RUN docker-php-ext-install exif && docker-php-ext-enable pdo_pgsql
 
 
 
