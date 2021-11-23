@@ -29,7 +29,7 @@ RUN entrykit --symlink
 
 # redis.conf 가져오기
 WORKDIR /usr_data
-RUN wget https://raw.githubusercontent.com/zero12a/di/master/msaredis/redis.conf.tmpl
+RUN wget https://raw.githubusercontent.com/zero12a/di/master/db/msaredis/redis.conf.tmpl
 
 # redis 비밀번호 설정하기
 ENV REDIS_PASSWD "1234"

@@ -4,11 +4,11 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 8052:80 --name os2 msads2
 
 # step 1
-FROM php:7.4.20-fpm-alpine3.13
+FROM php:7.4.26-fpm-alpine3.14
 
 # 패키지 찾기 : apk search gcc | grep ^gcc
 
-ARG APCU_VERSION=5.1.20
+ARG APCU_VERSION=5.1.21
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################2

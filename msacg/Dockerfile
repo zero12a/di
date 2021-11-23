@@ -10,7 +10,7 @@
 FROM php:7.4-fpm
 
 # step 2
-ARG APCU_VERSION=5.1.20
+ARG APCU_VERSION=5.1.21
 
 
 ##############################################
@@ -71,8 +71,8 @@ RUN composer require predis/predis
 RUN composer require aws/aws-sdk-php
 RUN composer require ezyang/htmlpurifier
 RUN composer require phpoffice/phpexcel
-#aws 의존성때문에 최신v7.x는 안되고 v6.5.5 해야함.
-RUN composer require guzzlehttp/guzzle:^6.5.5
+#aws 의존성때문에 7.0사용해야함.
+RUN composer require guzzlehttp/guzzle:^7.0
 
 # install download custom lib
 WORKDIR /data/www/lib/php
