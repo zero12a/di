@@ -192,9 +192,6 @@ ENTRYPOINT [ \
         "/usr/local/etc/php-fpm.d/www.conf", \
         "--", \
     "render", \
-        "/data/www/common/include/incConfig.php", \
-        "--", \
-    "render", \
         "/etc/nginx/nginx.conf", \
         "--", \
     "/entrypoint.sh" \

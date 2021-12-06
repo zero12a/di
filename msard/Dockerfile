@@ -187,7 +187,7 @@ ENV LIB_PATH_REDIS "/data/www/lib/php/vendor/autoload.php"
 ENV REDIS_HOST "172.17.0.1"
 ENV REDIS_PORT 1234
 ENV REDIS_PASSWD "1234"
-ENV REDIS_CONFIG_ID "CONFIG_CG"
+ENV REDIS_CONFIG_ID "CONFIG_RD"
 
 # port open
 EXPOSE 80
@@ -196,9 +196,6 @@ EXPOSE 80
 ENTRYPOINT [ \
     "render", \
         "/usr/local/etc/php-fpm.d/www.conf", \
-        "--", \
-    "render", \
-        "/data/www/common/include/incConfig.php", \
         "--", \
     "render", \
         "/etc/nginx/nginx.conf", \

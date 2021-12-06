@@ -12,7 +12,7 @@ FROM php:8.0-fpm
 ARG GIT_TOKEN
 
 # step 2
-ARG APCU_VERSION=5.1.20
+ARG APCU_VERSION=5.1.21
 ARG ENTRYKIT_VERSION=0.4.0
 ARG GUZZLEHTTP_VERSION=7.3
 
@@ -178,9 +178,6 @@ EXPOSE 80 81
 ENTRYPOINT [ \
     "render", \
         "/usr/local/etc/php-fpm.d/www.conf", \
-        "--", \
-    "render", \
-        "/data/www/common/include/incConfig.php", \
         "--", \
     "render", \
         "/etc/nginx/nginx.conf", \

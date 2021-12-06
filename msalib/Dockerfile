@@ -91,6 +91,10 @@ RUN wget -O jquery/jquery.multiselect.js https://raw.githubusercontent.com/noble
 RUN wget -O jquery/jquery.multiselect.css https://raw.githubusercontent.com/nobleclem/jQuery-MultiSelect/master/jquery.multiselect.css
 
 
+RUN wget -O jquery/anyselect.min.js https://raw.githubusercontent.com/zero12a/anyselect/master/dist/anyselect.min.js
+RUN wget -O jquery/anyselect.min.css https://raw.githubusercontent.com/zero12a/anyselect/master/dist/anyselect.min.css
+
+
 # 60. chart.js
 RUN wget https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js
 # 70. feather
@@ -168,6 +172,11 @@ RUN wget -O lodash.min.js https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min
 # 195. toastr
 RUN wget -O toastr.min.js https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js
 RUN wget -O toastr.min.css https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css
+
+# 196. split.min.js
+RUN wget -O split.min.js https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.2/split.min.js
+
+
 
 # 200. (private project) dhtmlx lib
 RUN mkdir /data/www/lib/dhtmlxSuite

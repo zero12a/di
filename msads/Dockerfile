@@ -9,7 +9,7 @@ FROM php:7.4-fpm-alpine
 
 # 패키지 찾기 : apk search gcc | grep ^gcc
 
-ARG APCU_VERSION=5.1.20
+ARG APCU_VERSION=5.1.21
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################2
@@ -211,9 +211,6 @@ EXPOSE 80
 ENTRYPOINT [ \
     "render", \
         "/usr/local/etc/php-fpm.d/www.conf", \
-        "--", \
-    "render", \
-        "/data/www/common/include/incConfig.php", \
         "--", \
     "render", \
         "/etc/nginx/nginx.conf", \
