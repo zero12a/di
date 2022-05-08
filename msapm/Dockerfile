@@ -9,7 +9,7 @@
 FROM php:7.4-fpm
 
 # step 2
-ARG PHPMYADMIN_VERSION=5.1.1
+ARG PHPMYADMIN_VERSION=5.1.3
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################
