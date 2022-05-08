@@ -55,7 +55,7 @@ RUN echo "Asia/Seoul" > /etc/timezone
 ##############################################
 ## config daemon
 ##############################################
-RUN wget -O /fluentd/etc/fluent.conf.tmpl https://raw.githubusercontent.com/zero12a/di/master/msafluentd_amqp/fluent.conf.tmpl?4
+RUN wget -O /fluentd/etc/fluent.conf.tmpl https://raw.githubusercontent.com/zero12a/di/master/msafluentd_amqp/fluent.conf.tmpl?5
 #RUN ["chmod", "777", "/fluentd/etc/fluent.conf.tmpl"]
 RUN ["chmod", "777", "/fluentd/etc/fluent.conf"]
 
