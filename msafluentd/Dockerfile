@@ -5,7 +5,7 @@
 
 
 
-FROM fluent/fluentd:v1.14-6
+FROM fluent/fluentd:v1.14
 
 # user commend line arg
 ARG TO_MYSQL_HOST
