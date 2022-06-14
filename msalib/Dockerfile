@@ -182,7 +182,7 @@ RUN wget -O split.min.js https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.2/s
 RUN mkdir /data/www/lib/dhtmlxSuite
 WORKDIR /data/www/lib/dhtmlxSuite
 
-# NEW github Auth
+# NEW github Auth (naver xbox에서 down해야함)
 #RUN echo -H "Authorization: token ${GIT_TOKEN}" https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
 #RUN curl -H "Authorization: token ${GIT_TOKEN}"  https://raw.githubusercontent.com/zero12a/lib/master/dhtmlxSuite_v461_pro.zip --output dhtmlx.zip
 #RUN unzip dhtmlx.zip
