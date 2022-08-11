@@ -19,5 +19,13 @@ postgre 6432->5432/tcp #postgresql
 pgadmin4 6480->80/tcp #pgadmin4
 justjs 9080->8080/tcp #justjs
 
+amqp_rcv 34224/tcp_udp #샌드박스log 수신해서 rabbitmq 로 던지기
+rabbitmq 5671-5672, 15672, 15674 @메시지큐서비스(코딩: 샌드박스log to mq to browser)
+sbphpweb 8041 #샌드박스 코딩
+mysql8 8306->3306 
+fluentd 24224/tcp_udp #로그수집기
+mariadb 4306->3306
+
+
 <미사용>
 msaos 8052->80/tcp           os #[미사용] 인증 (msaos는 swoole버전)

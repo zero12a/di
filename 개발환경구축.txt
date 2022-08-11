@@ -156,17 +156,25 @@ docker 윈도우 환경 구성
 3. use mysql
 4. select host, user from user;
 5. ALTER USER 'root'@'%' IDENTIFIED BY '';
- - create user 'zero12a'@'172.17.0.1' identified by 'kimsclub';
+ - create user 'zero12a'@'172.17.0.1' identified by '';
  --비번변경
- ALTER USER 'zero1a'@'172.17.0.1' IDENTIFIED BY 'kimsclub';
+ ALTER USER 'zero1a'@'172.17.0.1' IDENTIFIED BY '';
  
  --신규 생성 및 권한
- create user 'zero12a'@'172.17.0.1' identified by 'kimsclub';
+ create user 'zero12a'@'172.17.0.1' identified by '';
  grant all privileges on *.* to 'zero12a'@'172.17.0.1';
 
  --신규 생성 및 권한
- create user 'cg'@'%' identified by 'cg1234qwer';
+ create user 'cg'@'%' identified by '';
  grant all privileges on *.* to 'cg'@'%';
+
+
+-- aws rds mariadb
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW,
+ CREATE ROUTINE, ALTER ROUTINE, EVENT, TRIGGER
+ on CGCORE.* to 'cg'@'%' IDENTIFIED BY ';
+
+
 
 
 6. flush privileges;
@@ -417,6 +425,21 @@ wget -nc http://getcomposer.org/composer.phar
 > brew install awscli
 
 
+
+<docker 자동시작>
+[Unit]
+Description=Docker Auto Start
+After=network-online.target docker.socket firewalld.service containerd.service docker.service
+
+[Service]
+User=root
+Group=www-data
+Environment="PATH=/root/"
+WorkingDirectory=/root
+ExecStart=/usr/bin/docker start redis mariadb os batch cg lib pm mk ds
+
+[Install]
+WantedBy=multi-user.target
 
 
 
