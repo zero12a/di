@@ -7,6 +7,7 @@
 2. aws cli 해당 사용자 인증정보 설정
  - aws configure set aws_access_key_id
  - aws configure set aws_secret_access_key
+ 또는 aws configure 입력해서 차근차근 key, sec 입력해도 됨
 
 3. aws cli ecr 임시토큰으로 인증하기
  - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 776092519253.dkr.ecr.ap-northeast-2.amazonaws.com
@@ -22,9 +23,18 @@
 
 5. 로컬 도커이미지에 태그 달기
  - docker tag msapm 776092519253.dkr.ecr.ap-northeast-2.amazonaws.com/myecr/pjt1:latest
+ - [public] docker tag rabbitmqws public.ecr.aws/k1x0w7n1/rabbitmqws:latest
+ - [public] docker tag sandboxphpweb public.ecr.aws/k1x0w7n1/sandboxphpweb:latest
+ - [public] docker tag msafluentd_amqp public.ecr.aws/k1x0w7n1/msafluentd_amqp:latest
+
+
 
 6. aws ecr에 이미지 업로드 하기
  - docker push 776092519253.dkr.ecr.ap-northeast-2.amazonaws.com/myecr/pjt1:latest
+ - [public] docker push public.ecr.aws/k1x0w7n1/rabbitmqws:latest
+ - [public] docker push public.ecr.aws/k1x0w7n1/sandboxphpweb:latest
+ - [public] docker push public.ecr.aws/k1x0w7n1/msafluentd_amqp:latest
+
 
 7. aws ecs 클러스터 구성하기 
  - 생성 소요시간 : 4:13시작 - 10분이상 소요
