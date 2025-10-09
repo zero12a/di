@@ -29,7 +29,7 @@ Omit --global to set the identity only in this repository.
 
 
 <2025.10 순서>
-참고 블로그4 : ttps://blog.naver.com/nuricle/223907192406
+참고 블로그5 : ttps://blog.naver.com/nuricle/223907192406
 
 0. 연동 계정 세팅하기
  git config --global user.name "zero"
