@@ -6,10 +6,10 @@
 # (백그라운드 실행/배포) docker run -i -t -d -p 8050:80 --name pm msapm:TAG
 
 # step 1
-FROM php:7.4-fpm
+FROM php:8.2-fpm
 
 # step 2
-ARG PHPMYADMIN_VERSION=5.1.3
+ARG PHPMYADMIN_VERSION=5.2.3
 ARG ENTRYKIT_VERSION=0.4.0
 
 ##############################################
