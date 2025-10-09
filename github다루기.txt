@@ -53,7 +53,15 @@ Omit --global to set the identity only in this repository.
 5. 커밋하고
  git commit -m 'new macbook'
 
-6. github에 업로드 하기
+6. 브랜치 이름 지정하기
+ git branch -M master
+
+7. github에 업로드 하기
  git push -u origin master
+
+ << push 시 아래와 같이 에러 발생하면, -f 옵션으로 강제 push 하기 >>
+ error: src refspec master does not match any
+error: failed to push some refs to 'https://github.com/zero12a/anyselect'
+
 
 
