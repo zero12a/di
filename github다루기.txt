@@ -60,8 +60,6 @@ Omit --global to set the identity only in this repository.
  git push -u origin master
 
  << push 시 아래와 같이 에러 발생하면, -f 옵션으로 강제 push 하기 >>
- error: src refspec master does not match any
-error: failed to push some refs to 'https://github.com/zero12a/anyselect'
-
+ ! [rejected]        master -> master (fetch first)
 
 
