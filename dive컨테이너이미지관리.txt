@@ -1,0 +1,14 @@
+# dive 설치
+brew install dive
+
+# 이미지 분석하기 (500m시 5분이상 소요)
+dive imagename 
+
+# 명령어
+tab
+
+# 불필요 파일삭제 (alpine DS)
+1. (178M) apk add .build-dependencies $PHPIZE_DEV
+2. (29M) monolog
+3. (26M) aws-sdk-php
+4. (17M) phpexcel

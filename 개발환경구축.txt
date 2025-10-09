@@ -1,0 +1,448 @@
+docker 윈도우 환경 구성
+
+참고주소1 : 도커 https://subicura.com/2017/01/19/docker-guide-for-beginners-2.html
+참고주소2 : 멀티노드 http://seokjun.kr/docker-nginx-node/
+참고주소3 : 도커기본 http://blog.naver.com/alice_k106/220646382977
+
+< docker 환경 구성 > 
+1. docker 설치
+2. 윈도우 가상화 활서오하
+2.1 powershell 관리자 권한으로 실행
+2.2 윈도우 가상화 활성화
+ - 안될때 오류 메시지 "하이퍼바이저를 실행하지 않아 가상컴퓨터를 실행할수 없습니다."
+   Hyper-V관리자에서 가상머신을 실행하려고 할때 발생하는 메시지
+ - powershell 을 관리자 권한으로 실행
+ - Enable-WindowsOptionalFeature -Online -FeatureName:Microsoft-Hyper-V -All
+3. 가상화 가능 여부 확인1
+ - 작업관리자 > CPU : 가상화, Hyper-V지원
+4. 가상화 가능 여부 확인2
+ - cmd > systeminfo : 가상화옵션 4가지가 모두 on 이여야 함
+   . 1개가 off면 맥으로 부팅후 부팅관리자에서 윈도우로 부팅을 수동으로 해야함
+5. 가상화 : 사용안함 되어 있얼 것이다.
+6. 가상화를 사용하려면
+ - os x 로부팅
+ - 설정 > 시동디스크 > 윈도우로 부팅
+ - 가상화가 활성화 됨을 확인 할 수 있다.
+
+< docker 기본 명령어 > 
+1. 실행중인 프로세스 확인 : docker ps
+2. 버전 체크
+ - docker version
+ - docker-compose --version
+ - docker-machine --version
+3. docker 전체 상태 확인 :  docker info
+4. 프로세스 시작/중지
+ - docker stop NAMES
+ - docker start NAMES
+5. 인스턴스 삭제 (stop상태일때만 가능)
+ - docker rm NAMES
+ - docker rm -f NAMES (삭제 잘 안될때 강제 삭제)
+6. 다운로드 이미지 리스트 확인 : docker images
+7. docker 로그 보기
+ - docker logs NAMES
+ - docker logs -f NAMES (실시간 모니터링)
+ - docker logs --tail=100 NAMES (끝 100라인만 보기)
+8. docker 이미지 생성 (Dockerfile필요)
+ - docker build --tag node-nginx:test .
+9. 생성된 이미지 조회
+ - docker images
+10. 이미지 삭제 (인스탄트가 rm 되었을때만 가능)
+ - docker rmi IMAGE_ID
+ - 또는 docker rmi 이미지이름:TAG
+11.Dockerfile 명령어들
+ - FROM : 설치할 프로그램
+ - RUN : cmd(쉘)에서 명령어 실행하는것과 같음 ( RUN mkdir temp 나 RUN echo "Hello" )
+ - ADD : 호스트os부터 가져올 파일명을 입력
+12.Docker 리눅스로 들어가기 (docker가 실행 중여야 함)
+ - > docker exec -it NAMES /bin/bash 
+ - > > cat /usr/local/etc/php/php.ini 
+13.특정 컨테이너에 vi 설치하기
+ - > > apt-get update
+ - > > apt-get install vim
+14.도커 스냅샷 뜨기 
+ - docker commit <옵션> <컨테이너 이름> <이미지 이름>:<태그> 
+ - (컨테이너 실행중에도 가능) docker commit mysql mysql57:UTF8
+15. 도커 이미지 세부 정보 보기 (IP 확인하기)
+ - docker inspect CONTAINER_ID
+16. 도커 설치된 서비스 보기
+ - docker ps
+ - docker ps -a (중지된 서비스 포함 보기)
+
+17. 도커 허브에 올리기
+ - https://hub.docker.com 가입
+ - docker login 
+  . username은 이메일 아니고 그냥 ID
+ - 업로드 할 "이미지이름" 레파지토리를 먼저 생성함 (없으면 자동 생성됨)
+ - 기존 이미지에 별명주기 ( docker tag 이미지이름(or id) 새이름(zero12a/redis):NEW_TAG )
+  . TAG는 참조본을 생성하는 것을 이미지ID가 동일하다.
+  . TAG삭제는 docker rmi 이미지이름:TAG
+ - 도커 허브에 올리기 ( docker push 새이름(zero12a/redis):TAG )
+
+< docker 네트워크구성 및 도커호스트간 통신 > 
+-. 기본방향 : 기본적으로 테스트 노트북의 IP가 동적으로 바뀌는 환경일때
+-. DOCKER간 통신 방법 : 도커용 가상 네트워크(DockerNAT)에 설정된 고정 IP/포트로 통신하면 됨 
+
+< docker 설정/모니터링 >
+-. docker inspect 서비스이름
+-. 모니터링 cpu/ram/io : docker stats 
+
+
+< redis 환경 > 
+1. redis (최신버전으로 설치)
+ - d옵션 : 백그라운드 실행
+ - p옵션 : os의 1234 port를 가상화의 6379 port와 연결됨( telnet localhost 1234 )
+ - docker run -d -p 1234:6379 --name 설치될이름(redis1) 이미지이름(redis):TAG
+ - 실행시 고정ip 할당 " --ip=174.17.0.254 " 옵션 추가
+2. 접속 테스트
+ - > telnet localhost 1234
+ - > set mykey hello
+  + OK
+ - > get mykey
+3. 도커내 설치 경로
+ - /usr/local/bin/
+
+< redis 명령어 > 
+1. 상태 : info
+2. 접속자 목록 : client list
+3. 실시간 처리정보 확인 : monitor
+4. 설정 보기 : config get timeout, config get *
+ - maxclients, timeout
+
+ redis 명령어 : http://moss.tistory.com/entry/Redis-%EC%84%9C%EB%B2%84-%EC%84%A4%EC%A0%95-%EC%A0%95%EB%A6%AC
+
+
+
+< mysql 설치 > 
+1. mysql client(워크벤치) 툴을 pc에 설치
+ - https://dev.mysql.com/downloads/file/?id=474210
+2. mysql 을 pc로 다운로드
+ - > docker pull mysql/mysql-server:5.7
+3. mysql 다운로드 이미지 확인
+ - > docker images
+4. mysql 설치 (최신버전으로 설치)
+ - > docker run -d -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=true --name mysql mysql:5.7
+ - > 비밀번호 설정시 : MYSQL_ROOT_PASSWORD=my-secret-pw
+5. 접속 테스트
+ - > mysql -h127.0.0.1 -uroot
+
+        ##한글/타임 설정 (/etc/mysql/my.cnf)
+        !includedir /etc/mysql/conf.d/
+        !includedir /etc/mysql/mysql.conf.d/
+
+
+
+        [client]
+        default-character-set=utf8
+
+        [mysql]
+        default-character-set=utf8
+
+        [mysqld]
+        sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+        init_connect=SET collation_connection=utf8_unicode_ci
+        init_connect=SET NAMES utf8
+        character-set-server = utf8
+        collation-server = utf8_unicode_ci
+        skip-character-set-client-handshake
+        default-time-zone='+9:00'
+
+        [mysqldump]
+        default-character-server = utf8
+
+
+< mysql 사용자/db 추가>
+1. 접속 cd "C:\MySQL Client\MySQL Workbench 6.3 CE"
+2. mysql -uroot
+3. use mysql
+4. select host, user from user;
+5. ALTER USER 'root'@'%' IDENTIFIED BY '';
+ - create user 'zero12a'@'172.17.0.1' identified by '';
+ --비번변경
+ ALTER USER 'zero1a'@'172.17.0.1' IDENTIFIED BY '';
+ 
+ --신규 생성 및 권한
+ create user 'zero12a'@'172.17.0.1' identified by '';
+ grant all privileges on *.* to 'zero12a'@'172.17.0.1';
+
+ --신규 생성 및 권한
+ create user 'cg'@'%' identified by '';
+ grant all privileges on *.* to 'cg'@'%';
+
+
+-- aws rds mariadb
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW,
+ CREATE ROUTINE, ALTER ROUTINE, EVENT, TRIGGER
+ on CGCORE.* to 'cg'@'%' IDENTIFIED BY ';
+
+
+
+
+6. flush privileges;
+7. create user 'zero12a'@'localhost' identified by '';
+8. create user 'zero12a'@'%' identified by '';
+9. grant all privileges on *.* to 'zero12a'@'%';
+10. (phpmyadmin) docker환경일때 가상os가 호스트os를 접근하기 위해 config.inc.php 생성해줘야 함
+11. 한글 설정 상태 확인
+ -  > show variables like 'c%';
+12. mysql.cnf를 도커에 복사
+ - my.cnf는 링크 파일이니 복사 해도 의미 없고 mysql.cnf 를 복사해서 수정해야함.
+13. 기 생성되 db는 캐릭터셋이 안바뀜
+ - collation_database,  character_set_database
+14. 기존 데이터도 변경해 주기
+ - alter database mysql CHARACTER SET UTF8;
+15. 한글데이터 완료된 설정 스냅삿하기 
+ - docker commit <옵션> <컨테이너 이름> <이미지 이름>:<태그> 
+ - (컨테이너 실행중에도 가능) docker commit mysql mysql57:UTF8
+16. 특정 sql 오류 발생 ( v5.7이상 )
+ - 오류 : sql_mode=only_full_group_by
+ - mysql.cnf변경 
+    [mysqld]
+    sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+
+
+< nginx 환경 > 
+1. nginx 설치 (최신버전으로 설치됨)
+ - > docker run -d -p 80:80 --name web_nginx nginx
+2. docker에서 os의 C드라이브를 접근 할수 있도록 허용 처리
+ - docker GUI 프로그램 > settings > Shared Drivers > C 체크 허용
+3. nginx 설치 실행 경로 지정
+ - /usr/share/nginx/html 는 도커 내부 설치 경로로 보여짐
+ - /etc/nginx/conf.d/default.conf 는 도커 내부 설치 경로로 보여짐
+ - > docker run -d -p 80:80 --name web_nginx -v C:\docker\nginx\www_root:/usr/share/nginx/html nginx 
+4. conf 파일 수정
+ - # conf파일 뽑아 내기
+ - > docker cp web_nginx:/etc/nginx/nginx.conf default.conf 
+ - # 변경한 conf반영하기 ( -v A:B 는 OS의 A폴더를 도커의 B폴더로 링크함 )
+ - > docker run -d -p 80:80 --name web_nginx -v C:/docker/nginx/nginx.conf:/etc/nginx/nginx.conf -v C:/docker/nginx:/nginx nginx 
+
+< docker network 설정>
+옵션 : 기본 brige(nat), --net=host  (mac 에서는 net host 옵션을 지원하지 않음.)
+host 설정시 : lsof -nP -i4TCP:8080 (8080 netstat 확인)
+
+docker run -d -p 80:80 --name nginx1.14 --net host nginx
+
+< node.js 환경 >
+1. node.js 윈도우 버전 설치
+2. 프로젝트 폴터 생성 nodepjt
+3. 샘플 pjt 생성
+ - > npm init -f
+ - > npm i --save express uuid
+4. 샘플 소스를 작성한다. index.js
+5. 샘플 소스를 실행한다.
+ - > node index.js
+
+< node.js를 docker에서 실행 >
+1. node_modules 를 복사하는 일이 없도록 도커 무시 파일 생성 (.dockerignore)
+ 파일 내용은 "node_modules"만 입력하고 저장
+2. Dockerfile 파일 생성
+ FROM node
+ COPY package.json /src/package.json
+ RUN cd /src; npm install
+ COPY . /src
+ EXPOSE 3000
+ WORKDIR /src
+
+ CMD node index.js
+3. 도커파일 이미지 빌드  ( 맨뒤에 . 누락 주의 )
+ - > docker build --tag node-nginx:test .
+4. 생성 된 이미지 확인
+ - > docker images
+5. 실행하기
+ - > docker run --name node-nginx1 -d -p 3000:3000 node-nginx:test
+6. 접속 테스트
+ - 브라우저에서 http://localhost:3000/
+
+
+< node.js를 멀티 노드 및 클러스터링없는이중화 >
+1. 3개 노드 실행
+- > docker run --name node-nginx1 -d -p 3000:3000 node-nginx:test
+- > docker run --name node-nginx2 -d -p 3001:3000 node-nginx:test
+- > docker run --name node-nginx3 -d -p 3002:3000 node-nginx:test
+2. nginx 노드 밸런싱 설정
+ - nginx_multinode.conf 생성 (생성경로 c:\docker\nginx\)
+ - * 주의 * 할 점은 upstream server의 ip는 OS의 IP로 기재
+3. docker 빌드 컨피그 생성
+ - Dockerfile
+  FROM nginx
+  COPY nginx_multinode.conf /etc/nginx/nginx.conf
+4. 도커 이미지 생성
+ - nginx/Dockerfile이 있는 폴더로 이동
+ - > docker build --tag node-nginx-lb:test .
+5. 이미지로 도커 실행
+ - > docker run -d --name node-nginx-lb -p 5000:80 node-nginx-lb:test
+6. 새로고침 할때 마다 다른 서버로 접속하는거 막기
+ - "least_conn", "ip_hash" 등의 옵션이 있음, nginx plus버전에서는 zone옵션이있고(was가 센션 클러스터링 동기화 제공함, sticky cookie)
+ - nginx conf파일 upstream에 "ip_hash;" 추가
+
+< node.js 세션 클러스터링 >
+1. 관련 패키지 설치
+ - > npm install connect-redis express-session 
+ - > npm install blue-tape (단위 테스트 지원)
+ - > npm install cookie-parser
+2. 세션 컨트롤 작성
+ - session_redis.js
+3. DockerFile 시작 파일 변경
+ " CMD node session_redis.js "로
+4. 재빌드 
+ - > cd nodepjt
+ - > docker rmi NAMES (기존이미지 지우고)
+ - > docker build --tag node-nginx:test .
+5. 노드 실행
+ - > docker run --name node-nginx1 -d -p 3000:5000 node-nginx:test
+ - > docker run --name node-nginx2 -d -p 3001:5000 node-nginx:test
+ - > docker run --name node-nginx3 -d -p 3002:5000 node-nginx:test
+5. nginx 클러스터 실행
+ - c:\docker\nginx\로 폴더 이동
+ - > DockerFile의 EPOSE PORT를 5000으로 맞춰줘야 함
+ - > docker rmi NAMES (기존이미지 지우고)
+ - > docker build --tag node-nginx-lb:test .
+ - > docker run -d --name node-nginx-lb -p 4000:80 node-nginx-lb:test
+
+< node.js 프로젝트에 mysql 환경설정 >
+1. npm install mysql
+
+ < HOST IP변경 되었을때 해줘야 하는 것들 >
+1. Redis 서버 IP변경
+2. nginx_multinode.conf의 3대 서버 IP변경
+ - 502 Bad Gateway 에러가 남
+
+< websocket 환경 구성 >
+1. sockjs 패키지 설치
+ - npm install sockjs node-static
+ - npm sockjs-express
+2. 
+
+
+< git 환경 구성 >
+1. git 설치 (npm install git)
+
+< php7 nginx 환경 구성 >
+1. 이미지 땡겨 오기  (https://hub.docker.com/r/skiychan/nginx-php7/)
+ - docker pull skiychan/nginx-php7:latest
+
+2. 기본 설치 실행 하기
+ - docker run --name nginx -p 8080:80 -d skiychan/nginx-php7
+ - 브라우져에서 확인하기 ( http://localhost:8080/, 잘 안 열리면 restart )
+
+3. root 경로 변경해서 다시 실행하기 ( skiychan/nginx-php7 이름 바꾸면 안됨, 실행시 git에서 동적으로 정보 다시 가져옴 )
+ - (win) docker run --name nginx -p 8080:80 -v C:\docker\pm:/data/www -d  skiychan/nginx-php7
+ - (mac) sudo docker run --name nginx -p 8080:80 -v /Users/zeroone/Documents/docker/:/data/www -d zero12a/cg_nginx-php7:20180413
+ - mac인 경우 관리자 권한 ( sudo docker ~ ) 로 실행
+4. php conf 뽑아내기/집어넣기
+ -  docker cp NAMES:/usr/local/php/etc/php.d/php.ini php.ini
+ -  docker cp php.ini NAMES:/usr/local/php/etc/php.d/php.ini 
+
+  - > docker exec -it nginx /bin/bash 
+ - > > cat /usr/local/php/etc/php.ini 
+
+
+< php7 에 Predis 환경 구성 >
+1. 실행중인 도커로 진입
+2. 컴포져 설치
+ - php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/local/bin/
+3. predis 설치정보 파일 생성
+ - echo '{"require":{"predis/predis":"*"}}' > composer.json
+4. predis 설치
+ - ./php /usr/local/bin/composer.phar install
+  ==> 위 install 과정은 상당 시간 소요됨(기다려야함)
+5. pear 확장프로그램 설치 (php7.3에서는 pear로만 설치 가능하고 )
+ - yum info php-pear
+ - yum install php-pear
+ - pear channel-discover pear.nrk.io (nrk/predis 채널 등록)
+ - pear remote-list -c nrk (nrk/predis 채널활성화)
+ - pear install nrk/Predis
+ - 설치 경로:  /usr/share/pear/Predis..
+  . php7 : /usr/local/lib/php/Predis
+ - (php.ini) include_path에 /usr/share/pear 경로를 추가해 줘야 함 ( .:/usr/share/pear )
+  . php7 : 에서는 경로 필요없음 inlucde_path 경로만 맞으면 됨.
+ - 세션 핸들러 files을 redis 로 변경 
+   1. (php.ini)   session.save_handler를 files를 redis로 변경
+      session.save_handler = redis
+      session.serialize_handler=igbinary
+      igbinary.compact_strings=On
+
+   2. (php.ini 또는 해당php) redis 서버 경로 추가 ( ini_set('session.save_path', "tcp://172.30.53.17:6379"); )
+   3. php.ini 세션스토어를 redis 핸들러 를 설치 하기 위한 개발 툴 설치 ( yum install php-devel )
+   4. php.ini 세션스토어를 redis 핸들러 를 설치 하기 위한 개발 툴 설치 ( yum install gcc make )
+   5. redis 설치 ( pecl install redis ) ==> 설치 경로 : /usr/lib64/php/modules/redis.so, 버전3.1.4설치됨
+   6. php.ini에 redis 확장 활성화
+   7. igbinary설치 ( pecl install igbinary) ==> 설치 경로 : /usr/lib64/php/modules/igbinary.so
+ - ldap인증 붙이기
+  yum install php-install 설치후에 ==> 설치 경로 : /usr/lib64/php/modules/ldap.so
+
+
+< php7/nginx OS에 wget 설치 >
+1. yum install wget
+
+< php7/ RedisClient 설치 > => 동작 안함
+wget -nc http://getcomposer.org/composer.phar
+/usr/local/php/bin/php composer.phar require cheprasov/php-redis-client
+
+< php7/ AWS SDK 설치>
+/usr/local/php/bin/php composer.phar require aws/aws-sdk-php
+
+< git 설치 >
+1. yum install git
+2. git 초기화
+ - 콘솔(도스창) 실행
+ - 프로젝트 루트 폴더로 이동
+ - git init 실행
+ - 원격지 추가 git remote add origin https://github.com/zero12a/rd.git
+ - [원격소스 복제해 오기] git clone 원격경로
+3. 이미 업로드된 깃헙에서 다른 OS로 가져와서 다시 새 OS에서 작업하기
+ - git clone htts://~
+ - git pull --rebase origin master
+ - git push -u origin master
+
+
+< php7/node nginx 설정 >
+1. dockerfile 생성
+  FROM nginx
+  COPY nginx_nodephp.conf /etc/nginx/nginx.conf
+2. 도커 이미지 생성
+ - docker build --tag nginx-php-node:test .
+3. 도커 이미지 서비스 등록 및 실행
+ - docker run -d --name nginx-php-node -p 8000:80 nginx-php-node:test
+
+
+
+< mysql 데이터 복구 >
+1. 관련 유틸리티 설치
+ - mysql utililties
+ - mysql connector/python
+
+2. frm 테이블 스키마정의 확장자 파일에서 테이블 생성문 추출
+ - > mysqlfrm --diagnostic 해당데이터폴더 > create.sql
+
+3. 테이블스패이스에서 강제로 해당 테이블 정보 삭제
+ - alter table 테이블이름 discard tablespace; 
+   . 만약 명령어 실행 실패시 해당 데이터 폴더로 이동해서 db다운 후 테이블.frm 테이블.ibd 파일 삭제
+ - 생성된 sql을 실행해 준다.
+
+
+< mac aws cli 설치>
+> pip install awscli --upgrade --user
+> brew install awscli
+
+
+
+<docker 자동시작>
+[Unit]
+Description=Docker Auto Start
+After=network-online.target docker.socket firewalld.service containerd.service docker.service
+
+[Service]
+User=root
+Group=www-data
+Environment="PATH=/root/"
+WorkingDirectory=/root
+ExecStart=/usr/bin/docker start redis mariadb os batch cg lib pm mk ds
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+
+

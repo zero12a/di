@@ -1,0 +1,160 @@
+# 좋은 참고 사이트
+명령어 모음 https://kubernetes.io/ko/docs/reference/kubectl/cheatsheet/
+서비스 https://kubernetes.io/ko/docs/concepts/services-networking/connect-applications-service/
+서비스오픈 https://kubernetes.io/ko/docs/tutorials/services/source-ip/
+
+# 쿠버네티스 환경 구축
+1. macos 에서 쿠버네티스 활성화
+ - (UI) 도커아이콘 > preference > kubernetes탭
+  . "Enable Kubernetes" 체크활성화
+  . "Deploy Docker stack to kubernetes by default" 체크활성화
+  . "Show system containers" 체크활성화
+
+2. 쿠버네티스 대시보드 설치
+ <준비>
+ - 설치 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc2/aio/deploy/recommended.yaml
+ - 설치확인 kubectl get pod --namespace=kube-system -l k8s-app=kubernetes-dashboard
+ - 실행 kubectl proxy
+ <확인>
+ - 웹에서 확인 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+ - token타입 선택하고 
+ - token 생성
+  . kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+
+ - 위에서 생성된 토근 웹화면에 입력해서 로그인
+
+3. 쿠버네티스 기초
+ - (마스터에서) node 목록 확인 
+  . kubectl get nodes
+ - (마스터에서) 네임스페이스(클러스터) 확인 / 이 단위로 권한설정가능.
+  . kubectl get namespace
+ - (마스터에서) pod 목록 확인
+  . kubectl get pod
+
+4. pod 생성하기
+ - 테스트 도커이미지 2개 불러오기 
+  . docker pull gihyodocker/nginx:latest
+  . docker pull gihyodocker/echo:latest
+ - simple-pod.yaml (컨테이너 2개짜리) 파일 생성하기 ( 책 192p )
+ - pod 생성하기하고 실행하기
+  . kubectl apply -f simple-pod.yaml
+ - pod 확인 
+  . kubectl get pod
+  NAME          READY   STATUS    RESTARTS   AGE
+  simple-echo   2/2     Running   0          16m
+  => 해석 
+   . NAME : 컬럼은 pod임
+   . READY : 2개의 컨테이너 존재, 2면 컨테이너모두실행중, 1이면 1개실패, 0이면 2개모두 구동실패)
+   . STATUS : "Running"이면 정상
+
+ - 2개 컨테이너중 특정 컨테이너(-c "nginx") 쉘로 진입하기
+  . kubectl exec -it simple-echo bash -c nginx
+ - 2개 컨테이너중 특정 pod(simple-echo)의 특정 컨테이너(echo) tail
+  . kubectl logs -f simple-echo -c echo 
+ - pod 삭제하기
+  . kubectl delete pod simple-echo
+
+5. pod 기타 명령어
+ - pod 정보 상세조회
+ . kubectl describe pods simple-echo
+
+6. 리플리카 3세트 pod 만들기
+ - yaml 파일 생성하기 (  201p )
+ - kubectl apply - f simple-replicaset.yaml --record # "--record"옵션을 넣어 클러스터에 반영
+ - kubectl scale --replicas=4 rs/echo #리소스(rs)타입의 "echo"어플리케이션을 +1개 스케일업
+ - kubectl scale --replicas=2 rs/echo #리소스(rs)타입의 "echo"어플리케이션을 -2개 스케일다운
+ - 특정파드(echo-2kz4x) 삭제하면 최종 scale수량에 맞춰 자동으로 생성됨(pod 2개일때 실행하면, 먼저 1개 자동생성하고, 삭제요청한거 삭제됨)
+  . kubectl delete pod,service echo-2kz4x #"NAME"가 일치하는 pod 삭제
+  . kubectl delete -f simple-replicaset.yaml #또는 yaml에 정의된 pod 삭제
+  . kubectl delete pods,services -l app=echo   #또는 라벨이 "app: echo"인 pod 삭제, 트랜잭션은 딜레이가 있으며, 2개 생성후 2개삭제까지 완료해야
+  프롬프트가 완료됨.
+  . kubectl -n my-namespace delete pod,svc --all #또는 특정 네임스페이스(my-namespace)의 모든 pod 삭제
+ - 디폴로이먼트 오토스케일 정의하기
+  . kubectl autoscale deployment echo --min=2 --max=10
+
+7. 디폴로이먼트 3세트 pod 만들기
+ - yaml 파일 생성하기 ( 203p )
+  . kubectl apply -f simple-deployment.yaml #기존 리플레카세트의 pod가 2개인경우 1개 스캐일됨.
+ - 정보 조회하기
+  . kubectl get pod,replicaset,deployment --selector app=echo
+ - 리비전 확인하기(REVISION:1)
+  . kubectl rollout history deployment echo
+ - pod수량은 스케일하면 리비전은 변경안되고,특정 이미지로 변경(gihyodocker/echo:patched)시 리비전이 올라감.
+  . kubectl apply -f simple-deploymentMod.yaml --record
+ - 리비전 확인하기(REVISION:1과2)
+  . kubectl rollout history deployment echo
+ - 특정 리비전의 상세 내용 확인하기
+  . kubectl rollout history deployment echo --revision=1
+ - 이전 리비전으로 롤백 하기(롤백이 될때 pod는 모드 롤백되고, 리플리카세트는 2개가 남음)
+  . kubectl rollout undo deployment echo #이전 리비전으로 롤백
+  . kubectl rollout undo deployment echo --to-revision=2 #특정 리비전으로 롤백
+ - 리비전 확인하기(REVISION:2과3)
+  . kubectl rollout history deployment echo
+ - 디폴로이먼트 삭제하기 (리플리카, 파드 모두 삭제됨)
+  . kubectl delete -f simple-deployment.yaml
+
+8. 서비스 디스커버리 오픈("kind: Service"옵션, pod끼리 통신만 가능하고 외부에서 접속 불가)
+ - 서비스 공개 야믈 작성 (210p, simple-service.yaml)
+ - 서비스 생성하기
+  . kubectl apply -f simple-service.yaml # "summer"릴리즈만 활성화
+  . docker pull gihyodocker/fundamental:0.1.0
+  . kubectl run -i --rm --tty debug --image=gihyodocker/fundamental:0.1.0 --restart=Never -- bash -il #"debug"파드 생성
+  . debug:/# curl http://echo/ #디버그모드에서 echo서비스 호출
+  . 모든 컨테이너 로그 보기("summer" 1개에서 접속로그 존재)
+  . kubectl logs -f echo-summer-4lqn2 -c echo # "echo-summer-4lqn2"파드의 "echo" 컨테이너
+  . kubectl logs -f echo-summer-d4spc -c echo # "echo-summer-d4spc"파드의 "echo" 컨테이너
+  . kubectl logs -f echo-spring-pnqm2 -c echo # "echo-summer-pnqm2"파드의 "echo" 컨테이너
+
+  . kubectl delete pod debug # debug파드가 위 명령어 에서 잘못 생성된 경우 삭제하기
+  . kubectl get svc echo # "echo"서비스 확인하기 ( "PORT(S)" 내부port:외부port )
+
+  NAME   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+  echo   ClusterIP   10.103.189.22   <none>        80/TCP    1s
+
+
+9. 외부에 서비스 오픈("kind: Service"옵션에 "type: NodePort"추가 옵션 설정)
+  - 야믈 파일 생성 (213p)
+  - 서비스 생성하기
+  . kubectl apply -f simple-serviceNodePort.yaml
+  - kubectl get svc echo #서비스 port확인하기( "PORT(S)" 내부port:외부port )
+
+  NAME   TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+  echo   NodePort   10.105.79.123   <none>        80:30015/TCP   3s
+
+  - curl http://127.0.0.1:30015 #해당 서비스 port로 요청시 성공
+  - curl http://127.0.0.1:80 #해당 서비스 80 port로 요청시 실패
+   => curl: (7) Failed to connect to 127.0.0.1 port 80: Connection refused
+  - 외부 오픈된 port가 임의 포트이므로, 로드밸런서를 위한 포트 타입으로 변경
+   . kubectl edit svc echo # Type 을 NodePort 에서 LoadBalancer 로 변경한다. 
+   . kubectl get svc echo # "CLUSTER-IP", "EXTERNAL-IP", 외부port가 변경됨
+
+   NAME   TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+   echo   LoadBalancer   10.96.41.131   localhost     80:30745/TCP   24m
+
+   . curl http://localhost:80/ # 이제 "80"port로 해서 접속됨.
+   . EXTERNAL-IP 의 IP 주소는 공용 인터넷에서 이용할 수 있는 주소이다. CLUSTER-IP 는 클러스터/프라이빗 클라우드 네트워크 내에서만 사용할 수 있다.
+
+10. aws 로드밸런서 연결하기
+AWS에서는 LoadBalancer 유형은 IP가 아닌 (긴)호스트네임을 사용하는 ELB를 생성한다는 점을 참고한다. 
+이것은 일반적인 kubectl get svc 의 출력에 맞추기에는 매우 길기 때문에 실제로 이를 보려면 kubectl describe service my-nginx 를 수행해야 한다. 
+다음과 같은 것을 보게 된다.
+kubectl describe service echo
+...
+LoadBalancer Ingress:   a320587ffd19711e5a37606cf4a74574-1142138393.us-east-1.elb.amazonaws.com
+...
+
+# 에러 FAQ
+1. error: error parsing simple-pod.yaml: error converting YAML to JSON: yaml: line 8: mapping values are not allowed in this context
+- re : "kubectl apply -f simple-pod.yaml"명령어 실행시 발생하며, 띄워쓰기 및 TAB 반드시 맞춰야 함.
+
+#사용자 컨피크(~.aws/config)
+[default]
+output = json
+region = ap-northeast-2
+[eks]
+output = json
+region = ap-northeast-2
+[profile eksadmin]
+role_arn = arn:aws:iam::776092519253:role/myEksCluster
+source_profile = eks
+

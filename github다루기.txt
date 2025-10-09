@@ -1,0 +1,59 @@
+* github 명령어 모음
+https://unikys.tistory.com/323
+
+1. "git push -u origin master" 실행시 오류
+ - 메시지 : ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'https://github.com/zero12a/DS.git'
+
+ - 원인 : github사이트의 소스와 로컬이 불일치
+ - 해결법 : 로컬소스를 github에 강제(-f) 업데이트
+   . git push -f origin
+
+
+2. "git commit -m "first commit"" 실행시 오류
+ - 메시지 : 
+*** Please tell me who you are.
+
+Run
+
+  git config --global user.email "zero12a@gmail.com"
+  git config --global user.name "kim haha"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+ - 원인 : 나의 이메일, 이름 미설정
+ 
+ 3. api토큰 생성
+  - 게정 > setting > developer settings > new personal access token
+  
+
+
+<2025.10 순서>
+참고 블로그 : ttps://blog.naver.com/nuricle/223907192406
+
+0. 연동 계정 세팅하기
+ git config --global user.name "zero"
+ git config --global user.email "~~@gmail.com"
+** 나중에 로그인 비밀번호는 묻는데 이건 github 개발자 도구에서 액세스 토큰을 입력해야함
+
+1. 깃 환경 설정 (해당폴더로 이동해서)
+ (이미 생성된 폴더가 있으면 삭제 필요 rm -rf .git)
+ git init
+
+2. 깃 원격 경로와 연결하기
+ git remote add origin https://github.com/zero12a/db
+
+3. 로컬에 파일이 없는 경우에만 파일 github에서 로컬로 복제해 오기
+ (자동적으로 프로젝트 폴더 'db'가 생성되고 그 이하로 복제해옴)
+ git clone https://github.com/zero12a/db.git
+
+4. 로컬 파일 추가하고(또는 파일명)
+ git add .
+
+5. 커밋하고
+ git commit -m 'new macbook'
+
+6. github에 업로드 하기
+ git push -u origin master
+
+

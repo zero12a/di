@@ -1,0 +1,67 @@
+1. aws cli설치
+  - curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+  - aws --version
+
+2. aws 특정 사용자에게 ecr 권한 주기
+
+2. aws cli 해당 사용자 인증정보 설정
+ - aws configure set aws_access_key_id
+ - aws configure set aws_secret_access_key
+ 또는 aws configure 입력해서 차근차근 key, sec 입력해도 됨
+
+3. aws cli ecr 임시토큰으로 인증하기
+ - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 776092519253.dkr.ecr.ap-northeast-2.amazonaws.com
+
+<api 인증키 설정 안하면 아래 같이 오류 뜸>
+""An error occurred (UnrecognizedClientException) when calling the GetAuthorizationToken operation: The security token included in the request is invalid." 
+
+
+4. aws 콘솔에서 ecr 레파지토리 생성하기
+ - myecr/pjt1 레파지토리 생성
+ - myecr/pjt1 선택하고 들어가서 좌측 메뉴에서 "Tags" 클릭
+ - tag에 my "myecrtag1"=>"1" 을 입력
+
+5. 로컬 도커이미지에 태그 달기
+ - docker tag msapm 776092519253.dkr.ecr.ap-northeast-2.amazonaws.com/myecr/pjt1:latest
+ - [public] docker tag rabbitmqws public.ecr.aws/k1x0w7n1/rabbitmqws:latest
+ - [public] docker tag sandboxphpweb public.ecr.aws/k1x0w7n1/sandboxphpweb:latest
+ - [public] docker tag msafluentd_amqp public.ecr.aws/k1x0w7n1/msafluentd_amqp:latest
+
+
+
+6. aws ecr에 이미지 업로드 하기
+ - docker push 776092519253.dkr.ecr.ap-northeast-2.amazonaws.com/myecr/pjt1:latest
+ - [public] docker push public.ecr.aws/k1x0w7n1/rabbitmqws:latest
+ - [public] docker push public.ecr.aws/k1x0w7n1/sandboxphpweb:latest
+ - [public] docker push public.ecr.aws/k1x0w7n1/msafluentd_amqp:latest
+
+
+7. aws ecs 클러스터 구성하기 
+ - 생성 소요시간 : 4:13시작 - 10분이상 소요
+
+
+8. aws eks 클러스터 구성하기 
+
+8-1. aws eks 클러스터용 role 생성하기
+ - 신규 role 권한은 "EKS" -> "EKS Cluster"
+
+8-2. aws eks 클러스터 생성하기 화면에서 해당 role선택 생성하기
+ - dmz망 생성시 10분이상 "생성 중"
+
+9. aws ecs 클러스터 Fargate 프로파일 구성하기
+ - VPC가 프라이빗만 지정 가능함.  
+ - 생성 소요시간 : 4:45분 시작 - 10분
+ - 네임스페이스 : myecr/pjt1 로 입력하고
+ - tag에 : myecrtag1 => 1 입력 필수
+
+
+10. aws eks 클러스터 node 구성하기(Ec2에 생성됨)
+ - subnet이 dhcp ip 자동할당 해야함. (https://docs.aws.amazon.com/vpc/latest/userguide/vpc-ip-addressing.html#subnet-public-ip)
+
+11. 쿠버네티스 버전 업그레이드시 시간이 엄청 오래 걸림
+ - 5:40분 시작 ~ 
+
+12. 결국은 CLI로 해야함.
+ https://www.eksworkshop.com/beginner/180_fargate/
+ https://www.youtube.com/watch?v=-3FELDeZf_Q
+ 

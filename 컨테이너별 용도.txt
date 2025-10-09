@@ -1,0 +1,31 @@
+컨테이너 프로세스 목록
+
+이미지 서비스포트 컨테이너명 #용도
+redis 7979->6379/tcp redis #메모리 db
+msapm 8030->80/tcp  pm #전체 개발용
+msapm 8050->80/tcp  pm #phpmyadmin
+msamk 8060->80/tcp   mk #메이커 8061(workerman test)->80/tcp
+msamk 8040->80/tcp   ds #데모서비스 
+msard 8080->80/tcp   rd #서비스
+msaos 18052->80/tcp  os #인증 ( asos2는 nginx-fpm버전)
+msacg:200105 0.0.0.0:8090->80/tcp   cg #코드젠
+msalib 0.0.0.0:8070->80/tcp    lib #라이브러리 및 img
+msalc lc #로그수집기(오픈포트 없음)
+masall 9081~89->81~89  #all 테스트 용도 
+airflow 8010->8080/tcp   #배치 airflow
+msabatch no/tcp   #배치 batch
+
+postgre 6432->5432/tcp #postgresql
+pgadmin4 6480->80/tcp #pgadmin4
+justjs 9080->8080/tcp #justjs
+
+amqp_rcv 34224/tcp_udp #샌드박스log 수신해서 rabbitmq 로 던지기
+rabbitmq 5671-5672, 15672, 15674 @메시지큐서비스(코딩: 샌드박스log to mq to browser)
+sbphpweb 8041 #샌드박스 코딩
+mysql8 8306->3306 
+fluentd 24224/tcp_udp #로그수집기
+mariadb 4306->3306
+
+
+<미사용>
+msaos 8052->80/tcp           os #[미사용] 인증 (msaos는 swoole버전)

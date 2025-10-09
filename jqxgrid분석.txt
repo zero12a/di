@@ -1,0 +1,18 @@
+* jqxgrid 편집 모드 지원 종류
+ - 치명적 단점은 
+  1. re-redering, re-fresh문제 = 편집 시마다 전체 셀 리렌더링 함.
+  2. 스크롤링이 느림 (4개컬럼, 20행 테스트 기준)
+ - 장점
+  1. 멀티 체크 컬럼 가능 ( DropDownList)
+  2. 콤보박스 객체는 서로 분리됨.
+ - 특징
+  1. 마스트체커는 컬럼 타임이 아니고 row셀럭터임
+  2. 데이터객체(dataAdaptor)와 화면 html이 분리됨
+ - 아래 5개 지원 ( 멀티 체크 셀렉트 지원o = dropdownlist )
+    TextBox
+    CheckBox(uses the jqxCheckBox widget)
+    NumberInput(uses the jqxNumberInput widget and edits currency, percentange and any type of numeric information)
+    DateTimeInput(uses the jqxDateTimeInput widget and edits date and time values)
+    DropDownList(uses the jqxDropDownList widget and selects a single value from a list of values)
+     - jqxDropDownList는 멀티 체크 가능한데 아직테스트 안됨.
+ - 1개발자, 프로젝트 제한없음 : 400달러

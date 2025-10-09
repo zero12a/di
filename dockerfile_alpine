@@ -1,0 +1,142 @@
+#알파인 리눅스 내려받기
+docker pull alpine
+
+#백그라우드 프로세스로 실행하기 ( tail -f 없으면 실행하면 바로 종료되어 버림)
+docker run -d --name alpine alpine:latest tail -f /dev/null
+
+#콘솔 진입 (bash가 없음)
+docker exec -it alpine sh
+
+#업데이트
+ apk update
+ apk upgrade 
+
+#확장 패키지 설치
+ apk search jdk
+ apk add openjdk8 
+ apk add vim
+ apk add bash
+
+#findsecbugs cli 다운로드
+wget https://github.com/find-sec-bugs/find-sec-bugs/releases/download/version-1.9.0/findsecbugs-cli-1.9.0.zip
+unzip *.zip
+
+#이미지 만들기1
+docker commit alpine zero12a/alpine_openjdk8:20190329
+
+#이미지 올리기2
+docker push zeor12a/alpine_openjdk8
+
+#이미지 만들기1
+docker commit alpine zero12a/alpine_aws_enc:20190403
+
+#이미지 올리기2
+docker push zero12a/alpine_aws_enc
+
+
+#############################
+## whereis 설치
+#############################
+apk add --update util-linux
+
+
+#############################
+## gcc 설치
+#############################
+apk add build-base
+
+
+#############################
+## aws 암호화 cli 설치
+#############################
+#python 설치
+apk add python3
+apk add python3-dev #컴파일 필요시 python.h
+apk add libffi-dev #컴파일 필요시 wffi.h
+apk add openssl-dev #컴파일 필요시 ssl.h
+
+3.6.8최신 버전 설치됨
+
+#pip 설치파일 다운로드
+wget https://bootstrap.pypa.io/get-pip.py
+
+#pip 설치
+python3 get-pip.py --user
+
+#pip 업그레이드
+pip install --upgrade pip
+19.0.3 버전 설치됨
+
+#pip 경로 등록
+export PATH=~/.local/bin:$PATH
+
+#setuptools 업그레이드
+pip install --upgrade setuptools
+pip install --upgrade cffi #gcc, python3-dev 필요함.
+
+#aws 암호화 cli 설치
+pip install aws-encryption-sdk-cli
+ - 라이브러리 버전 에러 발생
+
+#설치 버전 확인
+aws-encryption-cli --version
+ - cli 1.1.5
+ - sdk 1.3.8
+
+#키 생성 하기
+aws console - kms에서 "고객 관리형 키" 메뉴로 이동해서 키 생성하기
+
+#아래 와 같이 실행시 오류 발생
+
+#암호화
+aws-encryption-cli --encrypt --input plain.txt \
+                     --master-keys key=arn:aws:kms:ap-northeast-2:~~ \
+                     --encryption-context purpose=test \
+                     --metadata-output ~/metadata \
+                     --output plain.enc
+
+#암호화 (키 필요)
+aws-encryption-cli --encrypt --input plain.txt \
+                     --master-keys key=arn:aws:kms:ap-northeast-2:~~ \
+                     --encryption-context purpose=test \
+                     --metadata-output ~/metadata \
+                     --output plain.enc
+
+#복호화 (키 불필요, 키정보가 암호화 결과에 포함됨)
+aws-encryption-cli --decrypt --input plain.enc \
+                    --encryption-context purpose=test \
+                    --metadata-output ~/metadata \
+                    --output plain.dec
+
+
+
+자꾸 output 파일 삭제 에러 발생
+MainThread - aws_encryption_sdk_cli - WARNING - Operation failed: deleting output file: ./plain.txt.encrypted
+Encountered unexpected error: increase verbosity to see details.
+GenerateKeyError("Master Key arn:aws:kms:ap-northeast-2~~ unable to generate data key")
+
+- 에러 이유 : 해당 사용자 계정에 "kms:GenerateDataKey*" 권한이 없음.
+- 연관 권한 : "kms:Encrypt", "kms:Decrypt"
+
+#awscli도 설치
+pip install awscli
+
+aws help 하면 아래 에러 발생
+Could not find executable named "groff"
+
+#groff 설치
+apk add groff
+
+#IAM에서 KMS용 정책 생성
+ - KMS 정책은 : KEY 관련 모든 권한 부여
+ - group 생성하고 해당 그룹에 신규로 생성한 KMS 정책 권한 부여
+ - 해당 group에 해당 user 추가 
+
+#사용자 인증
+aws configure
+ID 
+KEY 
+ap-northeast-2
+json
+
+#명령어 실행

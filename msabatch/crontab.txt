@@ -1,0 +1,2 @@
+* * * * * cd /data/www/b.t/dbbatch && /data/www/lib/php/vendor/bin/crunz schedule:run
+* * * * * cd /data/www/b.t/mailsend && /data/www/lib/php/vendor/bin/crunz schedule:run

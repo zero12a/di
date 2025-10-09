@@ -1,0 +1,15 @@
+; /usr/local/etc/php-fpm.conf
+; this file is /usr/local/etc/php-fpm.d/www.conf
+; https://tideways.com/profiler/blog/an-introduction-to-php-fpm-tuning
+[www]
+user = www-data
+group = www-data
+listen = {{ var "PHPFPM_LISTEN" | default "/var/run/php-fpm.sock" }}
+listen.mode = 0666
+pm = dynamic
+pm.max_children = 20
+pm.start_servers = 5
+pm.min_spare_servers = 5
+pm.max_spare_servers = 10
+pm.max_requests = 500
+access.log = /var/log/php-fpm.$pool.access.log

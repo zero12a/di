@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: clusterip-service-1
+spec:
+  selector:
+    app: nginx_pod_1
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

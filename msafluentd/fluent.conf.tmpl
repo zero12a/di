@@ -1,0 +1,40 @@
+<source>
+  @type  forward
+  @id    input1
+  @label @mainstream
+  port  24224
+
+  <parse>
+    @type json
+  </parse>
+</source>
+
+
+
+
+<label @mainstream>
+
+    <filter **>
+      @type record_transformer
+      enable_ruby true
+      auto_typecast yes
+      <record>
+        # rescue is JSON.parse exception 
+        msg ${ (JSON.parse(record["log"])["message"]) rescue nil }
+      </record>
+    </filter>
+
+    <match **>
+        @type mysql_bulk
+        host {{ var "TO_MYSQL_HOST" | default "172.17.0.1" }}
+        port {{ var "TO_MYSQL_PORT" | default "3306" }}
+        database {{ var "TO_MYSQL_DBNM" | default "TESTDB" }} 
+        username {{ var "TO_MYSQL_UID" | default "TESTUSER" }} 
+        password {{ var "TO_MYSQL_PWD" | default "TESTPWD" }} 
+        column_names SRC,CONTAINERNM,CONTAINERID,LOG,MSG
+        key_names source,container_name,container_id,log,msg
+        table FLUENTLOG
+        flush_interval 1s
+    </match>
+
+</label>

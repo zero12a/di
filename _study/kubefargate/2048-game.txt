@@ -1,0 +1,200 @@
+0. 클러스터 생성
+eksctl create cluster  --name myzero12gclustercli3 --region=ap-northeast-2 --version 1.18 --fargate 
+
+0. 클러스터 선택
+aws eks --region ap-northeast-2 update-kubeconfig --name myzero12gclustercli3
+
+0. core/kube-system용 프로파일이 클러스터 생성시 디펄트로 생성됨
+프로파일명 : fp-default, 네임스페이스 : default, kube-system
+
+1. 프로파일 생성 (이거 생성하면 프로파일이 2개로됨)
+ eksctl create fargateprofile \
+    --cluster myzero12gclustercli3 \
+    --name 2048-game \
+    --namespace 2048-game
+
+2. 생성
+wget https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/2048/2048-namespace.yaml
+wget https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/2048/2048-deployment.yaml
+wget https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/2048/2048-service.yaml
+
+kubectl apply -f 2048-namespace.yaml #재실행하면 안바껴서 실행안됨 (다음 단계를 해야함)
+kubectl apply -f 2048-deployment.yaml
+kubectl apply -f 2048-service.yaml
+
+
+3. 재배포
+kubectl -n 2048-game rollout status deployment 2048-deployment
+
+4. 확인
+kubectl get nodes
+
+5. Create an OIDC Provider (IAM policy to be used by the ALB Ingress Controller.)
+eksctl utils associate-iam-oidc-provider \
+  --cluster myzero12gclustercli3 \
+  --region=ap-northeast-2  \
+  --approve
+
+6. Create an IAM Policy for ALB Ingress
+wget https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/iam-policy.json
+
+aws iam create-policy \
+  --policy-name ALBIngressControllerIAMPolicy \
+  --policy-document file://iam-policy.json
+
+7. Creating Service Account
+export FARGATE_POLICY_ARN=$(aws iam list-policies --query 'Policies[?PolicyName==`ALBIngressControllerIAMPolicy`].Arn' --output text)
+
+echo echo $FARGATE_POLICY_ARN
+결과 : arn:aws:iam::xxxxxx:policy/ALBIngressControllerIAMPolicy
+
+eksctl create iamserviceaccount \
+  --name alb-ingress-controller \
+  --namespace 2048-game \
+  --cluster myzero12gclustercli3 \
+  --attach-policy-arn ${FARGATE_POLICY_ARN} \
+  --approve \
+  --override-existing-serviceaccounts
+
+kubectl get sa alb-ingress-controller -n 2048-game -o yaml
+결과 : **************************************************************
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::776092519253:role/eksctl-myzero12gclustercli3-addon-iamservice-Role1-P5KWET6IMGKZ
+  creationTimestamp: "2020-10-29T11:37:50Z"
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:eks.amazonaws.com/role-arn: {}
+    manager: eksctl
+    operation: Update
+    time: "2020-10-29T11:37:50Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:secrets:
+        .: {}
+        k:{"name":"alb-ingress-controller-token-2phtp"}:
+          .: {}
+          f:name: {}
+    manager: kube-controller-manager
+    operation: Update
+    time: "2020-10-29T11:37:50Z"
+  name: alb-ingress-controller
+  namespace: 2048-game
+  resourceVersion: "935776"
+  selfLink: /api/v1/namespaces/2048-game/serviceaccounts/alb-ingress-controller
+  uid: 4b778631-5b59-484f-ad6c-f9ef752cd636
+secrets:
+- name: alb-ingress-controller-token-2phtp
+*********************************************************************
+
+8. Create RBAC Role
+wget https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/rbac-role.yaml
+
+sed 's/namespace: kube-system/namespace: 2048-game/g' rbac-role.yaml > rbac-role_new.yaml
+
+kubectl apply -f rbac-role_new.yaml
+
+9. helmt 설치
+curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+helm version
+결과: 3.4
+
+helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
+
+# Get the VPC ID
+export VPC_ID=$(aws eks describe-cluster --name myzero12gclustercli3 --query "cluster.resourcesVpcConfig.vpcId" --output text)
+
+echo $VPC_ID
+결과 : vpc-049f70617b5cxxxxxxxx
+
+helm --namespace 2048-game install 2048-game \
+  incubator/aws-alb-ingress-controller \
+  --set image.tag=v1.1.8 \
+  --set awsRegion=ap-northeast-2 \
+  --set awsVpcID=${VPC_ID} \
+  --set rbac.create=false \
+  --set rbac.serviceAccount.name=alb-ingress-controller \
+  --set clusterName=myzero12gclustercli3
+
+kubectl -n 2048-game rollout status \
+  deployment 2048-game-aws-alb-ingress-controller
+
+10. 시스템 정상 유무 확인(coredns가 동작중이여야함.)
+kubectl get all -n kube-system
+
+12. ingress 적용
+brew install yq
+
+curl -s https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/2048/2048-ingress.yaml \
+    | yq w  - 'metadata.annotations."alb.ingress.kubernetes.io/target-type"' ip \
+    | kubectl apply -f -
+
+위에꺼 실행후 
+1. aws콘솔 > 로드밸런싱 > 로드밸선서 접속시 신규 생성됨.
+2. aws콘솔 > 로드밸런싱 > 대상그룹 메뉴 접속시
+  - 생성된 deployment 5개 ip가 보임
+  ( 콘솔의 ip목록과 비교 :  kubectl get pods -n 2048-game -o wide ) 
+
+
+13. Elb정보 확인
+brew install jq
+
+export ALB_ADDRESS=$(kubectl get ingress -n 2048-game -o json | jq -r '.items[].status.loadBalancer.ingress[].hostname')
+
+echo "http://${ALB_ADDRESS}"
+
+
+14. 최종 상태
+<namespace : kube-system>
+> kubectl get all -n kube-system
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/coredns-97b75d8d6-b6d5g   1/1     Running   0          19m
+pod/coredns-97b75d8d6-zr9wn   1/1     Running   0          19m
+
+NAME               TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)         AGE
+service/kube-dns   ClusterIP   10.100.0.10   <none>        53/UDP,53/TCP   23m
+
+NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/aws-node     0         0         0       0            0           <none>          23m
+daemonset.apps/kube-proxy   0         0         0       0            0           <none>          23m
+
+NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/coredns   2/2     2            2           23m
+
+NAME                                 DESIRED   CURRENT   READY   AGE
+replicaset.apps/coredns-6fb4cf484b   0         0         0       22m
+replicaset.apps/coredns-97b75d8d6    2         2         2       19m
+
+<namespace : kube-system>
+> kubectl get all -n 2048-game
+NAME                                                        READY   STATUS    RESTARTS   AGE
+pod/2048-deployment-6cd485c86-759fd                         1/1     Running   0          17m
+pod/2048-deployment-6cd485c86-g2jpb                         1/1     Running   0          17m
+pod/2048-deployment-6cd485c86-ltp5h                         1/1     Running   0          17m
+pod/2048-deployment-6cd485c86-mgfgn                         1/1     Running   0          17m
+pod/2048-deployment-6cd485c86-s7l4q                         1/1     Running   0          17m
+pod/2048-game-aws-alb-ingress-controller-8584f44d85-b7wxf   1/1     Running   1          14m
+
+NAME                   TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+service/service-2048   NodePort   10.100.84.76   <none>        80:30246/TCP   17m
+
+NAME                                                   READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/2048-deployment                        5/5     5            5           17m
+deployment.apps/2048-game-aws-alb-ingress-controller   1/1     1            1           14m
+
+NAME                                                              DESIRED   CURRENT   READY   AGE
+replicaset.apps/2048-deployment-6cd485c86                         5         5         5       17m
+replicaset.apps/2048-game-aws-alb-ingress-controller-8584f44d85   1         1         1       14m
+YOUNGui-MacBook-Air:kubefargate zeroone$ 
+
+
+

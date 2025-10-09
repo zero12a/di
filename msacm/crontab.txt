@@ -1,0 +1,3 @@
+# must newline 1
+* * * * * /data/www/c.m/aws_ec2.sh
+# must newline 2

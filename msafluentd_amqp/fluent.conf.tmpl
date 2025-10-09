@@ -1,0 +1,52 @@
+<source>
+  @type  forward
+  @id    input1
+  @label @mainstream
+  port  34224
+
+  <parse>
+    @type json
+  </parse>
+</source>
+
+
+
+
+<label @mainstream>
+
+    <filter **>
+      @type record_transformer
+      enable_ruby true
+      auto_typecast yes
+      <record>
+        # rescue is JSON.parse exception 
+        msg ${ (JSON.parse(record["log"])["message"]) rescue nil }
+      </record>
+    </filter>
+
+    <match **>
+      # 참고 URL : https://github.com/restorando/fluent-plugin-amqp 
+      type amqp
+
+      # Set broker host and port
+      host {{ var "TO_RABBITMQ_HOST" | default "172.17.0.1" }}
+      port {{ var "TO_RABBITMQ_PORT" | default "5672" }}
+
+      # Set user and password for authentication
+      user {{ var "TO_RABBITMQ_UID" | default "guet" }}
+      password {{ var "TO_RABBITMQ_PWD" | default "guest" }}
+
+      # Configure amqp entities vhost, exchange id and type
+      vhost /
+      exchange {{ var "TO_RABBITMQ_EXCHANGE_NM" | default "my_exchange" }}
+      exchange_type {{ var "TO_RABBITMQ_EXCHANGE_TYPE" | default "topic" }}
+      exchange_durable false # optionally set exchange durability - default is true.
+      passive false # If true, will not try to create the exchange - default is false.
+      payload_only false # optional - default is false. if true, only the payload will be sent. if false, data format is { "key" => tag, "timestamp" => time, "payload" => record }.
+      content_type application/octet-stream # optional - default is application/octet-stream. some amqp consumers will expect application/json.
+      priority 0 # the priority for the message - requires bunny >= 1.1.6 and rabbitmq >= 3.5
+
+      flush_interval 1s
+    </match>
+
+</label>

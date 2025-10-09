@@ -1,0 +1,21 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nginx-deployment-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx_pod_1
+  template:
+    metadata:
+      labels:
+        app: nginx_pod_1
+    spec:
+      containers:
+      - name: simple-http
+        image: nginx:1.17.6-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 80
