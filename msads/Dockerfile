@@ -5,12 +5,13 @@
 
 
 # step 1
-FROM php:7.4-fpm-alpine
+FROM php:8-fpm-alpine
 
 # 패키지 찾기 : apk search gcc | grep ^gcc
 
-ARG APCU_VERSION=5.1.21
+ARG APCU_VERSION=5.1.27
 ARG ENTRYKIT_VERSION=0.4.0
+ARG GUZZLEHTTP_VERSION=7.10
 
 ##############################################2
 ## install os package
@@ -76,7 +77,7 @@ RUN composer require ezyang/htmlpurifier
 #event driven framework ( workerman require pcntl.so )
 RUN composer require gotzmann/comet  
 RUN composer require workerman/workerman
-RUN composer require guzzlehttp/guzzle:^6.5.5
+RUN composer require guzzlehttp/guzzle:^${GUZZLEHTTP_VERSION}
 
 RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
 

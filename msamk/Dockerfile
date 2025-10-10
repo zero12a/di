@@ -2,9 +2,14 @@
 # docker build --build-arg GIT_TOKEN=AAAAAAAA -t msamk .
 # (포그라운드 실행/배포) docker run -i -t -p 8060:80 --name mk msamk
 # (백그라운드 실행/배포) docker run -i -t -d -p 8060:80 --name mk msamk
+docker run -i -t -d \
+-v /Users/yoman/Documents/docker/mk:/data/www/m.k \
+-v /Users/yoman/Documents/docker/common:/data/www/common \
+-v /Users/yoman/Documents/docker/ds:/data/www/d.s \
+-p 8060:80 --name mk msamk
 
 # step 1
-FROM php:8.0-fpm
+FROM php:8.4-fpm
 
 # ARG는 빌드시에만 사용가능하고, ENV는 실제싱행 RUN/CMD에 사용가능
 # ARG GIT_EMAIL
@@ -12,9 +17,9 @@ FROM php:8.0-fpm
 ARG GIT_TOKEN
 
 # step 2
-ARG APCU_VERSION=5.1.21
+ARG APCU_VERSION=5.1.27
 ARG ENTRYKIT_VERSION=0.4.0
-ARG GUZZLEHTTP_VERSION=7.3
+ARG GUZZLEHTTP_VERSION=7.10
 
 ##############################################
 ## install os package

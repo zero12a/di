@@ -1,7 +1,7 @@
 ## debian linux 10
-# docker build  -t msaos2 .
-# (포그라운드 실행/배포) docker run -i -t -p 8052:80 --name os2 msads2
-# (백그라운드 실행/배포) docker run -i -t -d -p 8052:80 --name os2 msads2
+# docker build  -t msaos .
+# (포그라운드 실행/배포) docker run -i -t -p 18052:80 --name os msaos
+# (백그라운드 실행/배포) docker run -i -t -d -p 18052:80 --name os msaos
 
 # step 1
 FROM php:7.4.26-fpm-alpine3.14

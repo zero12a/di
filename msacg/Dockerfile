@@ -2,15 +2,20 @@
 # docker build -t msacg .
 # (포그라운드 실행/배포) docker run -i -t -p 8090:80 --name cg msacg
 # (백그라운드 실행/배포) docker run -i -t -d -p 8090:80 --name cg msacg
+# (백그라운드 실행/배포) docker run -i -t -d -p 8090:80 --name cg msacg
 
-# (백그라운드 실행/내PC개발)
+
+# (백그라운드 실행/내PC개발) docker run -i -t -d \
+-v /Users/yoman/Documents/docker/cg:/data/www/c.g \
+-v /Users/yoman/Documents/docker/common:/data/www/common \
+-p 8090:80 --name cg msacg
 
 
 # step 1
-FROM php:7.4-fpm
+FROM php:8.4-fpm
 
 # step 2
-ARG APCU_VERSION=5.1.21
+ARG APCU_VERSION=5.1.27
 
 
 ##############################################
