@@ -2,7 +2,10 @@
 # docker build  -t msads .
 # (포그라운드 실행/배포) docker run -i -t -p 8040:80 --name ds msads
 # (백그라운드 실행/배포) docker run -i -t -d -p 8040:80 --name ds msads
-
+docker run -i -t -d \
+-v /Users/yoman/Documents/docker/ds:/data/www/d.s \
+-v /Users/yoman/Documents/docker/common:/data/www/common \
+-p 8040:80 --name ds msads 
 
 # step 1
 FROM php:8-fpm-alpine
